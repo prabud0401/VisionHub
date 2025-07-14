@@ -1,7 +1,17 @@
 'use client';
 
 import { createContext, useContext, useEffect, useState, ReactNode } from 'react';
-import { getAuth, onAuthStateChanged, signInWithPopup, GoogleAuthProvider, User, signOut as firebaseSignOut, Auth } from 'firebase/auth';
+import { 
+  getAuth, 
+  onAuthStateChanged, 
+  signInWithPopup, 
+  GoogleAuthProvider, 
+  User, 
+  signOut as firebaseSignOut, 
+  Auth,
+  signInWithEmailAndPassword,
+  updatePassword,
+} from 'firebase/auth';
 import firebaseApp from '@/lib/firebase-config';
 import { createUserProfile } from '@/services/user-service';
 
@@ -9,6 +19,8 @@ interface AuthContextType {
   user: User | null;
   loading: boolean;
   signInWithGoogle: () => Promise<void>;
+  signInWithEmail: (email: string, pass: string) => Promise<void>;
+  updateUserPassword: (newPass: string) => Promise<void>;
   signOut: () => Promise<void>;
   isAuthModalOpen: boolean;
   setAuthModalOpen: (isOpen: boolean) => void;
@@ -36,7 +48,6 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     const unsubscribe = onAuthStateChanged(auth, (user) => {
       setUser(user);
       if (user) {
-        // This is now a server action call
         createUserProfile({
           uid: user.uid,
           email: user.email,
@@ -50,16 +61,13 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   }, []);
 
   const signInWithGoogle = async () => {
-    if (!auth) {
-      console.error("Firebase is not configured. Cannot sign in.");
-      return;
-    }
+    if (!auth) throw new Error("Firebase is not configured. Cannot sign in.");
+    
+    setLoading(true);
     try {
-      setLoading(true);
       const result = await signInWithPopup(auth, googleProvider);
       const user = result.user;
        if (user) {
-        // This is now a server action call
         await createUserProfile({
           uid: user.uid,
           email: user.email,
@@ -69,10 +77,34 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       }
     } catch (error) {
       console.error("Error signing in with Google", error);
+      throw error;
     } finally {
         setLoading(false);
     }
   };
+
+  const signInWithEmail = async (email: string, pass: string) => {
+    if (!auth) throw new Error("Firebase is not configured. Cannot sign in.");
+    setLoading(true);
+    try {
+        await signInWithEmailAndPassword(auth, email, pass);
+    } catch (error) {
+        console.error("Error signing in with email", error);
+        throw error;
+    } finally {
+        setLoading(false);
+    }
+  }
+
+  const updateUserPassword = async (newPass: string) => {
+    if (!auth?.currentUser) throw new Error("No user is currently signed in.");
+    try {
+        await updatePassword(auth.currentUser, newPass);
+    } catch (error) {
+        console.error("Error updating password", error);
+        throw error;
+    }
+  }
 
   const signOut = async () => {
     if (!auth) {
@@ -90,6 +122,8 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     user,
     loading,
     signInWithGoogle,
+    signInWithEmail,
+    updateUserPassword,
     signOut,
     isAuthModalOpen,
     setAuthModalOpen,
