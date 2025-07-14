@@ -1,27 +1,26 @@
 
 'use client';
 
+import LandingPage from './(marketing)/home/page';
 import { useAuth } from '@/context/auth-context';
-import { useRouter } from 'next/navigation';
-import { useEffect } from 'react';
+import DashboardPage from './(app)/dashboard/page';
 
 export default function Home() {
-  const router = useRouter();
   const { user, loading } = useAuth();
 
-  useEffect(() => {
-    if (!loading) {
-      if (user) {
-        router.replace('/dashboard');
-      } else {
-        router.replace('/home');
-      }
-    }
-  }, [user, loading, router]);
+  if (loading) {
+    return (
+      <div className="flex h-screen items-center justify-center bg-background">
+        <div className="h-16 w-16 animate-spin rounded-full border-4 border-dashed border-primary"></div>
+      </div>
+    );
+  }
+
+  // This logic was causing issues. Reverting it.
+  // The user should be able to see marketing pages even if logged in.
+  // if (user) {
+  //   return <DashboardPage />;
+  // }
   
-  return (
-    <div className="flex h-screen items-center justify-center bg-background">
-      <div className="h-16 w-16 animate-spin rounded-full border-4 border-dashed border-primary"></div>
-    </div>
-  );
+  return <LandingPage />;
 }

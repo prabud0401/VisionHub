@@ -8,6 +8,12 @@ export const metadata: Metadata = {
   description: 'Learn about the mission, vision, and team behind VisionHub AI.',
 };
 
+const images = {
+  main: "https://firebasestorage.googleapis.com/v0/b/visionhub-ai-s813r.firebasestorage.app/o/generated-images%2F3859edeb-c27b-4a27-bc8b-b78405da06e5.png?alt=media",
+  mission: "https://firebasestorage.googleapis.com/v0/b/visionhub-ai-s813r.firebasestorage.app/o/generated-images%2F6e8b8d45-91cc-4c58-afa3-0794a536b89d.png?alt=media",
+  team: "https://firebasestorage.googleapis.com/v0/b/visionhub-ai-s813r.firebasestorage.app/o/generated-images%2Fe6b176e0-fd43-4c40-a798-70e3ff23a025.png?alt=media",
+}
+
 export default function AboutPage() {
   return (
     <div className="bg-background text-foreground">
@@ -23,7 +29,7 @@ export default function AboutPage() {
 
         <div className="relative w-full h-96 rounded-lg overflow-hidden mb-20 shadow-2xl shadow-primary/20">
           <Image
-            src="https://storage.googleapis.com/visionhub-ai-s813r.appspot.com/generated-images/5dab8967-a114-4018-ae3e-adba8aa78de1.png"
+            src={images.main}
             alt="AI generated art showcasing creativity"
             layout="fill"
             objectFit="cover"
@@ -42,7 +48,7 @@ export default function AboutPage() {
           <div className="flex justify-center">
             <div className="relative w-80 h-80 rounded-lg overflow-hidden shadow-xl">
                  <Image
-                    src="https://cdn.web.imagine.art/imagine-frontend/assets/images/456d0d21-f2cb-4a81-a675-01e51351152a.jpeg"
+                    src={images.mission}
                     data-ai-hint="abstract goal target"
                     alt="Abstract representation of a target"
                     layout="fill"
@@ -56,7 +62,7 @@ export default function AboutPage() {
            <div className="flex justify-center md:order-2">
              <div className="relative w-80 h-80 rounded-lg overflow-hidden shadow-xl">
                  <Image
-                    src="https://cdn.web.imagine.art/imagine-frontend/assets/images/33423bdf-22d5-450f-9694-0f04b281f6e2.jpeg"
+                    src={images.team}
                     data-ai-hint="diverse team technology"
                     alt="Abstract representation of a diverse team"
                     layout="fill"

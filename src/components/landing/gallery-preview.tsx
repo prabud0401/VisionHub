@@ -2,15 +2,18 @@
 'use client';
 import Image from 'next/image';
 
-const galleryImages = [
-    { src: 'https://cdn.web.imagine.art/imagine-frontend/assets/images/6a147e40-887c-4a37-b5b1-d5867a57a922.jpeg' },
-    { src: 'https://cdn.web.imagine.art/imagine-frontend/assets/images/9903a45e-a612-4c25-829d-128a1a364132.jpeg' },
-    { src: 'https://cdn.web.imagine.art/imagine-frontend/assets/images/456d0d21-f2cb-4a81-a675-01e51351152a.jpeg' },
-    { src: 'https://cdn.web.imagine.art/imagine-frontend/assets/images/03b13735-a7b7-4e3c-a99f-0746654497a7.jpeg' },
-    { src: 'https://cdn.web.imagine.art/imagine-frontend/assets/images/64f15f69-7253-46a4-966a-7434311855e9.jpeg' },
-    { src: 'https://cdn.web.imagine.art/imagine-frontend/assets/images/33423bdf-22d5-450f-9694-0f04b281f6e2.jpeg' },
-    { src: 'https://cdn.web.imagine.art/imagine-frontend/assets/images/a45a6e51-c0e4-411a-a035-7c3984e79782.jpeg' },
+const galleryImageUrls = [
+    "https://firebasestorage.googleapis.com/v0/b/visionhub-ai-s813r.firebasestorage.app/o/generated-images%2F2ccd4f85-7fa4-468d-92ac-e80e41af5a39.png?alt=media",
+    "https://firebasestorage.googleapis.com/v0/b/visionhub-ai-s813r.firebasestorage.app/o/generated-images%2F3859edeb-c27b-4a27-bc8b-b78405da06e5.png?alt=media",
+    "https://firebasestorage.googleapis.com/v0/b/visionhub-ai-s813r.firebasestorage.app/o/generated-images%2F5dab8967-a114-4018-ae3e-adba8aa78de1.png?alt=media",
+    "https://firebasestorage.googleapis.com/v0/b/visionhub-ai-s813r.firebasestorage.app/o/generated-images%2F6e8b8d45-91cc-4c58-afa3-0794a536b89d.png?alt=media",
+    "https://firebasestorage.googleapis.com/v0/b/visionhub-ai-s813r.firebasestorage.app/o/generated-images%2Fbc9bc6be-11b4-4125-bb38-668b9539b00c.png?alt=media",
+    "https://firebasestorage.googleapis.com/v0/b/visionhub-ai-s813r.firebasestorage.app/o/generated-images%2Fbf6ab35f-9f35-4c21-a6e7-8dd307a5c82b.png?alt=media",
+    "https://firebasestorage.googleapis.com/v0/b/visionhub-ai-s813r.firebasestorage.app/o/generated-images%2Fe6b176e0-fd43-4c40-a798-70e3ff23a025.png?alt=media",
 ];
+
+const galleryImages = galleryImageUrls.map(url => ({ src: url }));
+
 
 const MarqueeRow = ({ images, reverse = false }: { images: typeof galleryImages, reverse?: boolean }) => (
   <div className="flex w-max items-center">

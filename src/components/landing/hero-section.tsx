@@ -19,7 +19,7 @@ export default function HeroSection() {
       id="home"
       className="relative h-screen w-full flex items-center justify-center text-white bg-cover bg-center bg-no-repeat"
       style={{
-        backgroundImage: "url('https://mir-s3-cdn-cf.behance.net/project_modules/fs/bb82b776060455.5c5e341a7bbaa.jpg')"
+        backgroundImage: "url('https://firebasestorage.googleapis.com/v0/b/visionhub-ai-s813r.firebasestorage.app/o/generated-images%2F3859edeb-c27b-4a27-bc8b-b78405da06e5.png?alt=media')"
       }}
     >
       <div className="absolute inset-0 bg-gradient-to-t from-background via-background/80 to-transparent" />
