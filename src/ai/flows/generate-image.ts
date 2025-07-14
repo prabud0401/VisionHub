@@ -31,15 +31,6 @@ export async function generateImages(input: GenerateImagesInput): Promise<Genera
   return generateImagesFlow(input);
 }
 
-// Map user-friendly names to actual model identifiers
-const modelIdMap: Record<string, string> = {
-  "Gemini AI": 'googleai/gemini-2.0-flash-preview-image-generation',
-  "OpenAI DALL-E 3": 'googleai/gemini-2.0-flash-preview-image-generation', // Placeholder, assuming Gemini for all for now
-  "Stability AI SDXL": 'googleai/gemini-2.0-flash-preview-image-generation', // Placeholder
-  "DeepAI Image Generation": 'googleai/gemini-2.0-flash-preview-image-generation', // Placeholder
-};
-
-
 const generateImagesFlow = ai.defineFlow(
   {
     name: 'generateImagesFlow',
@@ -48,13 +39,8 @@ const generateImagesFlow = ai.defineFlow(
   },
   async input => {
     const generationTasks = input.models.map(async (modelName) => {
-      const modelId = modelIdMap[modelName];
-      if (!modelId) {
-        throw new Error(`Invalid model name provided: ${modelName}`);
-      }
-
       const {media} = await ai.generate({
-        model: modelId,
+        model: 'googleai/gemini-2.0-flash-preview-image-generation',
         prompt: `${input.prompt} --ar ${input.aspectRatio}`,
         config: {
           responseModalities: ['TEXT', 'IMAGE'],
