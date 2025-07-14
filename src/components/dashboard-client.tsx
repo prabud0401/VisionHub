@@ -15,10 +15,10 @@ import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Textarea } from '@/components/ui/textarea';
 import { useToast } from '@/hooks/use-toast';
-import { useLocalStorage } from '@/hooks/use-local-storage';
 import type { GeneratedImage } from '@/lib/types';
 import { Alert, AlertDescription, AlertTitle } from './ui/alert';
 import { GenerationProgressModal } from './generation-progress-modal';
+import { useAuth } from '@/context/auth-context';
 
 const formSchema = z.object({
   prompt: z.string().min(10, {
@@ -39,7 +39,8 @@ export function DashboardClient() {
   const [error, setError] = useState<string | null>(null);
   const [progressState, setProgressState] = useState<'idle' | 'generating' | 'saving' | 'done'>('idle');
   const { toast } = useToast();
-  const [storedImages, setStoredImages] = useLocalStorage<GeneratedImage[]>('generated-images', []);
+  const { user } = useAuth();
+
 
   const form = useForm<FormValues>({
     resolver: zodResolver(formSchema),
@@ -54,6 +55,15 @@ export function DashboardClient() {
   const orientation = form.watch('orientation');
 
   async function onSubmit(values: FormValues) {
+    if (!user) {
+      toast({
+        variant: 'destructive',
+        title: 'Authentication Error',
+        description: 'You must be logged in to generate images.',
+      });
+      return;
+    }
+
     setIsLoading(true);
     setError(null);
     setGeneratedImage(null);
@@ -61,23 +71,14 @@ export function DashboardClient() {
     try {
       const result = await generateImage({ 
         prompt: values.prompt,
-        aspectRatio: values.aspectRatio 
+        aspectRatio: values.aspectRatio,
+        userId: user.uid,
+        model: values.model
       });
 
       setProgressState('saving');
       
-      // Simulate saving to database and storage
-      await new Promise(resolve => setTimeout(resolve, 1500));
-
-      const newImage: GeneratedImage = {
-        id: crypto.randomUUID(),
-        url: result.imageUrl,
-        prompt: values.prompt,
-        model: values.model,
-        createdAt: new Date().toISOString(),
-      };
-      setGeneratedImage(newImage);
-      setStoredImages([newImage, ...storedImages]);
+      setGeneratedImage(result);
       
       setProgressState('done');
       await new Promise(resolve => setTimeout(resolve, 1000));

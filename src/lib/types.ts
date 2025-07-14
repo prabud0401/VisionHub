@@ -4,4 +4,5 @@ export interface GeneratedImage {
   prompt: string;
   model: string;
   createdAt: string;
+  userId: string;
 }
