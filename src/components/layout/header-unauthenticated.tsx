@@ -30,11 +30,8 @@ export default function HeaderUnauthenticated() {
             ))}
           </nav>
           <div className="hidden items-center gap-2 md:flex">
-            <Button variant="ghost" onClick={() => setAuthModalOpen(true)}>
-              Login
-            </Button>
-            <Button variant="outline" className="border-accent text-accent hover:bg-accent hover:text-accent-foreground" onClick={() => setAuthModalOpen(true)}>
-              Join
+            <Button variant="accent" onClick={() => setAuthModalOpen(true)}>
+              Create
             </Button>
           </div>
           <div className="md:hidden">
@@ -59,8 +56,7 @@ export default function HeaderUnauthenticated() {
                     ))}
                   </nav>
                   <div className="flex flex-col gap-2 mt-4">
-                     <Button variant="ghost" onClick={() => setAuthModalOpen(true)}>Login</Button>
-                     <Button variant="outline" className="border-accent text-accent hover:bg-accent hover:text-accent-foreground" onClick={() => setAuthModalOpen(true)}>Join</Button>
+                     <Button variant="accent" onClick={() => setAuthModalOpen(true)}>Create</Button>
                   </div>
                 </div>
               </SheetContent>
