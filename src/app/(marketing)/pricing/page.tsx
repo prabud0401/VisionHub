@@ -1,3 +1,4 @@
+
 import { Metadata } from 'next';
 import { PricingClient } from '@/components/pricing-client';
 

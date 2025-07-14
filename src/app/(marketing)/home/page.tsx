@@ -1,13 +1,12 @@
+
 'use client';
-import HeaderUnauthenticated from '@/components/layout/header-unauthenticated';
-import HeroSection from './hero-section';
-import GalleryPreview from './gallery-preview';
-import Partners from './partners';
-import Testimonials from './testimonials';
-import Footer from '../layout/footer';
-import { AuthModal } from '../auth-modal';
+
+import HeroSection from '@/components/landing/hero-section';
+import GalleryPreview from '@/components/landing/gallery-preview';
+import Partners from '@/components/landing/partners';
+import Testimonials from '@/components/landing/testimonials';
 import Link from 'next/link';
-import { Button } from '../ui/button';
+import { Button } from '@/components/ui/button';
 import { ArrowRight, Brush, Gem, Sparkles } from 'lucide-react';
 
 const CtaSection = () => (
@@ -41,17 +40,12 @@ const CtaSection = () => (
 
 export default function LandingPage() {
     return (
-        <div className="flex flex-col min-h-screen bg-background">
-          <HeaderUnauthenticated />
-          <main>
+        <>
             <HeroSection />
             <Partners />
             <CtaSection />
             <Testimonials />
             <GalleryPreview />
-          </main>
-          <Footer />
-          <AuthModal />
-        </div>
+        </>
     );
 }

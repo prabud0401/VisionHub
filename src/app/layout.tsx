@@ -1,34 +1,8 @@
-'use client';
+
 import './globals.css';
 import { Toaster } from '@/components/ui/toaster';
 import { AuthProvider } from '@/context/auth-context';
-import Header from '@/components/layout/header';
-import { useAuth } from '@/context/auth-context';
-import LandingPage from '@/components/landing/landing-page';
-
-function AppContent({ children }: { children: React.ReactNode }) {
-  const { user, loading } = useAuth();
-
-  if (loading) {
-    return (
-      <div className="flex h-screen items-center justify-center bg-background">
-        <div className="h-16 w-16 animate-spin rounded-full border-4 border-dashed border-primary"></div>
-      </div>
-    );
-  }
-
-  if (!user) {
-    return <LandingPage />;
-  }
-
-  return (
-    <div className="relative flex min-h-screen flex-col bg-background pt-28">
-      <Header />
-      <main className="flex-1">{children}</main>
-    </div>
-  );
-}
-
+import { AuthModal } from '@/components/auth-modal';
 
 export default function RootLayout({
   children,
@@ -49,7 +23,8 @@ export default function RootLayout({
       </head>
       <body className="font-body antialiased bg-background text-foreground">
           <AuthProvider>
-            <AppContent>{children}</AppContent>
+            {children}
+            <AuthModal />
             <Toaster />
           </AuthProvider>
       </body>
