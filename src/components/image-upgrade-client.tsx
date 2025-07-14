@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useRef } from 'react';
+import { useState, useRef, useEffect } from 'react';
 import Image from 'next/image';
 import { Download, Loader2, UploadCloud, Wand2, X, AspectRatio, Trash2 } from 'lucide-react';
 import { removeImageBackground } from '@/ai/flows/remove-image-background';
@@ -11,6 +11,8 @@ import { useToast } from '@/hooks/use-toast';
 import { Alert, AlertDescription, AlertTitle } from './ui/alert';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from './ui/select';
+import { useLocalStorage } from '@/hooks/use-local-storage';
+
 
 export function ImageUpgradeClient() {
   const [originalImage, setOriginalImage] = useState<string | null>(null);
@@ -21,6 +23,17 @@ export function ImageUpgradeClient() {
   const [aspectRatio, setAspectRatio] = useState('16:9');
   const fileInputRef = useRef<HTMLInputElement>(null);
   const { toast } = useToast();
+  const [imageForUpgrade, setImageForUpgrade] = useLocalStorage<string | null>('imageForUpgrade', null);
+
+
+  useEffect(() => {
+    if (imageForUpgrade) {
+      setOriginalImage(imageForUpgrade);
+      // Clear the value from local storage so it's not reused
+      setImageForUpgrade(null); 
+    }
+  }, [imageForUpgrade, setImageForUpgrade]);
+
 
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
