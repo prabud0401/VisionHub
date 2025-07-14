@@ -8,7 +8,7 @@ if (!admin.apps.length) {
   if (serviceAccount) {
     admin.initializeApp({
       credential: admin.credential.cert(serviceAccount),
-      storageBucket: "userprofilewebsite.appspot.com",
+      storageBucket: "visionhub-ai-s813r.firebasestorage.app",
     });
   } else {
     console.warn(
