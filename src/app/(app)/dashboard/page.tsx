@@ -1,23 +1,24 @@
-import { GalleryClient } from '@/components/gallery-client';
+
+import { DashboardClient } from '@/components/dashboard-client';
 import { Metadata } from 'next';
 
 export const metadata: Metadata = {
-  title: 'Gallery | VisionHub AI',
-  description: 'Browse your generated images.',
+  title: 'Dashboard | VisionHub AI',
+  description: 'Generate AI images from text prompts.',
 };
 
-export default function GalleryPage() {
+export default function DashboardPage() {
   return (
     <div className="container mx-auto py-12 px-4">
       <div className="text-center mb-12">
         <h1 className="font-headline text-4xl font-bold tracking-tight lg:text-5xl">
-          Your Image Gallery
+          AI Image Generation
         </h1>
         <p className="mt-4 text-lg text-muted-foreground">
-          Here are all the amazing images you've created with VisionHub AI.
+          Describe your vision and let our AI bring it to life. Use the prompt enhancer for more creative results.
         </p>
       </div>
-      <GalleryClient />
+      <DashboardClient />
     </div>
   );
 }

@@ -1,19 +1,25 @@
+
 'use client';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { useAuth } from '@/context/auth-context';
 import { ArrowRight } from 'lucide-react';
+import { useRouter } from 'next/navigation';
 
 export default function HeroSection() {
   const { setAuthModalOpen } = useAuth();
-  
+  const router = useRouter();
+
   const handleCreate = () => {
+    // For unauthenticated users, this opens the modal.
+    // A logged-in user shouldn't see this page, but if they do,
+    // this would take them to the dashboard.
     setAuthModalOpen(true);
   };
 
   return (
-    <section 
-      id="home" 
+    <section
+      id="home"
       className="relative h-screen w-full flex items-center justify-center text-white bg-cover bg-center bg-no-repeat"
       style={{
         backgroundImage: "url('https://mir-s3-cdn-cf.behance.net/project_modules/fs/bb82b776060455.5c5e341a7bbaa.jpg')"
@@ -26,11 +32,12 @@ export default function HeroSection() {
           Turn your imagination into stunning visuals. VisionHub integrates multiple AI models to give you the ultimate creative power.
         </p>
         <div className="max-w-2xl mx-auto flex items-center gap-2 bg-background/50 p-2 rounded-lg border border-border">
-          <Input 
-            type="text" 
+          <Input
+            type="text"
             placeholder="A majestic lion with a crown of stars, digital painting"
             className="flex-grow bg-transparent border-none focus-visible:ring-0 text-white placeholder:text-muted-foreground"
             onFocus={handleCreate}
+            readOnly
           />
           <Button variant="accent" size="lg" onClick={handleCreate}>
             <span className="hidden sm:inline">Generate</span>

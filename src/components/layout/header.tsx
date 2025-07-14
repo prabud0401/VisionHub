@@ -1,8 +1,9 @@
+
 'use client';
 
 import Link from 'next/link';
-import { useRouter } from 'next/navigation';
-import { Bot, LogOut, Menu, User, Settings, LayoutDashboard, Brush, ImageIcon, Scaling } from 'lucide-react';
+import { usePathname, useRouter } from 'next/navigation';
+import { Bot, LogOut, Menu, Settings, LayoutDashboard, ImageIcon, Scaling } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Sheet, SheetContent, SheetTrigger } from '@/components/ui/sheet';
 import { useAuth } from '@/context/auth-context';
@@ -16,7 +17,7 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
-import HeaderUnauthenticated from './header-unauthenticated';
+import { cn } from '@/lib/utils';
 
 const navLinks = [
   { href: '/dashboard', label: 'Dashboard', icon: <LayoutDashboard className="mr-2 h-4 w-4" /> },
@@ -26,41 +27,34 @@ const navLinks = [
 
 export default function Header() {
   const router = useRouter();
-  const { user, signOut, loading } = useAuth();
-
-  if (loading) {
-    return (
-      <header className="fixed top-0 left-0 z-50 w-full bg-background/80 backdrop-blur-sm">
-        <div className="container mx-auto flex h-20 items-center justify-between px-4 md:px-6">
-          <div className="flex items-center gap-2 text-xl font-bold">
-            <Bot className="h-8 w-8 text-primary" />
-            <span>VisionHub</span>
-          </div>
-        </div>
-      </header>
-    );
-  }
-
-  if (!user) {
-    return <HeaderUnauthenticated />;
-  }
+  const pathname = usePathname();
+  const { user, signOut } = useAuth();
   
   const handleLogout = async () => {
     await signOut();
     router.push('/');
   };
 
+  if (!user) {
+    return null; // The app layout will handle redirects
+  }
+
   return (
-    <header className="fixed top-0 left-0 z-50 w-full">
+    <header className="fixed top-0 left-0 z-50 w-full bg-background/80 backdrop-blur-sm border-b border-border/40">
       <div className="container mx-auto flex h-20 items-center justify-between px-4">
         <div className="flex items-center gap-8">
           <Link href="/" className="flex items-center gap-2 text-xl font-bold">
             <Bot className="h-8 w-8 text-primary" />
             <span className="hidden sm:inline">VisionHub AI</span>
           </Link>
-          <nav className="hidden items-center gap-2 text-sm font-medium md:flex">
+          <nav className="hidden items-center gap-1 text-sm font-medium md:flex">
             {navLinks.map((link) => (
-              <Button variant="ghost" asChild key={link.href}>
+              <Button 
+                variant={pathname.startsWith(link.href) ? "secondary" : "ghost"}
+                asChild
+                key={link.href}
+                className={cn("transition-colors", !pathname.startsWith(link.href) && "text-muted-foreground")}
+              >
                   <Link href={link.href}>{link.label}</Link>
               </Button>
             ))}
@@ -118,13 +112,22 @@ export default function Header() {
                   </Link>
                   <nav className="flex flex-col gap-4">
                     {navLinks.map((link) => (
-                       <Button variant="ghost" className="justify-start" asChild key={link.href}>
+                       <Button 
+                         variant={pathname.startsWith(link.href) ? "secondary" : "ghost"}
+                         className="justify-start"
+                         asChild
+                         key={link.href}
+                       >
                          <Link href={link.href}>{link.icon}{link.label}</Link>
                        </Button>
                     ))}
-                     <Button variant="ghost" className="justify-start" asChild>
-                         <Link href='/settings'><Settings className="mr-2 h-4 w-4" />Settings</Link>
-                       </Button>
+                     <Button 
+                       variant={pathname.startsWith('/settings') ? "secondary" : "ghost"}
+                       className="justify-start"
+                       asChild
+                     >
+                       <Link href='/settings'><Settings className="mr-2 h-4 w-4" />Settings</Link>
+                     </Button>
                   </nav>
                   <Button onClick={handleLogout} variant="outline" className="mt-4">
                     <LogOut className="mr-2 h-5 w-5" />

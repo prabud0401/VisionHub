@@ -1,3 +1,4 @@
+
 import Image from 'next/image';
 import { Metadata } from 'next';
 import { Bot, Users, Target } from 'lucide-react';

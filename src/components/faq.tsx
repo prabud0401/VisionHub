@@ -1,3 +1,4 @@
+
 import {
   Accordion,
   AccordionContent,
@@ -16,6 +17,11 @@ const faqItems = [
     answer:
       'Our background removal tool uses a sophisticated AI to identify the main subject in your photo and intelligently remove the background. This leaves you with a clean image with a transparent background, ready for any project.',
   },
+    {
+    question: 'What is AI Outpainting and Upscaling?',
+    answer:
+      "AI Outpainting allows you to expand an image beyond its original borders. Our AI analyzes the existing image and intelligently generates new content to fill the expanded space, matching the style and lighting. Upscaling increases the resolution of your image, making it sharper and more detailed.",
+  },
   {
     question: 'Are my generated images private and secure?',
     answer:
@@ -24,7 +30,7 @@ const faqItems = [
   {
     question: 'Can I download the images I create?',
     answer:
-      'Absolutely! All generated images, including those with backgrounds removed, are available for high-resolution download directly from your gallery or immediately after generation.',
+      'Absolutely! All generated images, including those with backgrounds removed or upscaled, are available for high-resolution download directly from your gallery or immediately after generation.',
   },
   {
     question: 'Is there a limit to how many images I can generate?',

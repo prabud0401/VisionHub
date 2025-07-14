@@ -1,6 +1,8 @@
+
 import { Metadata } from 'next';
 import { Button } from '@/components/ui/button';
 import Faq from '@/components/faq';
+import Link from 'next/link';
 
 export const metadata: Metadata = {
   title: 'FAQ | VisionHub AI',
@@ -26,7 +28,9 @@ export default function FaqPage() {
                 <p className="mt-2 text-muted-foreground">
                     Our support team is here to help you on your creative journey.
                 </p>
-                <Button size="lg" className="mt-6">Contact Support</Button>
+                <Button asChild size="lg" className="mt-6">
+                    <Link href="#">Contact Support</Link>
+                </Button>
             </div>
         </div>
     );

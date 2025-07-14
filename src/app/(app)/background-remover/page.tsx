@@ -1,3 +1,4 @@
+
 import { ImageUpgradeClient } from '@/components/image-upgrade-client';
 import { Metadata } from 'next';
 
