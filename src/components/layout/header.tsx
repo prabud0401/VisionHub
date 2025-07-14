@@ -2,7 +2,7 @@
 
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
-import { Bot, LogOut, Menu, User, Settings, LayoutDashboard, Brush, ImageIcon } from 'lucide-react';
+import { Bot, LogOut, Menu, User, Settings, LayoutDashboard, Brush, ImageIcon, Scaling } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Sheet, SheetContent, SheetTrigger } from '@/components/ui/sheet';
 import { useAuth } from '@/context/auth-context';
@@ -21,7 +21,7 @@ import HeaderUnauthenticated from './header-unauthenticated';
 const navLinks = [
   { href: '/dashboard', label: 'Dashboard', icon: <LayoutDashboard className="mr-2 h-4 w-4" /> },
   { href: '/gallery', label: 'Gallery', icon: <ImageIcon className="mr-2 h-4 w-4" /> },
-  { href: '/background-remover', label: 'Background Remover', icon: <Brush className="mr-2 h-4 w-4" /> },
+  { href: '/background-remover', label: 'Image Upgrade', icon: <Scaling className="mr-2 h-4 w-4" /> },
 ];
 
 export default function Header() {
