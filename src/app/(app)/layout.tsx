@@ -5,6 +5,7 @@ import { useAuth } from '@/context/auth-context';
 import { useRouter } from 'next/navigation';
 import { useEffect } from 'react';
 import Header from '@/components/layout/header';
+import Footer from '@/components/layout/footer';
 
 export default function AppLayout({
   children,
@@ -32,6 +33,7 @@ export default function AppLayout({
     <div className="relative flex min-h-screen flex-col bg-background">
       <Header />
       <main className="flex-1 pt-20">{children}</main>
+      <Footer />
     </div>
   );
 }

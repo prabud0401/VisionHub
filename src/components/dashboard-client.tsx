@@ -405,7 +405,10 @@ export function DashboardClient() {
                 )}
                 {!isGenerating && !error && generatedImages && (
                   <div className="flex flex-col items-center gap-4 w-full">
-                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 w-full">
+                    <div className={cn(
+                      "grid gap-4 w-full",
+                       generatedImages.length > 1 ? "grid-cols-2" : "grid-cols-1"
+                      )}>
                       {generatedImages.map((image) => (
                         <div key={image.id} className="relative aspect-square">
                           <Image

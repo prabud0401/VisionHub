@@ -1,3 +1,4 @@
+
 'use client';
 import { Button } from '@/components/ui/button';
 import { Facebook, Twitter, Instagram, Linkedin } from 'lucide-react';
@@ -10,16 +11,23 @@ export default function SocialCta() {
             <div className="container mx-auto px-4">
                 <Card className="bg-card/90 backdrop-blur-sm">
                     <CardContent className="p-8 md:p-12 text-center">
-                        <h2 className="pixelated-font text-2xl md:text-3xl font-bold tracking-tighter mb-4">Follow Us on Social Media</h2>
+                        <h2 className="text-2xl md:text-3xl font-bold tracking-tighter mb-4">Join Our Creative Community</h2>
                         <p className="max-w-2xl mx-auto text-muted-foreground mb-8">
-                            Connect and share innovative ideas with over 10K+ creative like minded people.
+                            Connect with over 10K+ like-minded creators, share your work, and get inspired. Follow us on social media for the latest updates, tips, and showcases.
                         </p>
-                        <Button variant="accent" size="lg" className="mb-6">Follow Now</Button>
                         <div className="flex justify-center gap-6">
-                            <Link href="#" className="text-muted-foreground hover:text-primary"><Facebook /></Link>
-                            <Link href="#" className="text-muted-foreground hover:text-primary"><Twitter /></Link>
-                            <Link href="#" className="text-muted-foreground hover:text-primary"><Instagram /></Link>
-                            <Link href="#" className="text-muted-foreground hover:text-primary"><Linkedin /></Link>
+                            <Button asChild variant="outline" size="icon" className="h-12 w-12 rounded-full">
+                                <Link href="#" aria-label="Facebook"><Facebook /></Link>
+                            </Button>
+                             <Button asChild variant="outline" size="icon" className="h-12 w-12 rounded-full">
+                                <Link href="#" aria-label="Twitter"><Twitter /></Link>
+                            </Button>
+                             <Button asChild variant="outline" size="icon" className="h-12 w-12 rounded-full">
+                                <Link href="#" aria-label="Instagram"><Instagram /></Link>
+                            </Button>
+                             <Button asChild variant="outline" size="icon" className="h-12 w-12 rounded-full">
+                                <Link href="#" aria-label="LinkedIn"><Linkedin /></Link>
+                            </Button>
                         </div>
                     </CardContent>
                 </Card>

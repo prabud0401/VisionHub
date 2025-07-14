@@ -40,13 +40,29 @@ export default function AboutPage() {
             </p>
           </div>
           <div className="flex justify-center">
-            <Target className="w-48 h-48 text-primary/50" />
+            <div className="relative w-80 h-80 rounded-lg overflow-hidden shadow-xl">
+                 <Image
+                    src="https://cdn.web.imagine.art/imagine-frontend/assets/images/456d0d21-f2cb-4a81-a675-01e51351152a.jpeg"
+                    data-ai-hint="abstract goal target"
+                    alt="Abstract representation of a target"
+                    layout="fill"
+                    objectFit="cover"
+                />
+            </div>
           </div>
         </div>
         
         <div className="grid md:grid-cols-2 gap-12 items-center">
            <div className="flex justify-center md:order-2">
-            <Users className="w-48 h-48 text-accent/50" />
+             <div className="relative w-80 h-80 rounded-lg overflow-hidden shadow-xl">
+                 <Image
+                    src="https://cdn.web.imagine.art/imagine-frontend/assets/images/33423bdf-22d5-450f-9694-0f04b281f6e2.jpeg"
+                    data-ai-hint="diverse team technology"
+                    alt="Abstract representation of a diverse team"
+                    layout="fill"
+                    objectFit="cover"
+                />
+            </div>
           </div>
           <div className="md:order-1">
             <h2 className="text-3xl font-bold mb-4">Who We Are</h2>
