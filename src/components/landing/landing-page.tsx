@@ -7,23 +7,23 @@ import Partners from './partners';
 import Pricing from './pricing';
 import Testimonials from './testimonials';
 import FaqSection from './faq-section';
-import SocialCta from './social-cta';
 import Footer from '../layout/footer';
 import { AuthModal } from '../auth-modal';
 
 export default function LandingPage() {
     return (
-        <div className="flex flex-col min-h-screen">
+        <div className="flex flex-col min-h-screen bg-background">
           <HeaderUnauthenticated />
           <main>
             <HeroSection />
+            <div className="container mx-auto px-4">
+              <Partners />
+              <ToolsSuite />
+              <Testimonials />
+              <Pricing />
+              <FaqSection />
+            </div>
             <GalleryPreview />
-            <ToolsSuite />
-            <Partners />
-            <Pricing />
-            <Testimonials />
-            <FaqSection />
-            <SocialCta />
           </main>
           <Footer />
           <AuthModal />

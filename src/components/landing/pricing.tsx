@@ -10,14 +10,14 @@ import { useAuth } from '@/context/auth-context';
 
 const plans = {
   monthly: [
-    { name: 'Basic', price: '$10', features: ['500 credits', 'Standard quality', 'Limited access'] },
-    { name: 'Standard', price: '$25', features: ['1500 credits', 'High quality', 'Full access', 'Priority support'], highlighted: true },
-    { name: 'Premium', price: '$50', features: ['4000 credits', '4K+ quality', 'API access', 'Dedicated support'] },
+    { name: 'Basic', price: '$10', features: ['500 credits', 'Standard quality', 'Limited access to models'] },
+    { name: 'Standard', price: '$25', features: ['1500 credits', 'High quality outputs', 'Full access to models', 'Priority support'], highlighted: true },
+    { name: 'Premium', price: '$50', features: ['4000 credits', '4K+ resolution', 'API access', 'Dedicated support'] },
   ],
   annually: [
-    { name: 'Basic', price: '$96', features: ['500 credits/mo', 'Standard quality', 'Limited access'] },
-    { name: 'Standard', price: '$240', features: ['1500 credits/mo', 'High quality', 'Full access', 'Priority support'], highlighted: true },
-    { name: 'Premium', price: '$480', features: ['4000 credits/mo', '4K+ quality', 'API access', 'Dedicated support'] },
+    { name: 'Basic', price: '$96', features: ['500 credits/mo', 'Standard quality', 'Limited access to models'] },
+    { name: 'Standard', price: '$240', features: ['1500 credits/mo', 'High quality outputs', 'Full access to models', 'Priority support'], highlighted: true },
+    { name: 'Premium', price: '$480', features: ['4000 credits/mo', '4K+ resolution', 'API access', 'Dedicated support'] },
   ],
 };
 
@@ -27,10 +27,10 @@ export default function Pricing() {
   const currentPlans = isAnnual ? plans.annually : plans.monthly;
 
   return (
-    <section id="pricing" className="py-20 bg-card/80 backdrop-blur-sm rounded-lg">
+    <section id="pricing" className="py-20 lg:py-24 bg-card/50 rounded-lg">
       <div className="container mx-auto px-4 text-center">
-        <h3 className="text-primary font-semibold">OUR PRICING</h3>
-        <h2 className="text-3xl font-bold font-headline mt-2 mb-6">Get Started with Our App</h2>
+        <h3 className="text-primary font-semibold tracking-wider uppercase">Pricing</h3>
+        <h2 className="text-3xl font-bold mt-2 mb-6">Flexible Plans for Every Creator</h2>
         
         <div className="flex items-center justify-center space-x-2 mb-12">
           <Label htmlFor="billing-toggle">Monthly</Label>
@@ -41,11 +41,11 @@ export default function Pricing() {
         <div className="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-5xl mx-auto">
           {currentPlans.map((plan) => (
             <Card key={plan.name} className={cn(
-              "flex flex-col text-left transform hover:-translate-y-2 transition-transform duration-300 bg-card/50 backdrop-blur-sm",
-              plan.highlighted ? "border-accent shadow-accent/20 shadow-lg" : ""
+              "flex flex-col text-left transform hover:-translate-y-2 transition-transform duration-300 bg-background/50",
+              plan.highlighted ? "border-accent shadow-accent/20 shadow-lg" : "border-border"
             )}>
               <CardHeader>
-                <CardTitle className="font-headline text-2xl">{plan.name}</CardTitle>
+                <CardTitle className="text-2xl">{plan.name}</CardTitle>
                 <CardDescription className="text-4xl font-bold pt-4">{plan.price}<span className="text-sm font-normal text-muted-foreground">/{isAnnual ? 'year' : 'month'}</span></CardDescription>
               </CardHeader>
               <CardContent className="flex flex-col flex-grow">
@@ -62,7 +62,7 @@ export default function Pricing() {
                   variant={plan.highlighted ? 'accent' : 'outline'} 
                   className="w-full"
                 >
-                  Subscribe
+                  Choose Plan
                 </Button>
               </CardContent>
             </Card>

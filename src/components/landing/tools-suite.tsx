@@ -43,11 +43,11 @@ const tools = [
 
 export default function ToolsSuite() {
   return (
-    <section id="services" className="py-20 bg-card/80 backdrop-blur-sm rounded-lg">
+    <section id="services" className="py-20 lg:py-24">
       <div className="container mx-auto px-4 text-center">
-        <h2 className="text-3xl font-bold font-headline mb-4">Our AI Tools Suite</h2>
+        <h2 className="text-3xl font-bold mb-4">A Powerful Suite of AI Tools</h2>
         <p className="max-w-2xl mx-auto text-muted-foreground mb-12">
-          Revolutionize your creative workflow with VisionHub's AI Tools Suite. This suite empowers you with cutting-edge AI technology.
+          From ideation to final edits, VisionHub provides all the tools you need to streamline your creative workflow and produce exceptional results.
         </p>
         
         <Carousel
@@ -55,15 +55,15 @@ export default function ToolsSuite() {
             align: "start",
             loop: true,
           }}
-          className="w-full max-w-4xl mx-auto"
+          className="w-full max-w-6xl mx-auto"
         >
           <CarouselContent>
             {tools.map((tool, index) => (
               <CarouselItem key={index} className="md:basis-1/2 lg:basis-1/3">
-                <div className="p-1">
-                  <Card className="flex flex-col h-full">
+                <div className="p-1 h-full">
+                  <Card className="flex flex-col h-full bg-card overflow-hidden">
                     <CardContent className="p-0 flex flex-col flex-grow">
-                      <div className="relative w-full aspect-video rounded-t-lg overflow-hidden">
+                      <div className="relative w-full aspect-video">
                         <Image
                           src={tool.image}
                           alt={tool.benefit}
@@ -74,10 +74,10 @@ export default function ToolsSuite() {
                         />
                       </div>
                       <div className="p-6 text-left flex flex-col flex-grow">
-                        <h3 className="text-xl font-semibold font-headline mb-2">{tool.title}</h3>
-                        <p className="text-lg text-primary mb-4">{tool.benefit}</p>
+                        <p className="text-sm text-primary mb-2 font-semibold">{tool.benefit}</p>
+                        <h3 className="text-xl font-semibold mb-4">{tool.title}</h3>
                         <p className="text-muted-foreground mb-6 flex-grow">{tool.description}</p>
-                        <Button variant="accent" className="mt-auto w-full">Learn More</Button>
+                        <Button variant="outline" className="mt-auto w-full">Learn More</Button>
                       </div>
                     </CardContent>
                   </Card>

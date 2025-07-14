@@ -8,7 +8,8 @@ import { useAuth } from '@/context/auth-context';
 const navLinks = [
   { href: '#about', label: 'About' },
   { href: '#services', label: 'Services' },
-  { href: '#contact', label: 'Contact' },
+  { href: '#pricing', label: 'Pricing' },
+  { href: '#faq', label: 'FAQ' },
 ];
 
 export default function HeaderUnauthenticated() {
@@ -16,9 +17,9 @@ export default function HeaderUnauthenticated() {
 
   return (
     <>
-      <header className="fixed top-0 left-0 z-50 w-full bg-black/50 backdrop-blur-sm">
+      <header className="fixed top-0 left-0 z-50 w-full bg-background/80 backdrop-blur-sm">
         <div className="container mx-auto flex h-20 items-center justify-between px-4 md:px-6">
-          <Link href="/" className="flex items-center gap-2 font-headline text-xl font-bold">
+          <Link href="/" className="flex items-center gap-2 text-xl font-bold">
             <Bot className="h-8 w-8 text-primary" />
             <span>VisionHub</span>
           </Link>
@@ -31,7 +32,7 @@ export default function HeaderUnauthenticated() {
           </nav>
           <div className="hidden items-center gap-2 md:flex">
             <Button variant="accent" onClick={() => setAuthModalOpen(true)}>
-              Create
+              Get Started
             </Button>
           </div>
           <div className="md:hidden">
@@ -44,7 +45,7 @@ export default function HeaderUnauthenticated() {
               </SheetTrigger>
               <SheetContent side="right">
                 <div className="flex flex-col gap-6 p-6">
-                  <Link href="/" className="flex items-center gap-2 font-headline text-lg font-bold">
+                  <Link href="/" className="flex items-center gap-2 text-lg font-bold">
                     <Bot className="h-7 w-7 text-primary" />
                     <span>VisionHub</span>
                   </Link>
@@ -56,7 +57,7 @@ export default function HeaderUnauthenticated() {
                     ))}
                   </nav>
                   <div className="flex flex-col gap-2 mt-4">
-                     <Button variant="accent" onClick={() => setAuthModalOpen(true)}>Create</Button>
+                     <Button variant="accent" onClick={() => setAuthModalOpen(true)}>Get Started</Button>
                   </div>
                 </div>
               </SheetContent>

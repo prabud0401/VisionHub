@@ -2,7 +2,7 @@
 
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
-import { Bot, LogOut, Menu, User, Settings, LayoutDashboard } from 'lucide-react';
+import { Bot, LogOut, Menu, User, Settings, LayoutDashboard, Brush, ImageIcon } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Sheet, SheetContent, SheetTrigger } from '@/components/ui/sheet';
 import { useAuth } from '@/context/auth-context';
@@ -19,10 +19,9 @@ import {
 import HeaderUnauthenticated from './header-unauthenticated';
 
 const navLinks = [
-  { href: '/dashboard', label: 'Dashboard' },
-  { href: '/gallery', label: 'Gallery' },
-  { href: '/background-remover', label: 'Background Remover' },
-  { href: '/settings', label: 'Settings' },
+  { href: '/dashboard', label: 'Dashboard', icon: <LayoutDashboard className="mr-2 h-4 w-4" /> },
+  { href: '/gallery', label: 'Gallery', icon: <ImageIcon className="mr-2 h-4 w-4" /> },
+  { href: '/background-remover', label: 'Background Remover', icon: <Brush className="mr-2 h-4 w-4" /> },
 ];
 
 export default function Header() {
@@ -31,9 +30,9 @@ export default function Header() {
 
   if (loading) {
     return (
-      <header className="fixed top-0 left-0 z-50 w-full bg-black/50 backdrop-blur-sm">
+      <header className="fixed top-0 left-0 z-50 w-full bg-background/80 backdrop-blur-sm">
         <div className="container mx-auto flex h-20 items-center justify-between px-4 md:px-6">
-          <div className="flex items-center gap-2 font-headline text-xl font-bold">
+          <div className="flex items-center gap-2 text-xl font-bold">
             <Bot className="h-8 w-8 text-primary" />
             <span>VisionHub</span>
           </div>
@@ -52,24 +51,26 @@ export default function Header() {
   };
 
   return (
-    <header className="fixed top-4 left-1/2 z-50 w-[calc(100%-2rem)] max-w-6xl -translate-x-1/2">
-      <div className="flex h-16 items-center justify-between rounded-full border bg-background/80 px-4 shadow-lg backdrop-blur-sm md:px-6">
-        <Link href="/dashboard" className="flex items-center gap-2 font-headline text-lg font-bold">
-          <Bot className="h-7 w-7 text-primary" />
-          <span className="hidden sm:inline">VisionHub AI</span>
-        </Link>
-        <nav className="hidden items-center gap-2 text-sm font-medium md:flex">
-          {navLinks.map((link) => (
-            <Button variant="ghost" asChild key={link.href}>
-                <Link href={link.href}>{link.label}</Link>
-            </Button>
-          ))}
-        </nav>
+    <header className="fixed top-0 left-0 z-50 w-full">
+      <div className="container mx-auto flex h-20 items-center justify-between px-4">
+        <div className="flex items-center gap-8">
+          <Link href="/dashboard" className="flex items-center gap-2 text-xl font-bold">
+            <Bot className="h-8 w-8 text-primary" />
+            <span className="hidden sm:inline">VisionHub AI</span>
+          </Link>
+          <nav className="hidden items-center gap-2 text-sm font-medium md:flex">
+            {navLinks.map((link) => (
+              <Button variant="ghost" asChild key={link.href}>
+                  <Link href={link.href}>{link.label}</Link>
+              </Button>
+            ))}
+          </nav>
+        </div>
         <div className="flex items-center gap-4">
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
               <Button variant="ghost" className="relative h-10 w-10 rounded-full">
-                <Avatar className="h-10 w-10">
+                <Avatar className="h-10 w-10 border-2 border-primary/50">
                   <AvatarImage src={user.photoURL ?? ''} alt={user.displayName ?? 'User'} />
                   <AvatarFallback>{user.displayName?.charAt(0).toUpperCase()}</AvatarFallback>
                 </Avatar>
@@ -111,18 +112,21 @@ export default function Header() {
               </SheetTrigger>
               <SheetContent side="right">
                 <div className="flex flex-col gap-6 p-6">
-                  <Link href="/dashboard" className="flex items-center gap-2 font-headline text-lg font-bold">
+                  <Link href="/dashboard" className="flex items-center gap-2 text-lg font-bold">
                     <Bot className="h-7 w-7 text-primary" />
                     <span>VisionHub AI</span>
                   </Link>
                   <nav className="flex flex-col gap-4">
                     {navLinks.map((link) => (
-                       <Button variant="ghost" asChild key={link.href}>
-                         <Link href={link.href}>{link.label}</Link>
+                       <Button variant="ghost" className="justify-start" asChild key={link.href}>
+                         <Link href={link.href}>{link.icon}{link.label}</Link>
                        </Button>
                     ))}
+                     <Button variant="ghost" className="justify-start" asChild>
+                         <Link href='/settings'><Settings className="mr-2 h-4 w-4" />Settings</Link>
+                       </Button>
                   </nav>
-                  <Button onClick={handleLogout} className="mt-4">
+                  <Button onClick={handleLogout} variant="outline" className="mt-4">
                     <LogOut className="mr-2 h-5 w-5" />
                     Logout
                   </Button>

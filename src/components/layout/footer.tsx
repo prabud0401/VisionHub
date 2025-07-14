@@ -6,12 +6,12 @@ export default function Footer() {
     <footer id="contact" className="w-full bg-card/80 backdrop-blur-sm border-t border-border/40 py-12">
       <div className="container mx-auto grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 text-sm">
         <div className="flex flex-col gap-4">
-           <Link href="/" className="flex items-center gap-2 font-headline text-xl font-bold">
+           <Link href="/" className="flex items-center gap-2 text-xl font-bold">
             <Bot className="h-8 w-8 text-primary" />
             <span>VisionHub</span>
           </Link>
           <p className="text-muted-foreground">
-            Create AI Art and turn your imaginations into reality with VisionHub's AI Art Generator.
+            The ultimate AI image generation platform for content creators.
           </p>
           <div className="flex gap-4 mt-2">
             <Link href="#" className="text-muted-foreground hover:text-primary"><Facebook size={20} /></Link>
@@ -26,23 +26,23 @@ export default function Footer() {
             <li><Link href="#about" className="text-muted-foreground hover:text-primary">About Us</Link></li>
             <li><Link href="#services" className="text-muted-foreground hover:text-primary">Services</Link></li>
             <li><Link href="#pricing" className="text-muted-foreground hover:text-primary">Pricing</Link></li>
-            <li><Link href="#gallery" className="text-muted-foreground hover:text-primary">Gallery</Link></li>
+            <li><Link href="#faq" className="text-muted-foreground hover:text-primary">FAQ</Link></li>
           </ul>
         </div>
         <div>
-          <h4 className="font-semibold mb-4">Knowledge</h4>
+          <h4 className="font-semibold mb-4">Resources</h4>
           <ul className="space-y-2">
             <li><Link href="#" className="text-muted-foreground hover:text-primary">Blog</Link></li>
-            <li><Link href="#faq" className="text-muted-foreground hover:text-primary">FAQ</Link></li>
+            <li><Link href="#" className="text-muted-foreground hover:text-primary">Documentation</Link></li>
             <li><Link href="#" className="text-muted-foreground hover:text-primary">Tutorials</Link></li>
           </ul>
         </div>
         <div>
-          <h4 className="font-semibold mb-4">Company</h4>
+          <h4 className="font-semibold mb-4">Legal</h4>
           <ul className="space-y-2">
             <li><Link href="#" className="text-muted-foreground hover:text-primary">Terms of Service</Link></li>
             <li><Link href="#" className="text-muted-foreground hover:text-primary">Privacy Policy</Link></li>
-            <li><Link href="#" className="text-muted-foreground hover:text-primary">Contact</Link></li>
+            <li><Link href="#" className="text-muted-foreground hover:text-primary">Contact Us</Link></li>
           </ul>
         </div>
       </div>
