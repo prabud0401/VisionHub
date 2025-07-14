@@ -1,10 +1,20 @@
 
 'use client';
 import Link from 'next/link';
-import { Bot, Menu } from 'lucide-react';
+import { Bot, Menu, LayoutDashboard } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Sheet, SheetContent, SheetTrigger } from '@/components/ui/sheet';
 import { useAuth } from '@/context/auth-context';
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuLabel,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from '@/components/ui/dropdown-menu';
+import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
+import { useRouter } from 'next/navigation';
 
 const navLinks = [
   { href: '/about', label: 'About' },
@@ -14,13 +24,19 @@ const navLinks = [
 ];
 
 export default function HeaderUnauthenticated() {
-  const { setAuthModalOpen } = useAuth();
+  const { user, setAuthModalOpen, signOut } = useAuth();
+  const router = useRouter();
+  
+  const handleLogout = async () => {
+    await signOut();
+    router.push('/');
+  };
 
   return (
     <>
       <header className="fixed top-0 left-0 z-50 w-full bg-background/80 backdrop-blur-sm">
         <div className="container mx-auto flex h-20 items-center justify-between px-4 md:px-6">
-          <Link href="/home" className="flex items-center gap-2 text-xl font-bold">
+          <Link href="/" className="flex items-center gap-2 text-xl font-bold">
             <Bot className="h-8 w-8 text-primary" />
             <span>VisionHub</span>
           </Link>
@@ -31,11 +47,49 @@ export default function HeaderUnauthenticated() {
               </Link>
             ))}
           </nav>
+
           <div className="hidden items-center gap-2 md:flex">
-            <Button variant="accent" onClick={() => setAuthModalOpen(true)}>
-              Get Started
-            </Button>
+            {user ? (
+              <>
+                <Button variant="outline" asChild>
+                    <Link href="/dashboard">
+                        <LayoutDashboard className="mr-2 h-4 w-4"/>
+                        Dashboard
+                    </Link>
+                </Button>
+                <DropdownMenu>
+                    <DropdownMenuTrigger asChild>
+                    <Button variant="ghost" className="relative h-10 w-10 rounded-full">
+                        <Avatar className="h-10 w-10 border-2 border-primary/50">
+                        <AvatarImage src={user.photoURL ?? ''} alt={user.displayName ?? 'User'} />
+                        <AvatarFallback>{user.displayName?.charAt(0).toUpperCase()}</AvatarFallback>
+                        </Avatar>
+                    </Button>
+                    </DropdownMenuTrigger>
+                    <DropdownMenuContent className="w-56" align="end" forceMount>
+                    <DropdownMenuLabel className="font-normal">
+                        <div className="flex flex-col space-y-1">
+                        <p className="text-sm font-medium leading-none">{user.displayName}</p>
+                        <p className="text-xs leading-none text-muted-foreground">{user.email}</p>
+                        </div>
+                    </DropdownMenuLabel>
+                    <DropdownMenuSeparator />
+                    <DropdownMenuItem onClick={() => router.push('/settings')}>
+                        Settings
+                    </DropdownMenuItem>
+                    <DropdownMenuItem onClick={handleLogout}>
+                        Log out
+                    </DropdownMenuItem>
+                    </DropdownMenuContent>
+                </DropdownMenu>
+              </>
+            ) : (
+              <Button variant="accent" onClick={() => setAuthModalOpen(true)}>
+                Get Started
+              </Button>
+            )}
           </div>
+          
           <div className="md:hidden">
             <Sheet>
               <SheetTrigger asChild>
@@ -46,7 +100,7 @@ export default function HeaderUnauthenticated() {
               </SheetTrigger>
               <SheetContent side="right">
                 <div className="flex flex-col gap-6 p-6">
-                  <Link href="/home" className="flex items-center gap-2 text-lg font-bold">
+                  <Link href="/" className="flex items-center gap-2 text-lg font-bold">
                     <Bot className="h-7 w-7 text-primary" />
                     <span>VisionHub</span>
                   </Link>
@@ -58,7 +112,13 @@ export default function HeaderUnauthenticated() {
                     ))}
                   </nav>
                   <div className="flex flex-col gap-2 mt-4">
-                     <Button variant="accent" onClick={() => setAuthModalOpen(true)}>Get Started</Button>
+                    {user ? (
+                        <Button variant="outline" asChild>
+                            <Link href="/dashboard">Dashboard</Link>
+                        </Button>
+                    ) : (
+                        <Button variant="accent" onClick={() => setAuthModalOpen(true)}>Get Started</Button>
+                    )}
                   </div>
                 </div>
               </SheetContent>

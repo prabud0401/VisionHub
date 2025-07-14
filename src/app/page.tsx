@@ -3,10 +3,18 @@
 
 import LandingPage from './(marketing)/home/page';
 import { useAuth } from '@/context/auth-context';
-import DashboardPage from './(app)/dashboard/page';
+import { useRouter } from 'next/navigation';
+import { useEffect } from 'react';
 
 export default function Home() {
   const { user, loading } = useAuth();
+  const router = useRouter();
+
+  useEffect(() => {
+    // This logic is handled by the main layout now.
+    // This page should primarily handle the landing content.
+  }, [user, loading, router]);
+
 
   if (loading) {
     return (
@@ -16,11 +24,7 @@ export default function Home() {
     );
   }
 
-  // This logic was causing issues. Reverting it.
-  // The user should be able to see marketing pages even if logged in.
-  // if (user) {
-  //   return <DashboardPage />;
-  // }
-  
+  // To prevent routing loops and ensure clarity, the root page now always shows the landing page.
+  // The header component will show the appropriate actions (Dashboard/Get Started) based on auth state.
   return <LandingPage />;
 }
