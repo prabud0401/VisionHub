@@ -19,10 +19,17 @@ import {
 } from '@/components/ui/dropdown-menu';
 import { cn } from '@/lib/utils';
 
-const navLinks = [
-  { href: '/dashboard', label: 'Dashboard', icon: <LayoutDashboard className="mr-2 h-4 w-4" /> },
-  { href: '/gallery', label: 'Gallery', icon: <ImageIcon className="mr-2 h-4 w-4" /> },
-  { href: '/background-remover', label: 'Image Upgrade', icon: <Scaling className="mr-2 h-4 w-4" /> },
+const appLinks = [
+  { href: '/dashboard', label: 'Dashboard' },
+  { href: '/gallery', label: 'Gallery' },
+  { href: '/background-remover', label: 'Image Upgrade' },
+];
+
+const marketingLinks = [
+  { href: '/about', label: 'About' },
+  { href: '/services', label: 'Services' },
+  { href: '/pricing', label: 'Pricing' },
+  { href: '/faq', label: 'FAQ' },
 ];
 
 export default function Header() {
@@ -48,7 +55,20 @@ export default function Header() {
             <span className="hidden sm:inline">VisionHub AI</span>
           </Link>
           <nav className="hidden items-center gap-1 text-sm font-medium md:flex">
-            {navLinks.map((link) => (
+             <DropdownMenu>
+              <DropdownMenuTrigger asChild>
+                <Button variant={appLinks.some(l => pathname.startsWith(l.href)) ? "secondary" : "ghost"}>App</Button>
+              </DropdownMenuTrigger>
+              <DropdownMenuContent>
+                {appLinks.map((link) => (
+                  <DropdownMenuItem key={link.href} onClick={() => router.push(link.href)}>
+                     {link.label}
+                  </DropdownMenuItem>
+                ))}
+              </DropdownMenuContent>
+            </DropdownMenu>
+
+            {marketingLinks.map((link) => (
               <Button 
                 variant={pathname.startsWith(link.href) ? "secondary" : "ghost"}
                 asChild
@@ -111,14 +131,14 @@ export default function Header() {
                     <span>VisionHub AI</span>
                   </Link>
                   <nav className="flex flex-col gap-4">
-                    {navLinks.map((link) => (
+                    {[...appLinks, ...marketingLinks].map((link) => (
                        <Button 
                          variant={pathname.startsWith(link.href) ? "secondary" : "ghost"}
                          className="justify-start"
                          asChild
                          key={link.href}
                        >
-                         <Link href={link.href}>{link.icon}{link.label}</Link>
+                         <Link href={link.href}>{link.label}</Link>
                        </Button>
                     ))}
                      <Button 
