@@ -9,21 +9,21 @@ const tools = [
   {
     title: 'Text-to-Image Generation',
     description: 'Transform your words into breathtaking visuals.',
-    image: 'https://cdn.web.imagine.art/imagine-frontend/assets/images/9903a45e-a612-4c25-829d-128a1a364132.jpeg',
+    image: 'https://firebasestorage.googleapis.com/v0/b/visionhub-ai-s813r.firebasestorage.app/o/generated-images%2F2ccd4f85-7fa4-468d-92ac-e80e41af5a39.png?alt=media',
     dataAiHint: 'abstract art colorful',
     link: '/services'
   },
   {
     title: 'Image Upgrade Suite',
     description: 'Upscale, outpaint, and remove backgrounds with ease.',
-    image: 'https://cdn.web.imagine.art/imagine-frontend/assets/images/a45a6e51-c0e4-411a-a035-7c3984e79782.jpeg',
+    image: 'https://firebasestorage.googleapis.com/v0/b/visionhub-ai-s813r.firebasestorage.app/o/generated-images%2F5dab8967-a114-4018-ae3e-adba8aa78de1.png?alt=media',
     dataAiHint: 'photo editing tools',
     link: '/services'
   },
   {
     title: 'Prompt Enhancer',
     description: 'Let our AI perfect your prompts for superior results.',
-    image: 'https://cdn.web.imagine.art/imagine-frontend/assets/images/6a147e40-887c-4a37-b5b1-d5867a57a922.jpeg',
+    image: 'https://firebasestorage.googleapis.com/v0/b/visionhub-ai-s813r.firebasestorage.app/o/generated-images%2Fbf6ab35f-9f35-4c21-a6e7-8dd307a5c82b.png?alt=media',
     dataAiHint: 'glowing brain idea',
     link: '/services'
   }
