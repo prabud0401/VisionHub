@@ -11,8 +11,14 @@ export default function HeroSection() {
   };
 
   return (
-    <section id="home" className="relative h-screen w-full flex items-center justify-center text-white">
-      <div className="absolute inset-0 bg-transparent" />
+    <section 
+      id="home" 
+      className="relative h-screen w-full flex items-center justify-center text-white bg-cover bg-center bg-no-repeat"
+      style={{
+        backgroundImage: "url('https://mir-s3-cdn-cf.behance.net/project_modules/fs/bb82b776060455.5c5e341a7bbaa.jpg')"
+      }}
+    >
+      <div className="absolute inset-0 bg-black/50" />
       <div className="relative z-10 container mx-auto px-4 text-center">
         <h1 className="text-4xl md:text-6xl font-bold font-headline mb-4">VisionHub AI Image Generator</h1>
         <p className="text-lg md:text-xl max-w-3xl mx-auto text-foreground/80 mb-8">

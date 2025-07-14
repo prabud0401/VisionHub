@@ -4,19 +4,16 @@
 
 body {
   font-family: Arial, Helvetica, sans-serif;
-  background-image: url('https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEg2B1xgtVifts7ePS1hwe_i-QzMtIrQWG0BAz9jxwLAci-4J7bCA0AOYOcpT-gWoibrFR26hmkYqe0n-D9uYhzu_MnxUqZmYL6ytYrjQYSADaGh4QJJ3-EF1mJIHVoeDK822Him1QrSHJPoQYxhKkKCU47PU6GNcgFrQHn_d9wmacZ8WUGcmd06A4Fzlg/s7000/AI-GENERATED-WALLPAPER-4K.webp');
-  background-attachment: fixed;
-  background-size: cover;
-  background-position: center;
+  background-color: hsl(var(--background));
 }
 
 @layer base {
   :root {
     --background: 259 39% 10%; /* Darker background for the new theme */
     --foreground: 0 0% 98%;
-    --card: 259 39% 15% / 0.8;
+    --card: 259 39% 15% / 0.9;
     --card-foreground: 0 0% 98%;
-    --popover: 259 39% 15% / 0.8;
+    --popover: 259 39% 15% / 0.9;
     --popover-foreground: 0 0% 98%;
     --primary: 257 100% 75%; /* Maintained violet */
     --primary-foreground: 259 39% 10%;
@@ -47,11 +44,11 @@ body {
     --sidebar-ring: 217.2 91.2% 59.8%;
   }
   .dark {
-    --background: 259 39% 10% / 0.5;
+    --background: 259 39% 10%;
     --foreground: 0 0% 98%;
-    --card: 259 39% 15% / 0.8;
+    --card: 259 39% 15% / 0.9;
     --card-foreground: 0 0% 98%;
-    --popover: 259 39% 15% / 0.8;
+    --popover: 259 39% 15% / 0.9;
     --popover-foreground: 0 0% 98%;
     --primary: 257 100% 75%;
     --primary-foreground: 259 39% 10%;
@@ -87,7 +84,7 @@ body {
     @apply border-border;
   }
   body {
-    @apply bg-transparent text-foreground;
+    @apply bg-background text-foreground;
   }
   html {
     scroll-behavior: smooth;
