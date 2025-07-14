@@ -151,8 +151,8 @@ export function DashboardClient() {
         onAccept={handleAcceptEnhancedPrompt}
       />
 
-      <div className="grid gap-8 lg:grid-cols-2">
-        <div className="lg:col-span-2">
+      <div className="grid gap-8 lg:grid-cols-5">
+        <div className="lg:col-span-3">
             <Form {...form}>
               <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
                  <Card>
@@ -309,7 +309,7 @@ export function DashboardClient() {
                 )}
                 {!isGenerating && !error && generatedImages && (
                   <div className="flex flex-col items-center gap-4 w-full">
-                    <div className="grid grid-cols-2 gap-4 w-full">
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 w-full">
                       {generatedImages.map((image) => (
                         <div key={image.id} className="relative aspect-square">
                           <Image
@@ -325,7 +325,7 @@ export function DashboardClient() {
                       ))}
                     </div>
                     {generatedImages.length > 0 && (
-                        <Button asChild variant="outline" className="w-full">
+                        <Button asChild variant="outline" className="w-full mt-4">
                           <a href={generatedImages[0].url} download={`visionhub-ai-${generatedImages[0].id}.png`}>
                             <Download className="mr-2 h-4 w-4" />
                             Download First Image
