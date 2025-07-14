@@ -47,14 +47,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     }
     const unsubscribe = onAuthStateChanged(auth, async (user) => {
       setUser(user);
-      if (user) {
-        await createUserProfile({
-          uid: user.uid,
-          email: user.email,
-          displayName: user.displayName,
-          photoURL: user.photoURL,
-        });
-      }
+      // No need to call createUserProfile here, it's handled on sign-in.
       setLoading(false);
     });
     return () => unsubscribe();
@@ -68,6 +61,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       const result = await signInWithPopup(auth, googleProvider);
       const user = result.user;
        if (user) {
+        // This is the correct place to ensure the profile is created/updated.
         await createUserProfile({
           uid: user.uid,
           email: user.email,
