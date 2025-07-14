@@ -13,6 +13,7 @@ import {z} from 'genkit';
 
 const GenerateImageInputSchema = z.object({
   prompt: z.string().describe('The text prompt to generate an image from.'),
+  aspectRatio: z.string().describe('The aspect ratio of the image to generate.'),
 });
 
 export type GenerateImageInput = z.infer<typeof GenerateImageInputSchema>;
@@ -34,9 +35,13 @@ const generateImageFlow = ai.defineFlow(
     outputSchema: GenerateImageOutputSchema,
   },
   async input => {
+    // In a real application, you would add logic here to handle aspect ratio
+    // and save the image to a persistent storage like Firebase Storage,
+    // then save the metadata to a database like Firestore.
+
     const {media} = await ai.generate({
       model: 'googleai/gemini-2.0-flash-preview-image-generation',
-      prompt: input.prompt,
+      prompt: `${input.prompt} --ar ${input.aspectRatio}`,
       config: {
         responseModalities: ['TEXT', 'IMAGE'],
       },
