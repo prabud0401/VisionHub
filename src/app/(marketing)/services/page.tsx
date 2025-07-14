@@ -21,7 +21,7 @@ const services = [
     title: "AI Image Upgrade Suite",
     description: "Refine and perfect your images with our advanced editing tools. Whether you need to isolate a subject, expand a scene, or improve quality, our AI-powered suite makes complex editing tasks effortless.",
     features: ["One-Click Background Removal", "AI Outpainting & Upscaling", "Resize to Any Aspect Ratio", "Preserves Image Quality"],
-    image: "https://placehold.co/800x600.png",
+    image: "https://storage.googleapis.com/visionhub-ai-s813r.appspot.com/generated-images/9b6b8014-9b2f-4886-a7a5-3645b31e9c2f.png",
     imageHint: "woman portrait clean",
   },
   {

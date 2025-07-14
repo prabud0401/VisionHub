@@ -8,6 +8,8 @@ import Testimonials from '@/components/landing/testimonials';
 import Link from 'next/link';
 import { Button } from '@/components/ui/button';
 import { ArrowRight, Brush, Gem, Sparkles } from 'lucide-react';
+import ToolsSuite from '@/components/landing/tools-suite';
+import SocialCta from '@/components/landing/social-cta';
 
 const CtaSection = () => (
     <section className="py-20 lg:py-24 bg-card/50">
@@ -43,9 +45,11 @@ export default function LandingPage() {
         <>
             <HeroSection />
             <Partners />
+            <ToolsSuite />
             <CtaSection />
             <Testimonials />
             <GalleryPreview />
+            <SocialCta />
         </>
     );
 }
