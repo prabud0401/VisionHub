@@ -38,6 +38,7 @@ export function DashboardClient() {
     resolver: zodResolver(formSchema),
     defaultValues: {
       prompt: '',
+      model: 'Gemini AI'
     },
   });
 
@@ -95,6 +96,7 @@ export function DashboardClient() {
                         </SelectTrigger>
                       </FormControl>
                       <SelectContent>
+                        <SelectItem value="Gemini AI">Gemini AI</SelectItem>
                         <SelectItem value="OpenAI DALL-E 3">OpenAI DALL-E 3</SelectItem>
                         <SelectItem value="Stability AI SDXL">Stability AI SDXL</SelectItem>
                         <SelectItem value="DeepAI Image Generation">DeepAI Image Generation</SelectItem>

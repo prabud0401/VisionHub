@@ -2,10 +2,10 @@
 import Image from 'next/image';
 
 const partners = [
+    { name: 'Gemini AI', logo: '/gemini.svg' },
     { name: 'OpenAI', logo: '/openai.svg' },
     { name: 'Stability AI', logo: '/stability-ai.svg' },
     { name: 'Midjourney', logo: '/midjourney.svg' },
-    { name: 'DeepAI', logo: '/deepai.svg' },
 ];
 
 const PartnerLogo = ({ name }: { name: string }) => (
@@ -23,10 +23,10 @@ export default function Partners() {
                    We partner with the best in the industry to bring you cutting-edge AI image generation technology.
                 </p>
                 <div className="flex justify-center items-center gap-8 md:gap-16 flex-wrap">
+                    <PartnerLogo name="Gemini AI" />
                     <PartnerLogo name="OpenAI" />
                     <PartnerLogo name="Stability AI" />
                     <PartnerLogo name="Midjourney" />
-                    <PartnerLogo name="DeepAI" />
                 </div>
             </div>
         </section>

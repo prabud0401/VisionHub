@@ -22,7 +22,7 @@ export default function ToolsSuite() {
           <p className="text-muted-foreground mb-8">
             Maintain uniformity in your storytelling with Character Consistency, which ensures all generated images consistently reflect your characters.
           </p>
-          <Button variant="accent">Start using OpenAI</Button>
+          <Button variant="accent">Start using Gemini</Button>
         </div>
       </div>
     </section>

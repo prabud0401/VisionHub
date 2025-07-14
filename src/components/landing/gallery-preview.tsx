@@ -2,13 +2,13 @@
 import Image from 'next/image';
 
 const galleryImages = [
-  { src: 'https://placehold.co/400x400.png', hint: 'robot portrait' },
-  { src: 'https://placehold.co/400x400.png', hint: 'underwater city' },
-  { src: 'https://placehold.co/400x400.png', hint: 'glowing forest' },
-  { src: 'https://placehold.co/400x400.png', hint: 'steampunk vehicle' },
-  { src: 'https://placehold.co/400x400.png', hint: 'alien wildlife' },
-  { src: 'https://placehold.co/400x400.png', hint: 'crystal cave' },
-  { src: 'https://placehold.co/400x400.png', hint: 'magical castle' },
+  { src: 'https://placehold.co/400x400.png', hint: 'Sigiriya rock' },
+  { src: 'https://placehold.co/400x400.png', hint: 'Galle fort' },
+  { src: 'https://placehold.co/400x400.png', hint: 'tea plantation' },
+  { src: 'https://placehold.co/400x400.png', hint: 'Kandy temple' },
+  { src: 'https://placehold.co/400x400.png', hint: 'Sri Lankan wildlife' },
+  { src: 'https://placehold.co/400x400.png', hint: 'traditional dance' },
+  { src: 'https://placehold.co/400x400.png', hint: 'Sri Lankan beach' },
 ];
 
 const MarqueeRow = ({ images, reverse = false }: { images: typeof galleryImages, reverse?: boolean }) => (

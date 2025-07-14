@@ -13,9 +13,9 @@ const images = [
 ];
 
 const dataAiHints = [
-  'fantasy landscape',
-  'futuristic portrait',
-  'abstract art',
+  'Sigiriya fortress',
+  'coastal train',
+  'tea plantation',
 ]
 
 export default function HeroSection() {
