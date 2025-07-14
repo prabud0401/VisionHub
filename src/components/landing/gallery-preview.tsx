@@ -2,13 +2,13 @@
 import Image from 'next/image';
 
 const galleryImages = [
-  { src: 'https://cdn.web.imagine.art/imagine-frontend/assets/images/ai-image-generator-hero-image.png', hint: 'Sigiriya rock' },
-  { src: 'https://cdn.web.imagine.art/imagine-frontend/assets/images/ai-image-generator-hero-image.png', hint: 'Galle fort' },
-  { src: 'https://cdn.web.imagine.art/imagine-frontend/assets/images/ai-image-generator-hero-image.png', hint: 'tea plantation' },
-  { src: 'https://cdn.web.imagine.art/imagine-frontend/assets/images/ai-image-generator-hero-image.png', hint: 'Kandy temple' },
-  { src: 'https://cdn.web.imagine.art/imagine-frontend/assets/images/ai-image-generator-hero-image.png', hint: 'Sri Lankan wildlife' },
-  { src: 'https://cdn.web.imagine.art/imagine-frontend/assets/images/ai-image-generator-hero-image.png', hint: 'traditional dance' },
-  { src: 'https://cdn.web.imagine.art/imagine-frontend/assets/images/ai-image-generator-hero-image.png', hint: 'Sri Lankan beach' },
+  { src: 'https://placehold.co/400x400.png', hint: 'Sigiriya rock' },
+  { src: 'https://placehold.co/400x400.png', hint: 'Galle fort' },
+  { src: 'https://placehold.co/400x400.png', hint: 'tea plantation' },
+  { src: 'https://placehold.co/400x400.png', hint: 'Kandy temple' },
+  { src: 'https://placehold.co/400x400.png', hint: 'Sri Lankan wildlife' },
+  { src: 'https://placehold.co/400x400.png', hint: 'traditional dance' },
+  { src: 'https://placehold.co/400x400.png', hint: 'Sri Lankan beach' },
 ];
 
 const MarqueeRow = ({ images, reverse = false }: { images: typeof galleryImages, reverse?: boolean }) => (
