@@ -2,13 +2,13 @@
 import Image from 'next/image';
 
 const galleryImages = [
-  { src: 'https://placehold.co/400x400.png', hint: 'Sigiriya rock' },
-  { src: 'https://placehold.co/400x400.png', hint: 'Galle fort' },
-  { src: 'https://placehold.co/400x400.png', hint: 'tea plantation' },
-  { src: 'https://placehold.co/400x400.png', hint: 'Kandy temple' },
-  { src: 'https://placehold.co/400x400.png', hint: 'Sri Lankan wildlife' },
-  { src: 'https://placehold.co/400x400.png', hint: 'traditional dance' },
-  { src: 'https://placehold.co/400x400.png', hint: 'Sri Lankan beach' },
+  { src: 'https://cdn.web.imagine.art/imagine-frontend/assets/images/ai-image-generator-hero-image.png' },
+  { src: 'https://cdn.web.imagine.art/imagine-frontend/assets/images/ai-image-generator-hero-image.png' },
+  { src: 'https://cdn.web.imagine.art/imagine-frontend/assets/images/ai-image-generator-hero-image.png' },
+  { src: 'https://cdn.web.imagine.art/imagine-frontend/assets/images/ai-image-generator-hero-image.png' },
+  { src: 'https://cdn.web.imagine.art/imagine-frontend/assets/images/ai-image-generator-hero-image.png' },
+  { src: 'https://cdn.web.imagine.art/imagine-frontend/assets/images/ai-image-generator-hero-image.png' },
+  { src: 'https://cdn.web.imagine.art/imagine-frontend/assets/images/ai-image-generator-hero-image.png' },
 ];
 
 const MarqueeRow = ({ images, reverse = false }: { images: typeof galleryImages, reverse?: boolean }) => (
@@ -18,10 +18,9 @@ const MarqueeRow = ({ images, reverse = false }: { images: typeof galleryImages,
         <div key={`marquee-${i}`} className="w-64 h-64 p-2">
            <Image
             src={img.src}
-            alt="Gallery preview image"
+            alt="AI generated art preview"
             width={400}
             height={400}
-            data-ai-hint={img.hint}
             className="w-full h-full object-cover rounded-lg transition-transform duration-300 hover:scale-105 hover:shadow-2xl hover:shadow-primary/20"
           />
         </div>
@@ -32,10 +31,9 @@ const MarqueeRow = ({ images, reverse = false }: { images: typeof galleryImages,
         <div key={`marquee-clone-${i}`} className="w-64 h-64 p-2">
            <Image
             src={img.src}
-            alt="Gallery preview image"
+            alt="AI generated art preview"
             width={400}
             height={400}
-            data-ai-hint={img.hint}
             className="w-full h-full object-cover rounded-lg transition-transform duration-300 hover:scale-105 hover:shadow-2xl hover:shadow-primary/20"
           />
         </div>
