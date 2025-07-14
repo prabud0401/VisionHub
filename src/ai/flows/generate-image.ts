@@ -31,6 +31,15 @@ export async function generateImages(input: GenerateImagesInput): Promise<Genera
   return generateImagesFlow(input);
 }
 
+// Map user-friendly names to actual model identifiers
+const modelIdMap: Record<string, string> = {
+  "Gemini AI": 'googleai/gemini-2.0-flash-preview-image-generation',
+  "OpenAI DALL-E 3": 'googleai/gemini-2.0-flash-preview-image-generation', // Placeholder, assuming Gemini for all for now
+  "Stability AI SDXL": 'googleai/gemini-2.0-flash-preview-image-generation', // Placeholder
+  "DeepAI Image Generation": 'googleai/gemini-2.0-flash-preview-image-generation', // Placeholder
+};
+
+
 const generateImagesFlow = ai.defineFlow(
   {
     name: 'generateImagesFlow',
@@ -38,9 +47,14 @@ const generateImagesFlow = ai.defineFlow(
     outputSchema: z.custom<GenerateImagesOutput>(),
   },
   async input => {
-    const generationTasks = input.models.map(async (model) => {
+    const generationTasks = input.models.map(async (modelName) => {
+      const modelId = modelIdMap[modelName];
+      if (!modelId) {
+        throw new Error(`Invalid model name provided: ${modelName}`);
+      }
+
       const {media} = await ai.generate({
-        model: 'googleai/gemini-2.0-flash-preview-image-generation',
+        model: modelId,
         prompt: `${input.prompt} --ar ${input.aspectRatio}`,
         config: {
           responseModalities: ['TEXT', 'IMAGE'],
@@ -48,7 +62,7 @@ const generateImagesFlow = ai.defineFlow(
       });
 
       if (!media?.url) {
-        throw new Error(`No image was generated for model ${model}.`);
+        throw new Error(`No image was generated for model ${modelName}.`);
       }
 
       const imageId = crypto.randomUUID();
@@ -62,7 +76,7 @@ const generateImagesFlow = ai.defineFlow(
         userId: input.userId,
         url: publicUrl,
         prompt: input.prompt,
-        model: model,
+        model: modelName,
         promptId: input.promptId,
         createdAt: new Date().toISOString(),
       };
