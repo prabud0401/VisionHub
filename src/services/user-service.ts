@@ -13,7 +13,10 @@ interface UserProfile {
 }
 
 export async function createUserProfile(userData: UserProfile): Promise<void> {
-  if (!firestore) throw new Error('Firestore is not initialized.');
+  if (!firestore) {
+    console.error('Firestore is not initialized. Cannot create user profile.');
+    return;
+  };
 
   const userRef = firestore.collection('users').doc(userData.uid);
   const doc = await userRef.get();
@@ -23,3 +26,7 @@ export async function createUserProfile(userData: UserProfile): Promise<void> {
       email: userData.email,
       displayName: userData.displayName,
       photoURL: userData.photoURL,
+      createdAt: new Date().toISOString(),
+    });
+  }
+}
