@@ -29,12 +29,14 @@ export default function RootLayout({
         <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet" />
       </head>
       <body className="font-body antialiased bg-background text-foreground">
-        <AuthProvider>
-          <div className="relative flex min-h-screen flex-col">
-            <main className="flex-1">{children}</main>
-          </div>
-          <Toaster />
-        </AuthProvider>
+        <div className="bg-background/80 backdrop-blur-sm">
+          <AuthProvider>
+            <div className="relative flex min-h-screen flex-col">
+              <main className="flex-1">{children}</main>
+            </div>
+            <Toaster />
+          </AuthProvider>
+        </div>
       </body>
     </html>
   );

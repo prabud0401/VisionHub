@@ -3,7 +3,7 @@ import { Button } from "../ui/button";
 
 export default function ToolsSuite() {
   return (
-    <section id="services" className="py-20 bg-card/80">
+    <section id="services" className="py-20 bg-card/80 backdrop-blur-sm rounded-lg">
       <div className="container mx-auto px-4 text-center">
         <h2 className="text-3xl font-bold font-headline mb-4">Our AI Tools Suite</h2>
         <p className="max-w-2xl mx-auto text-muted-foreground mb-12">

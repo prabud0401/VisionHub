@@ -12,14 +12,14 @@ const testimonials = [
 
 export default function Testimonials() {
   return (
-    <section id="about" className="py-20 bg-background">
+    <section id="about" className="py-20 bg-transparent">
       <div className="container mx-auto px-4 text-center">
         <h3 className="text-primary font-semibold">WALL OF LOVE ❤️</h3>
         <h2 className="text-3xl font-bold font-headline mt-2 mb-12">Join 1M+ users creating art using VisionHub</h2>
 
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
           {testimonials.map((testimonial, index) => (
-            <Card key={index} className="bg-card border-border/50 text-left">
+            <Card key={index} className="bg-card/50 backdrop-blur-sm border-border/50 text-left">
               <CardContent className="p-6">
                 <div className="flex items-center mb-4">
                   <Avatar>

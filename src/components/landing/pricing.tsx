@@ -27,7 +27,7 @@ export default function Pricing() {
   const currentPlans = isAnnual ? plans.annually : plans.monthly;
 
   return (
-    <section id="pricing" className="py-20 bg-card/80">
+    <section id="pricing" className="py-20 bg-card/80 backdrop-blur-sm rounded-lg">
       <div className="container mx-auto px-4 text-center">
         <h3 className="text-primary font-semibold">OUR PRICING</h3>
         <h2 className="text-3xl font-bold font-headline mt-2 mb-6">Get Started with Our App</h2>
@@ -41,7 +41,7 @@ export default function Pricing() {
         <div className="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-5xl mx-auto">
           {currentPlans.map((plan) => (
             <Card key={plan.name} className={cn(
-              "flex flex-col text-left transform hover:-translate-y-2 transition-transform duration-300",
+              "flex flex-col text-left transform hover:-translate-y-2 transition-transform duration-300 bg-card/50 backdrop-blur-sm",
               plan.highlighted ? "border-accent shadow-accent/20 shadow-lg" : ""
             )}>
               <CardHeader>

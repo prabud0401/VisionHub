@@ -16,7 +16,7 @@ const PartnerLogo = ({ name }: { name: string }) => (
 
 export default function Partners() {
     return (
-        <section className="py-20 bg-background">
+        <section className="py-20 bg-transparent">
             <div className="container mx-auto px-4 text-center">
                 <h2 className="pixelated-font text-3xl font-bold tracking-tighter mb-4">Our Partners</h2>
                 <p className="max-w-2xl mx-auto text-muted-foreground mb-12">

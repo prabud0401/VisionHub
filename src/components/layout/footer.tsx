@@ -3,7 +3,7 @@ import { Bot, Facebook, Twitter, Instagram, Linkedin } from "lucide-react";
 
 export default function Footer() {
   return (
-    <footer id="contact" className="w-full bg-card/80 border-t border-border/40 py-12">
+    <footer id="contact" className="w-full bg-card/80 backdrop-blur-sm border-t border-border/40 py-12">
       <div className="container mx-auto grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 text-sm">
         <div className="flex flex-col gap-4">
            <Link href="/" className="flex items-center gap-2 font-headline text-xl font-bold">

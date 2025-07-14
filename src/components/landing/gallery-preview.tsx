@@ -46,7 +46,7 @@ const MarqueeRow = ({ images, reverse = false }: { images: typeof galleryImages,
 
 export default function GalleryPreview() {
   return (
-    <section id="gallery" className="py-20 bg-background overflow-hidden">
+    <section id="gallery" className="py-20 bg-transparent overflow-hidden">
       <div className="text-center mb-12">
         <h2 className="pixelated-font text-3xl font-bold tracking-tighter">Platform Gallery</h2>
       </div>
