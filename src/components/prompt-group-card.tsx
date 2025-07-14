@@ -1,7 +1,7 @@
 'use client';
 
 import Image from 'next/image';
-import { Download, Eye, Images, Trash2 } from 'lucide-react';
+import { Download, Eye, Images, Trash2, Wand2 } from 'lucide-react';
 import type { GeneratedImage } from '@/lib/types';
 import { Card, CardContent, CardFooter } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -18,9 +18,10 @@ interface PromptGroupCardProps {
   group: PromptGroup;
   onView: () => void;
   onDelete: () => void;
+  onUpgrade: () => void;
 }
 
-export function PromptGroupCard({ group, onView, onDelete }: PromptGroupCardProps) {
+export function PromptGroupCard({ group, onView, onDelete, onUpgrade }: PromptGroupCardProps) {
   const handleDelete = (e: React.MouseEvent) => {
     e.stopPropagation();
     onDelete();
@@ -29,6 +30,11 @@ export function PromptGroupCard({ group, onView, onDelete }: PromptGroupCardProp
   const handleView = (e: React.MouseEvent) => {
     e.stopPropagation();
     onView();
+  }
+
+  const handleUpgrade = (e: React.MouseEvent) => {
+    e.stopPropagation();
+    onUpgrade();
   }
 
   return (
@@ -50,6 +56,9 @@ export function PromptGroupCard({ group, onView, onDelete }: PromptGroupCardProp
           <div className="absolute inset-0 bg-black/50 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center gap-2 p-4">
             <Button size="icon" variant="secondary" onClick={handleView} aria-label="View Image Group">
               <Eye className="h-5 w-5" />
+            </Button>
+             <Button size="icon" variant="secondary" onClick={handleUpgrade} aria-label="Upgrade Image">
+              <Wand2 className="h-5 w-5" />
             </Button>
             <Button size="icon" variant="destructive" onClick={handleDelete} aria-label="Delete Image Group">
               <Trash2 className="h-5 w-5" />

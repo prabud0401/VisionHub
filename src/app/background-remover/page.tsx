@@ -1,23 +1,23 @@
-import { BackgroundRemoverClient } from '@/components/background-remover-client';
+import { ImageUpgradeClient } from '@/components/image-upgrade-client';
 import { Metadata } from 'next';
 
 export const metadata: Metadata = {
-  title: 'Background Remover | VisionHub AI',
-  description: 'Remove backgrounds from your images with one click.',
+  title: 'Image Upgrade | VisionHub AI',
+  description: 'Upscale, resize, and remove backgrounds from your images with AI.',
 };
 
-export default function BackgroundRemoverPage() {
+export default function ImageUpgradePage() {
   return (
     <div className="container mx-auto max-w-5xl py-12 px-4">
       <div className="text-center mb-12">
         <h1 className="font-headline text-4xl font-bold tracking-tight lg:text-5xl">
-          AI Background Remover
+          AI Image Upgrade Suite
         </h1>
         <p className="mt-4 text-lg text-muted-foreground">
-          Upload an image and our AI will automatically remove the background for you.
+          Upscale, resize, and remove backgrounds with the power of AI.
         </p>
       </div>
-      <BackgroundRemoverClient />
+      <ImageUpgradeClient />
     </div>
   );
 }

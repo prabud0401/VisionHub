@@ -2,13 +2,14 @@
 
 import { useState, useEffect } from 'react';
 import Image from 'next/image';
+import { useRouter } from 'next/navigation';
 import { format } from 'date-fns';
 import { useAuth } from '@/context/auth-context';
 import type { GeneratedImage } from '@/lib/types';
 import { PromptGroupCard } from './prompt-group-card';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from '@/components/ui/dialog';
 import { Button } from './ui/button';
-import { Download, Loader2, Trash2 } from 'lucide-react';
+import { Download, Loader2, Trash2, Wand2 } from 'lucide-react';
 import { getFirestore, collection, query, where, getDocs, deleteDoc, doc, writeBatch } from 'firebase/firestore';
 import firebaseApp from '@/lib/firebase-config';
 import {
@@ -21,6 +22,7 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
 } from "@/components/ui/alert-dialog"
+import { useLocalStorage } from '@/hooks/use-local-storage';
 
 interface PromptGroup {
   promptId: string;
@@ -36,6 +38,26 @@ export function GalleryClient() {
   const [groupToDelete, setGroupToDelete] = useState<PromptGroup | null>(null);
   const [isLoading, setIsLoading] = useState(true);
   const { user } = useAuth();
+  const router = useRouter();
+  const [, setImageForUpgrade] = useLocalStorage<string | null>('imageForUpgrade', null);
+
+
+  const handleUpgradeImage = async (imageUrl: string) => {
+    try {
+      // Fetch the image and convert it to a data URI
+      const response = await fetch(imageUrl);
+      const blob = await response.blob();
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        const dataUri = reader.result as string;
+        setImageForUpgrade(dataUri);
+        router.push('/background-remover');
+      };
+      reader.readAsDataURL(blob);
+    } catch (error) {
+      console.error("Failed to process image for upgrade:", error);
+    }
+  };
 
   useEffect(() => {
     async function fetchImages() {
@@ -141,6 +163,7 @@ export function GalleryClient() {
             group={group}
             onView={() => handleSelectGroup(group)}
             onDelete={() => confirmDeleteGroup(group)}
+            onUpgrade={() => handleUpgradeImage(group.coverImage)}
           />
         ))}
       </div>
@@ -169,12 +192,18 @@ export function GalleryClient() {
                                 {image.model}
                             </div>
                         </div>
-                        <Button asChild variant="secondary" size="sm">
-                            <a href={image.url} download={`visionhub-ai-${image.id}.png`}>
-                                <Download className="mr-2 h-4 w-4" />
-                                Download
-                            </a>
-                        </Button>
+                         <div className="grid grid-cols-2 gap-2">
+                           <Button asChild variant="secondary" size="sm">
+                              <a href={image.url} download={`visionhub-ai-${image.id}.png`}>
+                                  <Download className="mr-2 h-4 w-4" />
+                                  Download
+                              </a>
+                           </Button>
+                           <Button variant="outline" size="sm" onClick={() => handleUpgradeImage(image.url)}>
+                                <Wand2 className="mr-2 h-4 w-4" />
+                                Upgrade
+                           </Button>
+                        </div>
                     </div>
                 ))}
               </div>
