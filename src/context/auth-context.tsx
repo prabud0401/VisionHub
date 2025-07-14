@@ -36,6 +36,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     const unsubscribe = onAuthStateChanged(auth, (user) => {
       setUser(user);
       if (user) {
+        // This is now a server action call
         createUserProfile({
           uid: user.uid,
           email: user.email,
@@ -58,6 +59,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       const result = await signInWithPopup(auth, googleProvider);
       const user = result.user;
        if (user) {
+        // This is now a server action call
         await createUserProfile({
           uid: user.uid,
           email: user.email,

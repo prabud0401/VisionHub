@@ -1,8 +1,6 @@
-import { firestore } from '@/lib/firebase-admin';
+'use server';
 
-if (!firestore) {
-  console.warn('Firestore is not initialized. User service will not work.');
-}
+import { firestore } from '@/lib/firebase-admin';
 
 interface UserProfile {
     uid: string;
@@ -18,15 +16,21 @@ export async function createUserProfile(userData: UserProfile): Promise<void> {
     return;
   };
 
-  const userRef = firestore.collection('users').doc(userData.uid);
-  const doc = await userRef.get();
-
-  if (!doc.exists) {
-    await userRef.set({
-      email: userData.email,
-      displayName: userData.displayName,
-      photoURL: userData.photoURL,
-      createdAt: new Date().toISOString(),
-    });
+  try {
+    const userRef = firestore.collection('users').doc(userData.uid);
+    const doc = await userRef.get();
+  
+    if (!doc.exists) {
+      await userRef.set({
+        email: userData.email,
+        displayName: userData.displayName,
+        photoURL: userData.photoURL,
+        createdAt: new Date().toISOString(),
+      });
+    }
+  } catch (error) {
+    console.error("Error in createUserProfile: ", error);
+    // Depending on the use case, you might want to throw the error
+    // so the client can handle it.
   }
 }

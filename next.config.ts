@@ -34,7 +34,17 @@ const nextConfig: NextConfig = {
         port: '',
         pathname: '/**',
       },
+      {
+        protocol: 'https',
+        hostname: 'storage.googleapis.com',
+        port: '',
+        pathname: '/**',
+      }
     ],
+  },
+  webpack(config) {
+    config.experiments = { ...config.experiments, asyncWebAssembly: true };
+    return config;
   },
 };
 
