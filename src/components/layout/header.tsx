@@ -17,19 +17,11 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
-import { cn } from '@/lib/utils';
 
-const appLinks = [
-  { href: '/dashboard', label: 'Dashboard' },
-  { href: '/gallery', label: 'Gallery' },
-  { href: '/background-remover', label: 'Image Upgrade' },
-];
-
-const marketingLinks = [
-  { href: '/about', label: 'About' },
-  { href: '/services', label: 'Services' },
-  { href: '/pricing', label: 'Pricing' },
-  { href: '/faq', label: 'FAQ' },
+const navLinks = [
+  { href: '/dashboard', label: 'Dashboard', icon: <LayoutDashboard /> },
+  { href: '/gallery', label: 'Gallery', icon: <ImageIcon /> },
+  { href: '/background-remover', label: 'Image Upgrade', icon: <Scaling /> },
 ];
 
 export default function Header() {
@@ -50,30 +42,16 @@ export default function Header() {
     <header className="fixed top-0 left-0 z-50 w-full bg-background/80 backdrop-blur-sm border-b border-border/40">
       <div className="container mx-auto flex h-20 items-center justify-between px-4">
         <div className="flex items-center gap-8">
-          <Link href="/" className="flex items-center gap-2 text-xl font-bold">
+          <Link href="/dashboard" className="flex items-center gap-2 text-xl font-bold">
             <Bot className="h-8 w-8 text-primary" />
             <span className="hidden sm:inline">VisionHub AI</span>
           </Link>
-          <nav className="hidden items-center gap-1 text-sm font-medium md:flex">
-             <DropdownMenu>
-              <DropdownMenuTrigger asChild>
-                <Button variant={appLinks.some(l => pathname.startsWith(l.href)) ? "secondary" : "ghost"}>App</Button>
-              </DropdownMenuTrigger>
-              <DropdownMenuContent>
-                {appLinks.map((link) => (
-                  <DropdownMenuItem key={link.href} onClick={() => router.push(link.href)}>
-                     {link.label}
-                  </DropdownMenuItem>
-                ))}
-              </DropdownMenuContent>
-            </DropdownMenu>
-
-            {marketingLinks.map((link) => (
+          <nav className="hidden items-center gap-2 text-sm font-medium md:flex">
+            {navLinks.map((link) => (
               <Button 
                 variant={pathname.startsWith(link.href) ? "secondary" : "ghost"}
                 asChild
                 key={link.href}
-                className={cn("transition-colors", !pathname.startsWith(link.href) && "text-muted-foreground")}
               >
                   <Link href={link.href}>{link.label}</Link>
               </Button>
@@ -126,12 +104,12 @@ export default function Header() {
               </SheetTrigger>
               <SheetContent side="right">
                 <div className="flex flex-col gap-6 p-6">
-                  <Link href="/" className="flex items-center gap-2 text-lg font-bold">
+                  <Link href="/dashboard" className="flex items-center gap-2 text-lg font-bold">
                     <Bot className="h-7 w-7 text-primary" />
                     <span>VisionHub AI</span>
                   </Link>
                   <nav className="flex flex-col gap-4">
-                    {[...appLinks, ...marketingLinks].map((link) => (
+                    {navLinks.map((link) => (
                        <Button 
                          variant={pathname.startsWith(link.href) ? "secondary" : "ghost"}
                          className="justify-start"
