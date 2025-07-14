@@ -8,7 +8,7 @@ if (!admin.apps.length) {
   if (serviceAccount) {
     admin.initializeApp({
       credential: admin.credential.cert(serviceAccount),
-      storageBucket: process.env.NEXT_PUBLIC_FIREBASE_STORAGE_BUCKET,
+      storageBucket: process.env.https://mir-s3-cdn-cf.behance.net/project_modules/fs/bb82b776060455.5c5e341a7bbaa.jpg,
     });
   } else {
     console.warn(
