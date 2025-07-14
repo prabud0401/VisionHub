@@ -42,7 +42,7 @@ export default function AboutPage() {
           <div className="flex justify-center">
             <div className="relative w-80 h-80 rounded-lg overflow-hidden shadow-xl">
                  <Image
-                    src="https://placehold.co/800x800.png"
+                    src="https://cdn.web.imagine.art/imagine-frontend/assets/images/456d0d21-f2cb-4a81-a675-01e51351152a.jpeg"
                     data-ai-hint="abstract goal target"
                     alt="Abstract representation of a target"
                     layout="fill"
@@ -56,7 +56,7 @@ export default function AboutPage() {
            <div className="flex justify-center md:order-2">
              <div className="relative w-80 h-80 rounded-lg overflow-hidden shadow-xl">
                  <Image
-                    src="https://placehold.co/800x800.png"
+                    src="https://cdn.web.imagine.art/imagine-frontend/assets/images/33423bdf-22d5-450f-9694-0f04b281f6e2.jpeg"
                     data-ai-hint="diverse team technology"
                     alt="Abstract representation of a diverse team"
                     layout="fill"

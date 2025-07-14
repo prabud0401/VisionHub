@@ -9,21 +9,21 @@ const tools = [
   {
     title: 'Text-to-Image Generation',
     description: 'Transform your words into breathtaking visuals.',
-    image: 'https://placehold.co/600x400.png',
+    image: 'https://cdn.web.imagine.art/imagine-frontend/assets/images/9903a45e-a612-4c25-829d-128a1a364132.jpeg',
     dataAiHint: 'abstract art colorful',
     link: '/services'
   },
   {
     title: 'Image Upgrade Suite',
     description: 'Upscale, outpaint, and remove backgrounds with ease.',
-    image: 'https://placehold.co/600x400.png',
+    image: 'https://cdn.web.imagine.art/imagine-frontend/assets/images/a45a6e51-c0e4-411a-a035-7c3984e79782.jpeg',
     dataAiHint: 'photo editing tools',
     link: '/services'
   },
   {
     title: 'Prompt Enhancer',
     description: 'Let our AI perfect your prompts for superior results.',
-    image: 'https://placehold.co/600x400.png',
+    image: 'https://cdn.web.imagine.art/imagine-frontend/assets/images/6a147e40-887c-4a37-b5b1-d5867a57a922.jpeg',
     dataAiHint: 'glowing brain idea',
     link: '/services'
   }
@@ -54,7 +54,7 @@ export default function ToolsSuite() {
                     />
                   </div>
                 </CardHeader>
-                <CardContent className="flex flex-col flex-grow">
+                <CardContent className="flex flex-col flex-grow p-6">
                   <CardTitle className="text-xl mb-2">{tool.title}</CardTitle>
                   <CardDescription className="flex-grow">{tool.description}</CardDescription>
                   <div className="mt-4 flex items-center text-primary font-semibold">

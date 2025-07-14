@@ -11,9 +11,6 @@ export default function HeroSection() {
   const router = useRouter();
 
   const handleCreate = () => {
-    // For unauthenticated users, this opens the modal.
-    // A logged-in user shouldn't see this page, but if they do,
-    // this would take them to the dashboard.
     setAuthModalOpen(true);
   };
 
@@ -40,7 +37,7 @@ export default function HeroSection() {
             readOnly
           />
           <Button variant="accent" size="lg" onClick={handleCreate}>
-            <span className="hidden sm:inline">Generate</span>
+            <span className="hidden sm:inline">Start Creating</span>
             <ArrowRight className="sm:ml-2" />
           </Button>
         </div>

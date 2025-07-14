@@ -28,14 +28,14 @@ const services = [
     title: "Prompt Enhancer",
     description: "Unlock the full potential of generative AI with better prompts. Our intelligent Prompt Enhancer analyzes your initial idea and enriches it with descriptive details, styles, and keywords for more accurate and creative results.",
     features: ["AI-Powered Suggestions", "Visual & Stylistic Enrichment", "Learn Prompt Engineering", "Integrated with Generator"],
-    image: "https://placehold.co/800x600.png",
+    image: "https://cdn.web.imagine.art/imagine-frontend/assets/images/64f15f69-7253-46a4-966a-7434311855e9.jpeg",
     imageHint: "futuristic city bright",
   },
   {
     title: "Image-to-Prompt Analysis",
     description: "Ever wonder what prompt could create a specific image? Upload any picture, and our AI will reverse-engineer it, generating a detailed text prompt that captures its essence, style, and composition.",
     features: ["Deconstruct Any Image Style", "Inspiration for New Creations", "Learn from Existing Art", "Copy & Paste to Generate"],
-    image: "https://placehold.co/800x600.png",
+    image: "https://cdn.web.imagine.art/imagine-frontend/assets/images/03b13735-a7b7-4e3c-a99f-0746654497a7.jpeg",
     imageHint: "fantasy castle landscape",
   },
 ];
