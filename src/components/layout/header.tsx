@@ -22,6 +22,7 @@ const navLinks = [
   { href: '/dashboard', label: 'Dashboard' },
   { href: '/gallery', label: 'Gallery' },
   { href: '/background-remover', label: 'Background Remover' },
+  { href: '/settings', label: 'Settings' },
 ];
 
 export default function Header() {
@@ -51,13 +52,13 @@ export default function Header() {
   };
 
   return (
-    <header className="fixed top-4 left-1/2 z-50 w-[calc(100%-2rem)] max-w-5xl -translate-x-1/2">
+    <header className="fixed top-4 left-1/2 z-50 w-[calc(100%-2rem)] max-w-6xl -translate-x-1/2">
       <div className="flex h-16 items-center justify-between rounded-full border bg-background/80 px-4 shadow-lg backdrop-blur-sm md:px-6">
         <Link href="/dashboard" className="flex items-center gap-2 font-headline text-lg font-bold">
           <Bot className="h-7 w-7 text-primary" />
           <span className="hidden sm:inline">VisionHub AI</span>
         </Link>
-        <nav className="hidden items-center gap-6 text-sm font-medium md:flex">
+        <nav className="hidden items-center gap-2 text-sm font-medium md:flex">
           {navLinks.map((link) => (
             <Button variant="ghost" asChild key={link.href}>
                 <Link href={link.href}>{link.label}</Link>
@@ -87,11 +88,7 @@ export default function Header() {
                   <LayoutDashboard className="mr-2 h-4 w-4" />
                   <span>Dashboard</span>
                 </DropdownMenuItem>
-                <DropdownMenuItem>
-                  <User className="mr-2 h-4 w-4" />
-                  <span>Profile</span>
-                </DropdownMenuItem>
-                <DropdownMenuItem>
+                <DropdownMenuItem onClick={() => router.push('/settings')}>
                   <Settings className="mr-2 h-4 w-4" />
                   <span>Settings</span>
                 </DropdownMenuItem>
