@@ -1,3 +1,4 @@
+
 'use client';
 
 import { useState, useRef } from 'react';
@@ -24,6 +25,7 @@ import { cn } from '@/lib/utils';
 import { ToggleGroup, ToggleGroupItem } from './ui/toggle-group';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from './ui/select';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import { VerifyEmailCard } from './verify-email-card';
 
 const models = [
   "Gemini AI",
@@ -63,7 +65,7 @@ export function DashboardClient() {
   const fileInputRef = useRef<HTMLInputElement>(null);
   
   const { toast } = useToast();
-  const { user } = useAuth();
+  const { user, sendVerificationEmail } = useAuth();
 
 
   const form = useForm<FormValues>({
@@ -140,6 +142,15 @@ export function DashboardClient() {
       return;
     }
 
+    if (!user.emailVerified) {
+      toast({
+        variant: 'destructive',
+        title: 'Verification Required',
+        description: 'Please verify your email before generating images.',
+      });
+      return;
+    }
+
     setIsGenerating(true);
     setError(null);
     setGeneratedImages(null);
@@ -173,6 +184,10 @@ export function DashboardClient() {
       setIsGenerating(false);
       setProgressState('idle');
     }
+  }
+
+  if (user && !user.emailVerified) {
+    return <VerifyEmailCard userEmail={user.email} onResend={sendVerificationEmail} />;
   }
 
   return (

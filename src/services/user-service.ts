@@ -1,3 +1,4 @@
+
 'use server';
 
 import { firestore } from '@/lib/firebase-admin';
@@ -7,6 +8,7 @@ interface UserProfile {
     email: string | null;
     displayName: string | null;
     photoURL: string | null;
+    emailVerified: boolean;
     createdAt?: string;
 }
 
@@ -25,8 +27,13 @@ export async function createUserProfile(userData: UserProfile): Promise<void> {
         email: userData.email,
         displayName: userData.displayName,
         photoURL: userData.photoURL,
+        emailVerified: userData.emailVerified,
         createdAt: new Date().toISOString(),
       });
+    } else {
+       await userRef.update({
+         emailVerified: userData.emailVerified
+       });
     }
   } catch (error) {
     console.error("Error in createUserProfile: ", error);
