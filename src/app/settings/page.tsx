@@ -1,18 +1,33 @@
 'use client';
 
 import { useState } from 'react';
-import { Metadata } from 'next';
 import { useAuth } from '@/context/auth-context';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
-import { KeyRound, User, Palette, Shield } from 'lucide-react';
+import { KeyRound, User, Palette, Shield, CreditCard } from 'lucide-react';
 import { UpdatePasswordModal } from '@/components/update-password-modal';
+import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '@/components/ui/accordion';
+import { Input } from '@/components/ui/input';
+import { Label } from '@/components/ui/label';
 
 // export const metadata: Metadata = { // Metadata must be defined in a server component
 //   title: 'Settings | VisionHub AI',
 //   description: 'Manage your account settings.',
 // };
+
+const GooglePayIcon = () => (
+    <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6 mr-2" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+      <path d="M12 12m-8 0a8 8 0 1 0 16 0a8 8 0 1 0 -16 0" />
+      <path d="M6 12l2 -2" />
+      <path d="M8 12l2 2" />
+      <path d="M12 8l2 2" />
+      <path d="M12 14l2 -2" />
+      <path d="M14 12l2 -2" />
+      <path d="M16 12l2 2" />
+    </svg>
+);
+
 
 export default function SettingsPage() {
   const { user } = useAuth();
@@ -83,6 +98,52 @@ export default function SettingsPage() {
                             Change Password
                         </Button>
                     </div>
+                </CardContent>
+            </Card>
+
+            <Card className="md:col-span-2">
+                <CardHeader>
+                    <CardTitle className="flex items-center gap-2"><CreditCard /> Payment & Billing</CardTitle>
+                    <CardDescription>Manage your payment methods and view your billing history. This is a visual placeholder and is not functional.</CardDescription>
+                </CardHeader>
+                <CardContent>
+                    <Accordion type="single" collapsible className="w-full">
+                        <AccordionItem value="item-1">
+                            <AccordionTrigger>Add Payment Method</AccordionTrigger>
+                            <AccordionContent className="space-y-6 pt-4">
+                                <Button variant="outline" className="w-full justify-start text-lg p-6">
+                                    <GooglePayIcon /> Link Google Pay
+                                </Button>
+                                <div className="relative">
+                                    <div className="absolute inset-0 flex items-center">
+                                        <span className="w-full border-t" />
+                                    </div>
+                                    <div className="relative flex justify-center text-xs uppercase">
+                                        <span className="bg-card px-2 text-muted-foreground">
+                                        Or add a card
+                                        </span>
+                                    </div>
+                                </div>
+                                <div className="space-y-4">
+                                    <div className="space-y-2">
+                                        <Label htmlFor="card-number">Card Number</Label>
+                                        <Input id="card-number" placeholder="•••• •••• •••• ••••" disabled />
+                                    </div>
+                                    <div className="grid grid-cols-2 gap-4">
+                                        <div className="space-y-2">
+                                            <Label htmlFor="expiry">Expires</Label>
+                                            <Input id="expiry" placeholder="MM / YY" disabled />
+                                        </div>
+                                        <div className="space-y-2">
+                                            <Label htmlFor="cvc">CVC</Label>
+                                            <Input id="cvc" placeholder="•••" disabled />
+                                        </div>
+                                    </div>
+                                    <Button className="w-full" disabled>Save Card</Button>
+                                </div>
+                            </AccordionContent>
+                        </AccordionItem>
+                    </Accordion>
                 </CardContent>
             </Card>
 
