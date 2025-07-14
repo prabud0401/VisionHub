@@ -1,7 +1,6 @@
 
 'use client';
 
-import LandingPage from './(marketing)/home/page';
 import { useAuth } from '@/context/auth-context';
 import { useRouter } from 'next/navigation';
 import { useEffect } from 'react';
@@ -27,5 +26,5 @@ export default function Home() {
 
   // If there's no user, show the landing page.
   // The redirect for authenticated users is handled in the useEffect.
-  return <LandingPage />;
+  return null;
 }
