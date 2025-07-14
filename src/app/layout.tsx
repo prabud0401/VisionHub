@@ -2,6 +2,7 @@ import type { Metadata } from 'next';
 import './globals.css';
 import { Toaster } from '@/components/ui/toaster';
 import { AuthProvider } from '@/context/auth-context';
+import Header from '@/components/layout/header';
 
 export const metadata: Metadata = {
   title: 'VisionHub AI',
@@ -31,7 +32,8 @@ export default function RootLayout({
       <body className="font-body antialiased bg-background text-foreground">
         <div className="bg-background/80 backdrop-blur-sm">
           <AuthProvider>
-            <div className="relative flex min-h-screen flex-col">
+            <div className="relative flex min-h-screen flex-col pt-24">
+              <Header />
               <main className="flex-1">{children}</main>
             </div>
             <Toaster />
