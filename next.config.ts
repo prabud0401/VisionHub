@@ -9,6 +9,10 @@ const nextConfig: NextConfig = {
     ignoreDuringBuilds: true,
   },
   images: {
+    domains: [
+      "firebasestorage.googleapis.com",
+      // add any other domains you need here
+    ],
     remotePatterns: [
       {
         protocol: 'https',
