@@ -1,3 +1,4 @@
+
 'use client';
 
 import { createContext, useContext, useEffect, useState, ReactNode } from 'react';
@@ -11,6 +12,8 @@ import {
   Auth,
   signInWithEmailAndPassword,
   updatePassword,
+  sendPasswordResetEmail,
+  sendEmailVerification,
 } from 'firebase/auth';
 import firebaseApp from '@/lib/firebase-config';
 import { createUserProfile } from '@/services/user-service';
@@ -24,6 +27,8 @@ interface AuthContextType {
   signOut: () => Promise<void>;
   isAuthModalOpen: boolean;
   setAuthModalOpen: (isOpen: boolean) => void;
+  sendPasswordReset: (email: string) => Promise<void>;
+  sendVerificationEmail: () => Promise<void>;
 }
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
@@ -47,14 +52,6 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     }
     const unsubscribe = onAuthStateChanged(auth, async (user) => {
       setUser(user);
-      if (user) {
-        await createUserProfile({
-          uid: user.uid,
-          email: user.email,
-          displayName: user.displayName,
-          photoURL: user.photoURL,
-        });
-      }
       setLoading(false);
     });
     return () => unsubscribe();
@@ -68,11 +65,15 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       const result = await signInWithPopup(auth, googleProvider);
       const user = result.user;
        if (user) {
+        if (!user.emailVerified) {
+          await sendEmailVerification(user);
+        }
         await createUserProfile({
           uid: user.uid,
           email: user.email,
           displayName: user.displayName,
           photoURL: user.photoURL,
+          emailVerified: user.emailVerified,
         });
       }
     } catch (error) {
@@ -106,6 +107,27 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     }
   }
 
+  const sendPasswordReset = async (email: string) => {
+    if (!auth) throw new Error("Firebase is not configured.");
+    try {
+      await sendPasswordResetEmail(auth, email);
+    } catch(error) {
+       console.error("Error sending password reset email", error);
+       throw error;
+    }
+  };
+
+  const sendVerificationEmail = async () => {
+    if (!auth?.currentUser) throw new Error("No user is currently signed in.");
+    try {
+        await sendEmailVerification(auth.currentUser);
+    } catch (error) {
+        console.error("Error sending verification email", error);
+        throw error;
+    }
+  };
+
+
   const signOut = async () => {
     if (!auth) {
       console.error("Firebase is not configured. Cannot sign out.");
@@ -127,6 +149,8 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     signOut,
     isAuthModalOpen,
     setAuthModalOpen,
+    sendPasswordReset,
+    sendVerificationEmail,
   };
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;

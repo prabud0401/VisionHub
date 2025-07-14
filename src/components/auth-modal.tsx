@@ -1,3 +1,4 @@
+
 'use client';
 import { useState } from 'react';
 import {
@@ -13,7 +14,8 @@ import { Label } from '@/components/ui/label';
 import { useAuth } from '@/context/auth-context';
 import { Bot, Loader2 } from 'lucide-react';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { Alert, AlertDescription } from './ui/alert';
+import { Alert, AlertDescription, AlertTitle } from './ui/alert';
+import { useToast } from '@/hooks/use-toast';
 
 const GoogleIcon = () => (
   <svg className="mr-2 h-4 w-4" aria-hidden="true" focusable="false" data-prefix="fab" data-icon="google" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 488 512">
@@ -27,11 +29,13 @@ export function AuthModal() {
     setAuthModalOpen,
     signInWithGoogle,
     signInWithEmail,
+    sendPasswordReset
   } = useAuth();
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const { toast } = useToast();
 
   const handleGoogleSignIn = async () => {
     setIsLoading(true);
@@ -61,6 +65,27 @@ export function AuthModal() {
       setIsLoading(false);
     }
   };
+
+  const handlePasswordReset = async () => {
+    if (!email) {
+      setError("Please enter your email address to reset your password.");
+      return;
+    }
+    setIsLoading(true);
+    setError(null);
+    try {
+      await sendPasswordReset(email);
+      toast({
+        title: "Password Reset Email Sent",
+        description: "Please check your inbox for instructions to reset your password.",
+      });
+      setAuthModalOpen(false);
+    } catch (error) {
+       setError(error instanceof Error ? error.message : 'Failed to send password reset email.');
+    } finally {
+        setIsLoading(false);
+    }
+  }
 
 
   return (
@@ -112,9 +137,15 @@ export function AuthModal() {
                     required
                   />
                 </div>
+                 <div className="text-right">
+                    <Button type="button" variant="link" className="p-0 h-auto text-xs" onClick={handlePasswordReset} disabled={isLoading}>
+                        Forgot Password?
+                    </Button>
+                 </div>
                 {error && (
                     <Alert variant="destructive">
-                    <AlertDescription>{error}</AlertDescription>
+                      <AlertTitle>Error</AlertTitle>
+                      <AlertDescription>{error}</AlertDescription>
                     </Alert>
                 )}
                 <Button type="submit" className="w-full" disabled={isLoading}>
