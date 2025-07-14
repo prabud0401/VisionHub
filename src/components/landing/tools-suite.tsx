@@ -1,5 +1,6 @@
 'use client';
 import { Button } from "../ui/button";
+import Image from "next/image";
 
 export default function ToolsSuite() {
   return (
@@ -10,10 +11,15 @@ export default function ToolsSuite() {
           Revolutionize your creative workflow with VisionHub's AI Tools Suite. This suite empowers you with cutting-edge AI technology.
         </p>
         
-        <div className="flex justify-center items-center gap-2 mb-4">
-          <span className="w-3 h-3 bg-accent rounded-full"></span>
-          <span className="w-3 h-3 bg-muted rounded-full"></span>
-          <span className="w-3 h-3 bg-muted rounded-full"></span>
+        <div className="relative w-full max-w-xl mx-auto aspect-video mb-8 rounded-lg overflow-hidden border-2 border-primary/50 shadow-lg shadow-primary/20">
+          <Image
+            src="https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEigDbiBM6I5Fx1Jbz-hj_mqL_KtAPlv9UsQwpthZIfFLjL-hvCmst09I-RbQsbVt5Z0QzYI_Xj1l8vkS8JrP6eUlgK89GJzbb_P-BwLhVP13PalBm8ga1hbW5pVx8bswNWCjqZj2XxTFvwQ__u4ytDKvfFi5I2W9MDtH3wFXxww19EVYkN8IzIDJLh_aw/s1920/space-soldier-ai-wallpaper-4k.webp"
+            alt="AI Generated Space Soldier"
+            layout="fill"
+            objectFit="cover"
+            className="transition-transform duration-300 hover:scale-105"
+            data-ai-hint="space soldier"
+          />
         </div>
         
         <div className="max-w-xl mx-auto">
