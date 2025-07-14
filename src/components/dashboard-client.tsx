@@ -1,14 +1,15 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useRef } from 'react';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useForm } from 'react-hook-form';
 import { z } from 'zod';
 import Image from 'next/image';
-import { Bot, Download, ImageIcon, Loader2, Sparkles, WandSparkles } from 'lucide-react';
+import { Bot, Download, ImageIcon, Loader2, Sparkles, WandSparkles, UploadCloud, BrainCircuit } from 'lucide-react';
 
 import { generateImages } from '@/ai/flows/generate-image';
 import { enhancePrompt } from '@/ai/flows/enhance-prompt';
+import { imageToPrompt } from '@/ai/flows/image-to-prompt';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Form, FormControl, FormDescription, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form';
@@ -22,6 +23,7 @@ import { useAuth } from '@/context/auth-context';
 import { cn } from '@/lib/utils';
 import { ToggleGroup, ToggleGroupItem } from './ui/toggle-group';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from './ui/select';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 
 const models = [
   "Gemini AI",
@@ -53,9 +55,12 @@ export function DashboardClient() {
   const [generatedImages, setGeneratedImages] = useState<GeneratedImage[] | null>(null);
   const [isGenerating, setIsGenerating] = useState(false);
   const [isEnhancing, setIsEnhancing] = useState(false);
+  const [isAnalyzing, setIsAnalyzing] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [progressState, setProgressState] = useState<'idle' | 'generating' | 'saving' | 'done'>('idle');
   const [enhancerState, setEnhancerState] = useState({ isOpen: false, original: '', enhanced: '' });
+  const [uploadedImage, setUploadedImage] = useState<string | null>(null);
+  const fileInputRef = useRef<HTMLInputElement>(null);
   
   const { toast } = useToast();
   const { user } = useAuth();
@@ -94,6 +99,36 @@ export function DashboardClient() {
   const handleAcceptEnhancedPrompt = (newPrompt: string) => {
     form.setValue('prompt', newPrompt, { shouldValidate: true });
   }
+
+  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (file) {
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        setUploadedImage(reader.result as string);
+      };
+      reader.readAsDataURL(file);
+    }
+  };
+
+  const handleImageToPrompt = async () => {
+    if (!uploadedImage) {
+      toast({ variant: 'destructive', title: 'No Image', description: 'Please upload an image first.' });
+      return;
+    }
+    setIsAnalyzing(true);
+    try {
+      const result = await imageToPrompt({ photoDataUri: uploadedImage });
+      form.setValue('prompt', result.prompt, { shouldValidate: true });
+      toast({ title: 'Prompt Generated!', description: 'The prompt has been populated in the text area.' });
+    } catch (e) {
+      const errorMessage = e instanceof Error ? e.message : 'An unknown error occurred.';
+      toast({ variant: 'destructive', title: 'Analysis Failed', description: errorMessage });
+    } finally {
+      setIsAnalyzing(false);
+    }
+  };
+
 
   async function onSubmit(values: FormValues) {
     if (!user) {
@@ -157,42 +192,88 @@ export function DashboardClient() {
               <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
                  <Card>
                   <CardHeader>
-                    <CardTitle className="font-headline flex items-center justify-between">
-                      <span>1. Craft Your Prompt</span>
-                      <Button type="button" variant="outline" size="sm" onClick={handleEnhancePrompt} disabled={isEnhancing}>
-                        {isEnhancing ? (
-                          <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                        ) : (
-                          <WandSparkles className="mr-2 h-4 w-4" />
-                        )}
-                        Enhance
-                      </Button>
+                    <CardTitle className="font-headline flex items-center">
+                       1. Craft Your Vision
                     </CardTitle>
                   </CardHeader>
                    <CardContent>
-                      <FormField
-                        control={form.control}
-                        name="prompt"
-                        render={({ field }) => (
-                          <FormItem>
-                            <FormControl>
-                              <Textarea
-                                placeholder="e.g., A majestic lion with a crown of stars, digital painting"
-                                className="resize-none"
-                                rows={5}
-                                {...field}
-                              />
-                            </FormControl>
-                            <FormMessage />
-                          </FormItem>
-                        )}
-                      />
+                    <Tabs defaultValue="text">
+                        <TabsList className="grid w-full grid-cols-2">
+                            <TabsTrigger value="text">Text Prompt</TabsTrigger>
+                            <TabsTrigger value="image">Image to Prompt</TabsTrigger>
+                        </TabsList>
+                        <TabsContent value="text" className="pt-4">
+                            <FormField
+                            control={form.control}
+                            name="prompt"
+                            render={({ field }) => (
+                                <FormItem>
+                                <FormLabel className="sr-only">Prompt</FormLabel>
+                                <FormControl>
+                                    <Textarea
+                                    placeholder="e.g., A majestic lion with a crown of stars, digital painting"
+                                    className="resize-none"
+                                    rows={5}
+                                    {...field}
+                                    />
+                                </FormControl>
+                                <FormMessage />
+                                </FormItem>
+                            )}
+                            />
+                             <Button type="button" variant="outline" size="sm" onClick={handleEnhancePrompt} disabled={isEnhancing} className="mt-2 float-right">
+                                {isEnhancing ? (
+                                <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                                ) : (
+                                <WandSparkles className="mr-2 h-4 w-4" />
+                                )}
+                                Enhance Prompt
+                            </Button>
+                        </TabsContent>
+                        <TabsContent value="image" className="pt-4">
+                          <div className="space-y-4">
+                            { !uploadedImage && (
+                              <div
+                                className="flex flex-col items-center justify-center p-8 border-2 border-dashed rounded-lg cursor-pointer hover:bg-accent hover:border-accent-foreground/50 transition-colors"
+                                onClick={() => fileInputRef.current?.click()}
+                              >
+                                <UploadCloud className="h-12 w-12 text-muted-foreground mb-4" />
+                                <p className="text-md font-semibold">Click to upload an image</p>
+                                <p className="text-sm text-muted-foreground">The AI will generate a prompt from it.</p>
+                                <input
+                                  type="file"
+                                  ref={fileInputRef}
+                                  onChange={handleFileChange}
+                                  className="hidden"
+                                  accept="image/png, image/jpeg, image/webp"
+                                />
+                              </div>
+                            )}
+                            { uploadedImage && (
+                              <div className="space-y-4">
+                                <div className="relative aspect-video w-full rounded-lg overflow-hidden border">
+                                  <Image src={uploadedImage} alt="Uploaded for analysis" fill className="object-contain" />
+                                </div>
+                                <Button type="button" onClick={handleImageToPrompt} disabled={isAnalyzing} className="w-full">
+                                  {isAnalyzing ? (
+                                    <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                                  ) : (
+                                    <BrainCircuit className="mr-2 h-4 w-4" />
+                                  )}
+                                  Analyze and Generate Prompt
+                                </Button>
+                              </div>
+                            )}
+                          </div>
+                        </TabsContent>
+                    </Tabs>
+
                        <FormField
                         control={form.control}
                         name="tones"
                         render={({ field }) => (
-                          <FormItem className="mt-4">
-                            <FormLabel className="text-xs text-muted-foreground">Tones (optional)</FormLabel>
+                          <FormItem className="mt-6 border-t pt-6">
+                            <FormLabel className="font-semibold text-base">Stylistic Tones (optional)</FormLabel>
                              <ToggleGroup
                               type="multiple"
                               variant="outline"
