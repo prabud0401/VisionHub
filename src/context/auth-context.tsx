@@ -45,10 +45,10 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       setLoading(false);
       return;
     }
-    const unsubscribe = onAuthStateChanged(auth, (user) => {
+    const unsubscribe = onAuthStateChanged(auth, async (user) => {
       setUser(user);
       if (user) {
-        createUserProfile({
+        await createUserProfile({
           uid: user.uid,
           email: user.email,
           displayName: user.displayName,
