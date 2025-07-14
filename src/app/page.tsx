@@ -11,9 +11,10 @@ export default function Home() {
   const router = useRouter();
 
   useEffect(() => {
-    // This logic is handled by the main layout now.
-    // This page should primarily handle the landing content.
-  }, [user, loading, router]);
+    if (user) {
+      router.push('/dashboard');
+    }
+  }, [user, router]);
 
 
   if (loading) {
@@ -24,7 +25,7 @@ export default function Home() {
     );
   }
 
-  // To prevent routing loops and ensure clarity, the root page now always shows the landing page.
-  // The header component will show the appropriate actions (Dashboard/Get Started) based on auth state.
+  // If there's no user, show the landing page.
+  // The redirect for authenticated users is handled in the useEffect.
   return <LandingPage />;
 }
