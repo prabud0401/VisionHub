@@ -7,34 +7,41 @@ import { z } from 'zod';
 import Image from 'next/image';
 import { Bot, Download, ImageIcon, Loader2 } from 'lucide-react';
 
-import { generateImage } from '@/ai/flows/generate-image';
+import { generateImages } from '@/ai/flows/generate-image';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form';
-import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+import { Form, FormControl, FormDescription, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form';
 import { Textarea } from '@/components/ui/textarea';
 import { useToast } from '@/hooks/use-toast';
 import type { GeneratedImage } from '@/lib/types';
 import { Alert, AlertDescription, AlertTitle } from './ui/alert';
 import { GenerationProgressModal } from './generation-progress-modal';
 import { useAuth } from '@/context/auth-context';
+import { cn } from '@/lib/utils';
+import { ToggleGroup, ToggleGroupItem } from './ui/toggle-group';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from './ui/select';
+
+const models = [
+  "Gemini AI",
+  "OpenAI DALL-E 3",
+  "Stability AI SDXL",
+  "DeepAI Image Generation",
+]
 
 const formSchema = z.object({
   prompt: z.string().min(10, {
     message: 'Prompt must be at least 10 characters.',
   }),
-  model: z.string({
-    required_error: 'Please select an AI model.',
+  models: z.array(z.string()).min(1, {
+    message: "Please select at least one AI model."
   }),
-  orientation: z.string().default('square'),
   aspectRatio: z.string().default('1:1'),
 });
 
 type FormValues = z.infer<typeof formSchema>;
 
 export function DashboardClient() {
-  const [generatedImage, setGeneratedImage] = useState<GeneratedImage | null>(null);
+  const [generatedImages, setGeneratedImages] = useState<GeneratedImage[] | null>(null);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [progressState, setProgressState] = useState<'idle' | 'generating' | 'saving' | 'done'>('idle');
@@ -46,13 +53,10 @@ export function DashboardClient() {
     resolver: zodResolver(formSchema),
     defaultValues: {
       prompt: '',
-      model: 'Gemini AI',
-      orientation: 'square',
+      models: ["Gemini AI"],
       aspectRatio: '1:1',
     },
   });
-
-  const orientation = form.watch('orientation');
 
   async function onSubmit(values: FormValues) {
     if (!user) {
@@ -66,19 +70,21 @@ export function DashboardClient() {
 
     setIsLoading(true);
     setError(null);
-    setGeneratedImage(null);
+    setGeneratedImages(null);
     setProgressState('generating');
     try {
-      const result = await generateImage({ 
+      const promptId = crypto.randomUUID();
+      const result = await generateImages({
         prompt: values.prompt,
         aspectRatio: values.aspectRatio,
         userId: user.uid,
-        model: values.model
+        models: values.models,
+        promptId: promptId,
       });
 
       setProgressState('saving');
       
-      setGeneratedImage(result);
+      setGeneratedImages(result);
       
       setProgressState('done');
       await new Promise(resolve => setTimeout(resolve, 1000));
@@ -108,29 +114,34 @@ export function DashboardClient() {
           <CardContent>
             <Form {...form}>
               <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
+                
                 <FormField
                   control={form.control}
-                  name="model"
+                  name="models"
                   render={({ field }) => (
                     <FormItem>
-                      <FormLabel>AI Model</FormLabel>
-                      <Select onValueChange={field.onChange} defaultValue={field.value}>
-                        <FormControl>
-                          <SelectTrigger>
-                            <SelectValue placeholder="Select an AI model to use" />
-                          </SelectTrigger>
-                        </FormControl>
-                        <SelectContent>
-                          <SelectItem value="Gemini AI">Gemini AI</SelectItem>
-                          <SelectItem value="OpenAI DALL-E 3">OpenAI DALL-E 3</SelectItem>
-                          <SelectItem value="Stability AI SDXL">Stability AI SDXL</SelectItem>
-                          <SelectItem value="DeepAI Image Generation">DeepAI Image Generation</SelectItem>
-                        </SelectContent>
-                      </Select>
+                      <FormLabel>AI Models</FormLabel>
+                      <ToggleGroup
+                        type="multiple"
+                        variant="outline"
+                        className="flex flex-wrap justify-start gap-2"
+                        value={field.value}
+                        onValueChange={field.onChange}
+                      >
+                        {models.map(model => (
+                           <ToggleGroupItem key={model} value={model} className="flex-grow sm:flex-grow-0">
+                            {model}
+                          </ToggleGroupItem>
+                        ))}
+                      </ToggleGroup>
+                       <FormDescription>
+                        Select one or more models to generate images with.
+                      </FormDescription>
                       <FormMessage />
                     </FormItem>
                   )}
                 />
+
                 <FormField
                   control={form.control}
                   name="prompt"
@@ -152,47 +163,6 @@ export function DashboardClient() {
 
                 <FormField
                   control={form.control}
-                  name="orientation"
-                  render={({ field }) => (
-                    <FormItem className="space-y-3">
-                      <FormLabel>Orientation</FormLabel>
-                      <FormControl>
-                        <RadioGroup
-                          onValueChange={(value) => {
-                            field.onChange(value);
-                            const ratio = { square: '1:1', portrait: '9:16', landscape: '16:9' }[value] || '1:1';
-                            form.setValue('aspectRatio', ratio);
-                          }}
-                          defaultValue={field.value}
-                          className="flex flex-col space-y-1"
-                        >
-                          <FormItem className="flex items-center space-x-3 space-y-0">
-                            <FormControl>
-                              <RadioGroupItem value="square" />
-                            </FormControl>
-                            <FormLabel className="font-normal">Square</FormLabel>
-                          </FormItem>
-                          <FormItem className="flex items-center space-x-3 space-y-0">
-                            <FormControl>
-                              <RadioGroupItem value="portrait" />
-                            </FormControl>
-                            <FormLabel className="font-normal">Portrait</FormLabel>
-                          </FormItem>
-                          <FormItem className="flex items-center space-x-3 space-y-0">
-                            <FormControl>
-                              <RadioGroupItem value="landscape" />
-                            </FormControl>
-                            <FormLabel className="font-normal">Landscape</FormLabel>
-                          </FormItem>
-                        </RadioGroup>
-                      </FormControl>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
-
-                <FormField
-                  control={form.control}
                   name="aspectRatio"
                   render={({ field }) => (
                     <FormItem>
@@ -204,21 +174,11 @@ export function DashboardClient() {
                           </SelectTrigger>
                         </FormControl>
                         <SelectContent>
-                          {orientation === 'square' && <SelectItem value="1:1">1:1</SelectItem>}
-                          {orientation === 'portrait' && (
-                            <>
-                              <SelectItem value="9:16">9:16</SelectItem>
-                              <SelectItem value="2:3">2:3</SelectItem>
-                              <SelectItem value="4:5">4:5</SelectItem>
-                            </>
-                          )}
-                          {orientation === 'landscape' && (
-                            <>
-                              <SelectItem value="16:9">16:9</SelectItem>
-                              <SelectItem value="3:2">3:2</SelectItem>
-                              <SelectItem value="5:4">5:4</SelectItem>
-                            </>
-                          )}
+                          <SelectItem value="1:1">Square (1:1)</SelectItem>
+                          <SelectItem value="16:9">Landscape (16:9)</SelectItem>
+                          <SelectItem value="9:16">Portrait (9:16)</SelectItem>
+                          <SelectItem value="4:3">Standard (4:3)</SelectItem>
+                          <SelectItem value="3:2">Classic (3:2)</SelectItem>
                         </SelectContent>
                       </Select>
                       <FormMessage />
@@ -236,7 +196,7 @@ export function DashboardClient() {
                   ) : (
                     <>
                       <Bot className="mr-2 h-4 w-4" />
-                      Generate Image
+                      Generate Images
                     </>
                   )}
                 </Button>
@@ -250,7 +210,7 @@ export function DashboardClient() {
             <CardTitle className="font-headline">Result</CardTitle>
           </CardHeader>
           <CardContent className="flex items-center justify-center h-full min-h-[300px]">
-            {isLoading && !generatedImage && (
+            {isLoading && !generatedImages && (
               <div className="flex flex-col items-center gap-4 text-muted-foreground">
                 <Loader2 className="h-16 w-16 animate-spin text-primary" />
                 <p>Hold on, magic is happening...</p>
@@ -262,27 +222,37 @@ export function DashboardClient() {
                 <AlertDescription>{error}</AlertDescription>
               </Alert>
             )}
-            {!isLoading && !error && generatedImage && (
-              <div className="flex flex-col items-center gap-4">
-                <Image
-                  src={generatedImage.url}
-                  alt={generatedImage.prompt}
-                  width={512}
-                  height={512}
-                  className="rounded-lg object-contain aspect-square border"
-                />
-                <Button asChild variant="outline">
-                  <a href={generatedImage.url} download={`visionhub-ai-${generatedImage.id}.png`}>
-                    <Download className="mr-2 h-4 w-4" />
-                    Download
-                  </a>
-                </Button>
+            {!isLoading && !error && generatedImages && (
+              <div className="flex flex-col items-center gap-4 w-full">
+                <div className="grid grid-cols-2 gap-2 w-full">
+                  {generatedImages.map((image) => (
+                    <div key={image.id} className="relative aspect-square">
+                      <Image
+                        src={image.url}
+                        alt={image.prompt}
+                        fill
+                        className="rounded-lg object-contain border"
+                      />
+                       <div className="absolute bottom-1 right-1 bg-background/70 text-foreground text-xs px-1.5 py-0.5 rounded">
+                        {image.model}
+                      </div>
+                    </div>
+                  ))}
+                </div>
+                 {generatedImages.length > 0 && (
+                    <Button asChild variant="outline" className="w-full">
+                       <a href={generatedImages[0].url} download={`visionhub-ai-${generatedImages[0].id}.png`}>
+                        <Download className="mr-2 h-4 w-4" />
+                        Download First Image
+                      </a>
+                    </Button>
+                 )}
               </div>
             )}
-            {!isLoading && !error && !generatedImage && (
+            {!isLoading && !error && !generatedImages && (
               <div className="text-center text-muted-foreground">
                 <ImageIcon className="h-16 w-16 mx-auto mb-4" />
-                <p>Your generated image will appear here.</p>
+                <p>Your generated images will appear here.</p>
               </div>
             )}
           </CardContent>

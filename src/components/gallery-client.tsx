@@ -5,11 +5,11 @@ import Image from 'next/image';
 import { format } from 'date-fns';
 import { useAuth } from '@/context/auth-context';
 import type { GeneratedImage } from '@/lib/types';
-import { ImageCard } from './image-card';
+import { PromptGroupCard } from './prompt-group-card';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from '@/components/ui/dialog';
 import { Button } from './ui/button';
 import { Download, Loader2, Trash2 } from 'lucide-react';
-import { getFirestore, collection, query, where, getDocs, deleteDoc, doc } from 'firebase/firestore';
+import { getFirestore, collection, query, where, getDocs, deleteDoc, doc, writeBatch } from 'firebase/firestore';
 import firebaseApp from '@/lib/firebase-config';
 import {
   AlertDialog,
@@ -22,10 +22,18 @@ import {
   AlertDialogTitle,
 } from "@/components/ui/alert-dialog"
 
+interface PromptGroup {
+  promptId: string;
+  prompt: string;
+  images: GeneratedImage[];
+  createdAt: string;
+  coverImage: string;
+}
+
 export function GalleryClient() {
-  const [images, setImages] = useState<GeneratedImage[]>([]);
-  const [selectedImage, setSelectedImage] = useState<GeneratedImage | null>(null);
-  const [imageToDelete, setImageToDelete] = useState<string | null>(null);
+  const [promptGroups, setPromptGroups] = useState<PromptGroup[]>([]);
+  const [selectedGroup, setSelectedGroup] = useState<PromptGroup | null>(null);
+  const [groupToDelete, setGroupToDelete] = useState<PromptGroup | null>(null);
   const [isLoading, setIsLoading] = useState(true);
   const { user } = useAuth();
 
@@ -43,7 +51,30 @@ export function GalleryClient() {
         querySnapshot.forEach((doc) => {
           fetchedImages.push({ id: doc.id, ...doc.data() } as GeneratedImage);
         });
-        setImages(fetchedImages.sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()));
+        
+        const groups: { [key: string]: PromptGroup } = {};
+        fetchedImages.forEach(image => {
+          const promptId = image.promptId || image.prompt; // Fallback for older images
+          if (!groups[promptId]) {
+            groups[promptId] = {
+              promptId: promptId,
+              prompt: image.prompt,
+              images: [],
+              createdAt: image.createdAt,
+              coverImage: image.url,
+            };
+          }
+          groups[promptId].images.push(image);
+          // Update created at to the latest image in group for sorting
+          if (new Date(image.createdAt) > new Date(groups[promptId].createdAt)) {
+            groups[promptId].createdAt = image.createdAt;
+            groups[promptId].coverImage = image.url;
+          }
+        });
+        
+        const sortedGroups = Object.values(groups).sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime());
+        setPromptGroups(sortedGroups);
+
       } catch (error) {
         console.error("Error fetching images: ", error);
       } finally {
@@ -53,26 +84,34 @@ export function GalleryClient() {
     fetchImages();
   }, [user]);
 
-  const handleSelectImage = (image: GeneratedImage) => {
-    setSelectedImage(image);
+  const handleSelectGroup = (group: PromptGroup) => {
+    setSelectedGroup(group);
   };
 
-  const confirmDeleteImage = (id: string) => {
-    setImageToDelete(id);
+  const confirmDeleteGroup = (group: PromptGroup) => {
+    setGroupToDelete(group);
   };
 
-  const handleDeleteImage = async () => {
-    if (!imageToDelete || !firebaseApp) return;
+  const handleDeleteGroup = async () => {
+    if (!groupToDelete || !firebaseApp) return;
     
     try {
         const db = getFirestore(firebaseApp);
-        await deleteDoc(doc(db, "images", imageToDelete));
-        setImages(images.filter((img) => img.id !== imageToDelete));
+        const batch = writeBatch(db);
+
+        groupToDelete.images.forEach(image => {
+          const docRef = doc(db, "images", image.id);
+          batch.delete(docRef);
+        });
+
+        await batch.commit();
+
+        setPromptGroups(promptGroups.filter((g) => g.promptId !== groupToDelete.promptId));
         // TODO: Also delete from Firebase Storage
     } catch (error) {
-        console.error("Error deleting image: ", error);
+        console.error("Error deleting image group: ", error);
     } finally {
-      setImageToDelete(null);
+      setGroupToDelete(null);
     }
   };
 
@@ -84,7 +123,7 @@ export function GalleryClient() {
     );
   }
 
-  if (images.length === 0) {
+  if (promptGroups.length === 0) {
     return (
       <div className="text-center py-20">
         <h2 className="text-2xl font-semibold">Your gallery is empty</h2>
@@ -96,73 +135,68 @@ export function GalleryClient() {
   return (
     <>
       <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
-        {images.map((image) => (
-          <ImageCard
-            key={image.id}
-            image={image}
-            onView={() => handleSelectImage(image)}
-            onDelete={() => confirmDeleteImage(image.id)}
+        {promptGroups.map((group) => (
+          <PromptGroupCard
+            key={group.promptId}
+            group={group}
+            onView={() => handleSelectGroup(group)}
+            onDelete={() => confirmDeleteGroup(group)}
           />
         ))}
       </div>
 
-      <Dialog open={!!selectedImage} onOpenChange={(isOpen) => !isOpen && setSelectedImage(null)}>
-        <DialogContent className="max-w-3xl">
-          {selectedImage && (
+      <Dialog open={!!selectedGroup} onOpenChange={(isOpen) => !isOpen && setSelectedGroup(null)}>
+        <DialogContent className="max-w-5xl">
+          {selectedGroup && (
             <>
               <DialogHeader>
-                <DialogTitle>Image Details</DialogTitle>
+                <DialogTitle>"{selectedGroup.prompt}"</DialogTitle>
                 <DialogDescription>
-                  Created with {selectedImage.model} on {format(new Date(selectedImage.createdAt), 'PPP')}
+                  {selectedGroup.images.length} images generated on {format(new Date(selectedGroup.createdAt), 'PPP')}
                 </DialogDescription>
               </DialogHeader>
-              <div className="grid md:grid-cols-2 gap-6 mt-4">
-                <div className="relative aspect-square">
-                  <Image
-                    src={selectedImage.url}
-                    alt={selectedImage.prompt}
-                    fill
-                    className="rounded-lg object-cover border"
-                  />
-                </div>
-                <div className="flex flex-col gap-4">
-                  <div>
-                    <h3 className="font-semibold mb-2">Prompt</h3>
-                    <p className="text-sm text-muted-foreground bg-secondary p-3 rounded-md">
-                      {selectedImage.prompt}
-                    </p>
-                  </div>
-                   <div>
-                    <h3 className="font-semibold mb-2">Model</h3>
-                    <p className="text-sm text-muted-foreground">{selectedImage.model}</p>
-                  </div>
-                  <Button asChild className="mt-auto" variant="accent">
-                    <a href={selectedImage.url} download={`visionhub-ai-${selectedImage.id}.png`}>
-                      <Download className="mr-2 h-4 w-4" />
-                      Download Image
-                    </a>
-                  </Button>
-                </div>
+              <div className="mt-4 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 max-h-[70vh] overflow-y-auto pr-2">
+                {selectedGroup.images.map(image => (
+                    <div key={image.id} className="flex flex-col gap-2">
+                        <div className="relative aspect-square">
+                            <Image
+                                src={image.url}
+                                alt={image.prompt}
+                                fill
+                                className="rounded-lg object-cover border"
+                            />
+                             <div className="absolute bottom-1 right-1 bg-background/70 text-foreground text-xs px-1.5 py-0.5 rounded">
+                                {image.model}
+                            </div>
+                        </div>
+                        <Button asChild variant="secondary" size="sm">
+                            <a href={image.url} download={`visionhub-ai-${image.id}.png`}>
+                                <Download className="mr-2 h-4 w-4" />
+                                Download
+                            </a>
+                        </Button>
+                    </div>
+                ))}
               </div>
             </>
           )}
         </DialogContent>
       </Dialog>
       
-      <AlertDialog open={!!imageToDelete} onOpenChange={(isOpen) => !isOpen && setImageToDelete(null)}>
+      <AlertDialog open={!!groupToDelete} onOpenChange={(isOpen) => !isOpen && setGroupToDelete(null)}>
         <AlertDialogContent>
           <AlertDialogHeader>
             <AlertDialogTitle>Are you absolutely sure?</AlertDialogTitle>
             <AlertDialogDescription>
-              This action cannot be undone. This will permanently delete your image
-              and remove your data from our servers.
+              This action cannot be undone. This will permanently delete all {groupToDelete?.images.length} images
+              associated with this prompt.
             </AlertDialogDescription>
           </AlertDialogHeader>
           <AlertDialogFooter>
             <AlertDialogCancel>Cancel</AlertDialogCancel>
-            <AlertDialogAction onClick={handleDeleteImage} className="bg-destructive text-destructive-foreground hover:bg-destructive/90">
+            <AlertDialogAction onClick={handleDeleteGroup} className="bg-destructive text-destructive-foreground hover:bg-destructive/90">
               <Trash2 className="mr-2 h-4 w-4" />
-              Delete
+              Delete All
             </AlertDialogAction>
           </AlertDialogFooter>
         </AlertDialogContent>
