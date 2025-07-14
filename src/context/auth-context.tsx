@@ -3,6 +3,7 @@
 import { createContext, useContext, useEffect, useState, ReactNode } from 'react';
 import { getAuth, onAuthStateChanged, signInWithPopup, GoogleAuthProvider, User, signOut as firebaseSignOut, Auth } from 'firebase/auth';
 import firebaseApp from '@/lib/firebase-config';
+import { createUserProfile } from '@/services/user-service';
 
 interface AuthContextType {
   user: User | null;
@@ -34,6 +35,14 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     }
     const unsubscribe = onAuthStateChanged(auth, (user) => {
       setUser(user);
+      if (user) {
+        createUserProfile({
+          uid: user.uid,
+          email: user.email,
+          displayName: user.displayName,
+          photoURL: user.photoURL,
+        });
+      }
       setLoading(false);
     });
     return () => unsubscribe();
@@ -46,7 +55,16 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     }
     try {
       setLoading(true);
-      await signInWithPopup(auth, googleProvider);
+      const result = await signInWithPopup(auth, googleProvider);
+      const user = result.user;
+       if (user) {
+        await createUserProfile({
+          uid: user.uid,
+          email: user.email,
+          displayName: user.displayName,
+          photoURL: user.photoURL,
+        });
+      }
     } catch (error) {
       console.error("Error signing in with Google", error);
     } finally {
