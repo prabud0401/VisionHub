@@ -15,7 +15,7 @@ import {
   sendPasswordResetEmail,
   sendEmailVerification,
 } from 'firebase/auth';
-import firebaseApp from '@/lib/firebase-config';
+import { firebaseApp } from '@/lib/firebase-config';
 import { createUserProfile } from '@/services/user-service';
 
 interface AuthContextType {
@@ -33,21 +33,26 @@ interface AuthContextType {
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
-let auth: Auth | null = null;
-if (firebaseApp) {
-  auth = getAuth(firebaseApp);
-}
-
 const googleProvider = new GoogleAuthProvider();
 
 export function AuthProvider({ children }: { children: ReactNode }) {
   const [user, setUser] = useState<User | null>(null);
   const [loading, setLoading] = useState(true);
   const [isAuthModalOpen, setAuthModalOpen] = useState(false);
+  const [auth, setAuth] = useState<Auth | null>(null);
+
+  useEffect(() => {
+    if (firebaseApp) {
+      setAuth(getAuth(firebaseApp));
+    }
+  }, []);
 
   useEffect(() => {
     if (!auth) {
-      setLoading(false);
+      // Still waiting for firebaseApp to initialize
+      if (document.readyState === "complete") {
+          setLoading(false);
+      }
       return;
     }
     const unsubscribe = onAuthStateChanged(auth, async (user) => {
@@ -55,7 +60,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       setLoading(false);
     });
     return () => unsubscribe();
-  }, []);
+  }, [auth]);
 
   const signInWithGoogle = async () => {
     if (!auth) throw new Error("Firebase is not configured. Cannot sign in.");
