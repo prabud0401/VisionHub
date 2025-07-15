@@ -13,6 +13,7 @@ export interface AdminUser {
   emailVerified: boolean;
   createdAt: string;
   username: string;
+  credits: number;
 }
 
 export interface AdminImage extends GeneratedImage {
@@ -48,6 +49,16 @@ export async function getAllUsers(): Promise<AdminUser[]> {
     ...doc.data()
   } as AdminUser));
 }
+
+export async function updateUserCredits(uid: string, credits: number): Promise<void> {
+  if (!firestore) throw new Error('Firestore not initialized');
+  if (typeof credits !== 'number' || credits < 0) {
+    throw new Error('Invalid credit amount.');
+  }
+  const userRef = firestore.collection('users').doc(uid);
+  await userRef.update({ credits });
+}
+
 
 export async function deleteUser(uid: string): Promise<void> {
     if (!firestore) throw new Error('Firestore not initialized');

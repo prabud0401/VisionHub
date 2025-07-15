@@ -13,7 +13,7 @@ import {
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Button } from '@/components/ui/button';
-import { Loader2, Trash2, ShieldCheck, ShieldAlert } from 'lucide-react';
+import { Loader2, Trash2, ShieldCheck, ShieldAlert, Edit, Gem, User, Mail, Save } from 'lucide-react';
 import { format, parseISO } from 'date-fns';
 import {
   AlertDialog,
@@ -25,13 +25,26 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
 } from '@/components/ui/alert-dialog';
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogDescription,
+  DialogFooter,
+} from '@/components/ui/dialog';
+import { Input } from '@/components/ui/input';
+import { Label } from '@/components/ui/label';
 import { useToast } from '@/hooks/use-toast';
-import { getAllUsers, deleteUser, type AdminUser } from '@/services/admin-service';
+import { getAllUsers, deleteUser, updateUserCredits, type AdminUser } from '@/services/admin-service';
 
 export default function AdminUsersPage() {
   const [users, setUsers] = useState<AdminUser[]>([]);
   const [isLoading, setIsLoading] = useState(true);
+  const [isUpdating, setIsUpdating] = useState(false);
   const [userToDelete, setUserToDelete] = useState<AdminUser | null>(null);
+  const [userToEdit, setUserToEdit] = useState<AdminUser | null>(null);
+  const [newCredits, setNewCredits] = useState<number>(0);
   const { toast } = useToast();
 
   const fetchUsers = async () => {
@@ -49,18 +62,23 @@ export default function AdminUsersPage() {
 
   useEffect(() => {
     fetchUsers();
-  }, []);
+  }, [toast]);
 
   const handleDeleteClick = (user: AdminUser) => {
     setUserToDelete(user);
   };
+  
+  const handleEditClick = (user: AdminUser) => {
+    setUserToEdit(user);
+    setNewCredits(user.credits ?? 0);
+  };
+
 
   const handleDeleteConfirm = async () => {
     if (!userToDelete) return;
     try {
       await deleteUser(userToDelete.uid);
       toast({ title: 'User Deleted', description: `${userToDelete.displayName} has been permanently deleted.` });
-      // Refetch users after deletion
       fetchUsers();
     } catch (error) {
       console.error('Failed to delete user:', error);
@@ -69,6 +87,23 @@ export default function AdminUsersPage() {
       setUserToDelete(null);
     }
   };
+  
+  const handleUpdateCredits = async () => {
+    if (!userToEdit) return;
+    setIsUpdating(true);
+    try {
+        await updateUserCredits(userToEdit.uid, newCredits);
+        toast({ title: 'Credits Updated', description: `${userToEdit.displayName}'s credits set to ${newCredits}.` });
+        fetchUsers();
+    } catch (error) {
+         console.error('Failed to update credits:', error);
+         toast({ variant: 'destructive', title: 'Error', description: 'Failed to update credits.' });
+    } finally {
+        setIsUpdating(false);
+        setUserToEdit(null);
+    }
+  };
+
 
   if (isLoading) {
     return (
@@ -91,6 +126,7 @@ export default function AdminUsersPage() {
               <TableRow>
                 <TableHead>User</TableHead>
                 <TableHead>Username</TableHead>
+                <TableHead className="text-center">Credits</TableHead>
                 <TableHead>Email Verified</TableHead>
                 <TableHead>Date Joined</TableHead>
                 <TableHead>Actions</TableHead>
@@ -112,6 +148,12 @@ export default function AdminUsersPage() {
                     </div>
                   </TableCell>
                   <TableCell>@{user.username}</TableCell>
+                   <TableCell className="text-center font-medium">
+                     <span className="flex items-center justify-center gap-1">
+                        <Gem className="h-4 w-4 text-primary" />
+                        {user.credits ?? 0}
+                     </span>
+                   </TableCell>
                   <TableCell>
                     {user.emailVerified ? (
                       <span className="flex items-center gap-1 text-green-500">
@@ -125,15 +167,25 @@ export default function AdminUsersPage() {
                   </TableCell>
                   <TableCell>{format(parseISO(user.createdAt), 'PPP')}</TableCell>
                   <TableCell>
-                    <Button
-                      variant="destructive"
-                      size="icon"
-                      onClick={() => handleDeleteClick(user)}
-                      disabled={user.email === 'prabud0401@gmail.com'}
-                    >
-                      <Trash2 className="h-4 w-4" />
-                      <span className="sr-only">Delete User</span>
-                    </Button>
+                    <div className="flex gap-2">
+                        <Button
+                          variant="outline"
+                          size="icon"
+                          onClick={() => handleEditClick(user)}
+                        >
+                          <Edit className="h-4 w-4" />
+                          <span className="sr-only">Edit User</span>
+                        </Button>
+                        <Button
+                          variant="destructive"
+                          size="icon"
+                          onClick={() => handleDeleteClick(user)}
+                          disabled={user.email === 'prabud0401@gmail.com'}
+                        >
+                          <Trash2 className="h-4 w-4" />
+                          <span className="sr-only">Delete User</span>
+                        </Button>
+                    </div>
                   </TableCell>
                 </TableRow>
               ))}
@@ -141,6 +193,7 @@ export default function AdminUsersPage() {
           </Table>
         </CardContent>
       </Card>
+
       <AlertDialog open={!!userToDelete} onOpenChange={() => setUserToDelete(null)}>
         <AlertDialogContent>
           <AlertDialogHeader>
@@ -157,6 +210,47 @@ export default function AdminUsersPage() {
           </AlertDialogFooter>
         </AlertDialogContent>
       </AlertDialog>
+      
+      <Dialog open={!!userToEdit} onOpenChange={() => setUserToEdit(null)}>
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle>Edit User Credits</DialogTitle>
+            <DialogDescription>
+                Update the credit balance for {userToEdit?.displayName}.
+            </DialogDescription>
+          </DialogHeader>
+           <div className="py-4 space-y-4">
+                <div className="flex items-center gap-2 text-sm text-muted-foreground">
+                    <User className="h-4 w-4"/>
+                    <span>{userToEdit?.displayName} (@{userToEdit?.username})</span>
+                </div>
+                 <div className="flex items-center gap-2 text-sm text-muted-foreground">
+                    <Mail className="h-4 w-4"/>
+                    <span>{userToEdit?.email}</span>
+                </div>
+                <div className="space-y-2">
+                    <Label htmlFor="credits" className="flex items-center gap-2">
+                        <Gem className="h-4 w-4 text-primary" />
+                        Credit Balance
+                    </Label>
+                    <Input 
+                        id="credits"
+                        type="number"
+                        value={newCredits}
+                        onChange={(e) => setNewCredits(Number(e.target.value))}
+                        className="w-full"
+                    />
+                </div>
+           </div>
+          <DialogFooter>
+            <Button variant="ghost" onClick={() => setUserToEdit(null)}>Cancel</Button>
+            <Button onClick={handleUpdateCredits} disabled={isUpdating}>
+              {isUpdating ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : <Save className="mr-2 h-4 w-4"/>}
+               Save Changes
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
     </>
   );
 }
