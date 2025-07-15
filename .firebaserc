@@ -1,0 +1,15 @@
+
+{
+  "projects": {
+    "default": "visionhub-ai-s813r"
+  },
+  "targets": {
+    "visionhub-ai-s813r": {
+      "hosting": {
+        "live": [
+          "visionhub-ai-s813r"
+        ]
+      }
+    }
+  }
+}
