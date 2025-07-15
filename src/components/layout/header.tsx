@@ -52,7 +52,7 @@ export default function Header() {
             {user ? (
               <>
                 <div className="flex items-center gap-2 text-sm font-medium border border-border/50 rounded-full px-3 py-1.5">
-                    <Gem className="h-4 w-4 text-primary" />
+                    <Gem className="mr-2 h-4 w-4 text-primary" />
                     <span>{user.credits ?? 0} Credits</span>
                 </div>
                 <Button variant="outline" asChild>
@@ -114,7 +114,7 @@ export default function Header() {
               <SheetContent side="right">
                  <SheetTitle className="sr-only">Menu</SheetTitle>
                  <SheetDescription className="sr-only">Main navigation menu</SheetDescription>
-                <div className="flex h-full flex-col gap-6 p-6">
+                <div className="flex h-full flex-col gap-6 p-6 overflow-y-auto">
                   <Link href="/" className="flex items-center gap-2 text-lg font-bold">
                     <Bot className="h-7 w-7 text-primary" />
                     <span>VisionHub</span>
@@ -133,7 +133,7 @@ export default function Header() {
                         </div>
                       </div>
                       <div className="flex items-center gap-2 text-sm font-medium border border-border/50 rounded-full px-3 py-1.5 w-fit mb-4">
-                          <Gem className="h-4 w-4 text-primary" />
+                          <Gem className="mr-2 h-4 w-4 text-primary" />
                           <span>{user.credits ?? 0} Credits</span>
                       </div>
                       <div className="flex flex-col gap-2">
