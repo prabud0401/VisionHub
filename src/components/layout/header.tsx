@@ -42,7 +42,7 @@ export default function Header() {
     <header className="fixed top-0 left-0 z-50 w-full bg-background/80 backdrop-blur-sm border-b border-border/40">
       <div className="container mx-auto flex h-20 items-center justify-between px-4">
         <div className="flex items-center gap-8">
-          <Link href="/dashboard" className="flex items-center gap-2 text-xl font-bold">
+          <Link href="/" className="flex items-center gap-2 text-xl font-bold">
             <Bot className="h-8 w-8 text-primary" />
             <span className="hidden sm:inline">VisionHub AI</span>
           </Link>
@@ -104,7 +104,7 @@ export default function Header() {
               </SheetTrigger>
               <SheetContent side="right">
                 <div className="flex flex-col gap-6 p-6">
-                  <Link href="/dashboard" className="flex items-center gap-2 text-lg font-bold">
+                  <Link href="/" className="flex items-center gap-2 text-lg font-bold">
                     <Bot className="h-7 w-7 text-primary" />
                     <span>VisionHub AI</span>
                   </Link>
