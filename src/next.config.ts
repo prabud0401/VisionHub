@@ -9,11 +9,6 @@ const nextConfig: NextConfig = {
     ignoreDuringBuilds: true,
   },
   images: {
-    domains: [
-      "firebasestorage.googleapis.com",
-      "static.vecteezy.com",
-      // add any other domains you need here
-    ],
     remotePatterns: [
       {
         protocol: 'https',
@@ -56,7 +51,23 @@ const nextConfig: NextConfig = {
         hostname: 'i.pravatar.cc',
         port: '',
         pathname: '/**',
-      }
+      },
+      {
+        protocol: 'https',
+        hostname: 'content-management-files.canva.com',
+      },
+      {
+        protocol: 'https',
+        hostname: 'blog.segmind.com',
+      },
+      {
+        protocol: 'https',
+        hostname: 'www.dignited.com',
+      },
+      {
+        protocol: 'https',
+        hostname: 'blogs-cdn.imagine.art',
+      },
     ],
   },
   webpack(config) {
