@@ -10,7 +10,8 @@ export const metadata: Metadata = {
 const sections = [
     { id: 'information-collection', title: '1. Information We Collect' },
     { id: 'how-we-use-info', title: '2. How We Use Your Information' },
-    { id: 'data-security', title: '3. Data Security' },
+    { id: 'cookies-and-tracking', title: '3. Cookies and Tracking Technologies' },
+    { id: 'data-security', title: '4. Data Security' },
 ];
 
 export default function PrivacyPage() {
@@ -41,8 +42,19 @@ export default function PrivacyPage() {
                 </ul>
             </section>
 
+            <section id="cookies-and-tracking">
+                <h2>3. Cookies and Tracking Technologies</h2>
+                <p>We use cookies and similar tracking technologies to track the activity on our Service and hold certain information. Cookies are files with a small amount of data which may include an anonymous unique identifier. They are sent to your browser from a website and stored on your device. We use cookies for several purposes:</p>
+                <ul className="list-disc list-inside space-y-2 my-4">
+                    <li><strong>Essential Cookies:</strong> These are necessary for the website to function and cannot be switched off in our systems. They are usually only set in response to actions made by you which amount to a request for services, such as setting your privacy preferences, logging in, or filling in forms.</li>
+                    <li><strong>Preferences Cookies:</strong> These cookies allow our website to remember choices you make, such as your theme preference (light or dark mode), to provide a more personalized experience.</li>
+                    <li><strong>Consent Cookies:</strong> When you accept our cookie policy, we use a cookie to remember your consent choice so that we don't have to ask you again on subsequent visits.</li>
+                </ul>
+                <p>You will be shown a cookie consent banner when you first visit our site. By clicking "Accept", you agree to our use of these cookies. You can manage your preferences at any time, though disabling certain cookies may affect the functionality of the site.</p>
+            </section>
+
             <section id="data-security">
-                <h2>3. Data Security</h2>
+                <h2>4. Data Security</h2>
                 <p>We implement a variety of security measures to maintain the safety of your personal information. Your account is protected by a password, and we encourage you to use a strong password that is unique to our Service. We use encryption (such as SSL) to protect data transmitted to and from our site.</p>
                 <p>However, no method of transmission over the Internet or method of electronic storage is 100% secure. Therefore, while we strive to use commercially acceptable means to protect your personal information, we cannot guarantee its absolute security.</p>
                 <p>If you have any questions about this Privacy Policy, please contact us at privacy@visionhub.ai.</p>

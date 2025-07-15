@@ -42,7 +42,7 @@ export function CookieConsentBanner() {
           <CardContent className="p-6 flex flex-col md:flex-row items-center justify-between gap-4">
             <p className="text-sm text-muted-foreground text-center md:text-left flex-grow">
               We use cookies to enhance your experience and analyze site traffic. By clicking "Accept", you agree to our use of cookies. Read our{' '}
-              <Link href="#" className="underline hover:text-primary">
+              <Link href="/privacy" className="underline hover:text-primary">
                 Privacy Policy
               </Link>
               .
