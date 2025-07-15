@@ -18,9 +18,7 @@ const galleryImageUrls = [
     "https://firebasestorage.googleapis.com/v0/b/visionhub-ai-s813r.firebasestorage.app/o/generated-images%2F5fdecfe2-3ee7-4ec0-aae5-6ec078307f22.png?alt=media",
     "https://firebasestorage.googleapis.com/v0/b/visionhub-ai-s813r.firebasestorage.app/o/generated-images%2F6d29a9de-8324-4835-982c-03e7c729d641.png?alt=media",
     "https://firebasestorage.googleapis.com/v0/b/visionhub-ai-s813r.firebasestorage.app/o/generated-images%2F70303f86-d84e-4abc-b24e-f80830f78aa4.png?alt=media",
-    "https://firebasestorage.googleapis.com/v0/b/visionhub-ai-s813r.firebasestorage.app/o/generated-images%2F76b739cd-ca34-4f74-96fe-b7ab3b3345f3.png?alt=media",
-    "https://firebasestorage.googleapis.com/v0/b/visionhub-ai-s813r.firebasestorage.app/o/generated-images%2F775f262e-bdee-4586-a89d-c36e7b9112b7.png?alt=media",
-    "https://firebasestorage.googleapis.com/v0/b/visionhub-ai-s813r.firebasestorage.app/o/generated-images%2F85d84a37-54e0-4f43-81d5-bc4f14c56c28.png?alt=media"
+    "https://firebasestorage.googleapis.com/v0/b/visionhub-ai-s813r.firebasestorage.app/o/generated-images%2F76b739cd-ca34-4f74-96fe-b7ab3b3345f3.png?alt=media"
 ];
 
 const galleryImages = galleryImageUrls.map(url => ({ src: url }));
