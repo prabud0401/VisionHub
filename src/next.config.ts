@@ -1,3 +1,4 @@
+
 import type {NextConfig} from 'next';
 
 const nextConfig: NextConfig = {
@@ -67,6 +68,10 @@ const nextConfig: NextConfig = {
       {
         protocol: 'https',
         hostname: 'blogs-cdn.imagine.art',
+      },
+      {
+        protocol: 'https',
+        hostname: 'static.vecteezy.com',
       },
     ],
   },

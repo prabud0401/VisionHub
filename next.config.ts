@@ -1,3 +1,4 @@
+
 import type {NextConfig} from 'next';
 
 const nextConfig: NextConfig = {
@@ -9,15 +10,6 @@ const nextConfig: NextConfig = {
     ignoreDuringBuilds: true,
   },
   images: {
-    domains: [
-      "firebasestorage.googleapis.com",
-      "static.vecteezy.com",
-      "content-management-files.canva.com",
-      "blog.segmind.com",
-      "www.dignited.com",
-      "blogs-cdn.imagine.art",
-      // add any other domains you need here
-    ],
     remotePatterns: [
       {
         protocol: 'https',
@@ -32,7 +24,7 @@ const nextConfig: NextConfig = {
         pathname: '/**',
       },
       {
-        protocol: 'https',
+        protocol: 'https://',
         hostname: 'mir-s3-cdn-cf.behance.net',
         port: '',
         pathname: '/**',
@@ -48,7 +40,39 @@ const nextConfig: NextConfig = {
         hostname: 'storage.googleapis.com',
         port: '',
         pathname: '/**',
-      }
+      },
+       {
+        protocol: 'https',
+        hostname: 'firebasestorage.googleapis.com',
+        port: '',
+        pathname: '/**',
+      },
+      {
+        protocol: 'https',
+        hostname: 'i.pravatar.cc',
+        port: '',
+        pathname: '/**',
+      },
+      {
+        protocol: 'https',
+        hostname: 'content-management-files.canva.com',
+      },
+      {
+        protocol: 'https',
+        hostname: 'blog.segmind.com',
+      },
+      {
+        protocol: 'https',
+        hostname: 'www.dignited.com',
+      },
+      {
+        protocol: 'https',
+        hostname: 'blogs-cdn.imagine.art',
+      },
+       {
+        protocol: 'https',
+        hostname: 'static.vecteezy.com',
+      },
     ],
   },
   webpack(config) {
