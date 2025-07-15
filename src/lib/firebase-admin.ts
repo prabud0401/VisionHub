@@ -3,16 +3,20 @@ import * as admin from 'firebase-admin';
 
 // Check if the app is already initialized
 if (!admin.apps.length) {
-    try {
-        // This will work in a deployed Firebase/Google Cloud environment
-        // where Application Default Credentials are automatically available.
-        admin.initializeApp({
-            storageBucket: process.env.NEXT_PUBLIC_FIREBASE_STORAGE_BUCKET || "visionhub-ai-s813r.firebasestorage.app",
-        });
-        console.log("Firebase Admin SDK initialized with Application Default Credentials.");
-    } catch (error) {
-        console.warn("Application Default Credentials not found. Falling back to service account key for local development.");
-        // Fallback for local development using a service account key
+    // The GOOGLE_CLOUD_PROJECT environment variable is set automatically in deployed Google Cloud environments.
+    // Checking for its existence is a reliable way to determine if we're in a deployed environment.
+    if (process.env.GOOGLE_CLOUD_PROJECT) {
+        // In a deployed environment, initialize with Application Default Credentials.
+        try {
+            admin.initializeApp({
+                storageBucket: process.env.NEXT_PUBLIC_FIREBASE_STORAGE_BUCKET || "visionhub-ai-s813r.firebasestorage.app",
+            });
+            console.log("Firebase Admin SDK initialized for a deployed environment.");
+        } catch (e) {
+            console.error("Failed to initialize Firebase Admin SDK in deployed environment:", e);
+        }
+    } else {
+        // In a local environment, fall back to a service account key.
         const serviceAccountKey = process.env.FIREBASE_SERVICE_ACCOUNT_KEY;
         if (serviceAccountKey) {
             try {
@@ -21,12 +25,12 @@ if (!admin.apps.length) {
                     credential: admin.credential.cert(serviceAccount),
                     storageBucket: process.env.NEXT_PUBLIC_FIREBASE_STORAGE_BUCKET || "visionhub-ai-s813r.firebasestorage.app",
                 });
-                console.log("Firebase Admin SDK initialized with service account key.");
+                console.log("Firebase Admin SDK initialized for local development with service account key.");
             } catch (e) {
-                console.error("Failed to parse Firebase service account key or initialize app:", e);
+                console.error("Failed to parse Firebase service account key or initialize app for local development:", e);
             }
         } else {
-            console.error("FIREBASE_SERVICE_ACCOUNT_KEY environment variable is not set. Firebase Admin SDK could not be initialized.");
+            console.error("FIREBASE_SERVICE_ACCOUNT_KEY environment variable is not set. Firebase Admin SDK could not be initialized for local development.");
         }
     }
 }
