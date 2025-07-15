@@ -110,40 +110,61 @@ export default function Header() {
               <SheetContent side="right">
                  <SheetTitle className="sr-only">Menu</SheetTitle>
                  <SheetDescription className="sr-only">Main navigation menu</SheetDescription>
-                <div className="flex flex-col gap-6 p-6">
+                <div className="flex h-full flex-col gap-6 p-6">
                   <Link href="/" className="flex items-center gap-2 text-lg font-bold">
                     <Bot className="h-7 w-7 text-primary" />
                     <span>VisionHub</span>
                   </Link>
-                   <div className="flex flex-col gap-2 mt-4">
-                     {user ? (
-                       <>
-                        <Button variant="outline" asChild>
+
+                  {user ? (
+                    <div className="border-b pb-6">
+                      <div className="flex items-center gap-4 mb-4">
+                        <Avatar className="h-12 w-12 border-2 border-primary/50">
+                            <AvatarImage src={user.photoURL ?? ''} alt={user.displayName ?? 'User'} />
+                            <AvatarFallback>{user.displayName?.charAt(0).toUpperCase()}</AvatarFallback>
+                        </Avatar>
+                        <div>
+                            <p className="font-semibold">{user.displayName}</p>
+                            <p className="text-sm text-muted-foreground">{user.email}</p>
+                        </div>
+                      </div>
+                      <div className="flex flex-col gap-2">
+                        <Button asChild variant="outline" className="justify-start">
                           <Link href="/dashboard">Dashboard</Link>
                         </Button>
-                        <Button variant="ghost" onClick={handleLogout}>Log Out</Button>
-                       </>
-                     ) : (
+                        <Button asChild variant="ghost" className="justify-start">
+                          <Link href="/settings">Settings</Link>
+                        </Button>
+                         <Button variant="ghost" className="justify-start" onClick={handleLogout}>Log Out</Button>
+                      </div>
+                    </div>
+                  ) : (
+                     <div className="flex flex-col gap-2 mt-4">
                         <Button variant="accent" onClick={() => setAuthModalOpen(true)}>Get Started</Button>
-                     )}
-                  </div>
-                  <nav className="flex flex-col gap-4 border-t pt-6">
+                     </div>
+                  )}
+
+                  <nav className="flex flex-col gap-4 text-lg">
+                    {user && (
+                      <>
+                        <Link href="/gallery" className="transition-colors hover:text-primary">Gallery</Link>
+                        <Link href="/background-remover" className="transition-colors hover:text-primary">Image Upgrade</Link>
+                         <DropdownMenuSeparator />
+                      </>
+                    )}
                     {navLinks.map((link) => (
-                      <Link key={link.href} href={link.href} className="text-lg transition-colors hover:text-primary">
+                      <Link key={link.href} href={link.href} className="transition-colors hover:text-primary">
                         {link.label}
                       </Link>
                     ))}
                     {user && (
                       <>
-                        <Link href="/gallery" className="text-lg transition-colors hover:text-primary">Gallery</Link>
-                        <Link href="/background-remover" className="text-lg transition-colors hover:text-primary">Image Upgrade</Link>
-                        <Link href="/settings" className="text-lg transition-colors hover:text-primary">Settings</Link>
                         <DropdownMenuSeparator />
-                        <p className="px-2 text-sm text-muted-foreground">Coming Soon</p>
-                        <Link href="/image-to-image" className="text-lg transition-colors hover:text-primary">Image-to-Image</Link>
-                        <Link href="/inpainting" className="text-lg transition-colors hover:text-primary">Inpainting</Link>
-                        <Link href="/community" className="text-lg transition-colors hover:text-primary">Community</Link>
-                        <Link href="/video-generation" className="text-lg transition-colors hover:text-primary">Video Generation</Link>
+                        <p className="text-sm text-muted-foreground">Coming Soon</p>
+                        <Link href="/image-to-image" className="transition-colors hover:text-primary">Image-to-Image</Link>
+                        <Link href="/inpainting" className="transition-colors hover:text-primary">Inpainting</Link>
+                        <Link href="/community" className="transition-colors hover:text-primary">Community</Link>
+                        <Link href="/video-generation" className="transition-colors hover:text-primary">Video Generation</Link>
                       </>
                     )}
                   </nav>
