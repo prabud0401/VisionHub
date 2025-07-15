@@ -1,99 +1,96 @@
 
 'use client';
-
 import Link from 'next/link';
-import { usePathname, useRouter } from 'next/navigation';
-import { Bot, LogOut, Menu, Settings, LayoutDashboard, ImageIcon, Scaling } from 'lucide-react';
+import { Bot, Menu, LayoutDashboard } from 'lucide-react';
 import { Button } from '@/components/ui/button';
-import { Sheet, SheetContent, SheetTrigger } from '@/components/ui/sheet';
+import { Sheet, SheetContent, SheetTrigger, SheetTitle, SheetDescription } from '@/components/ui/sheet';
 import { useAuth } from '@/context/auth-context';
-import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import {
   DropdownMenu,
   DropdownMenuContent,
-  DropdownMenuGroup,
   DropdownMenuItem,
   DropdownMenuLabel,
   DropdownMenuSeparator,
   DropdownMenuTrigger,
+  DropdownMenuGroup,
 } from '@/components/ui/dropdown-menu';
+import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
+import { useRouter } from 'next/navigation';
 
 const navLinks = [
-  { href: '/dashboard', label: 'Dashboard', icon: <LayoutDashboard /> },
-  { href: '/gallery', label: 'Gallery', icon: <ImageIcon /> },
-  { href: '/background-remover', label: 'Image Upgrade', icon: <Scaling /> },
+  { href: '/about', label: 'About' },
+  { href: '/services', label: 'Services' },
+  { href: '/pricing', label: 'Pricing' },
+  { href: '/faq', label: 'FAQ' },
 ];
 
 export default function Header() {
+  const { user, setAuthModalOpen, signOut } = useAuth();
   const router = useRouter();
-  const pathname = usePathname();
-  const { user, signOut } = useAuth();
-  
+
   const handleLogout = async () => {
     await signOut();
     router.push('/');
   };
 
-  if (!user) {
-    return null; // The app layout will handle redirects
-  }
-
   return (
-    <header className="fixed top-0 left-0 z-50 w-full bg-background/80 backdrop-blur-sm border-b border-border/40">
-      <div className="container mx-auto flex h-20 items-center justify-between px-4">
-        <div className="flex items-center gap-8">
+    <>
+      <header className="fixed top-0 left-0 z-50 w-full bg-background/80 backdrop-blur-sm">
+        <div className="container mx-auto flex h-20 items-center justify-between px-4 md:px-6">
           <Link href="/" className="flex items-center gap-2 text-xl font-bold">
             <Bot className="h-8 w-8 text-primary" />
-            <span className="hidden sm:inline">VisionHub AI</span>
+            <span>VisionHub</span>
           </Link>
-          <nav className="hidden items-center gap-2 text-sm font-medium md:flex">
+          <nav className="hidden items-center gap-6 text-sm font-medium md:flex">
             {navLinks.map((link) => (
-              <Button 
-                variant={pathname.startsWith(link.href) ? "secondary" : "ghost"}
-                asChild
-                key={link.href}
-              >
-                  <Link href={link.href}>{link.label}</Link>
-              </Button>
+              <Link key={link.href} href={link.href} className="transition-colors hover:text-primary">
+                {link.label}
+              </Link>
             ))}
           </nav>
-        </div>
-        <div className="flex items-center gap-4">
-          <DropdownMenu>
-            <DropdownMenuTrigger asChild>
-              <Button variant="ghost" className="relative h-10 w-10 rounded-full">
-                <Avatar className="h-10 w-10 border-2 border-primary/50">
-                  <AvatarImage src={user.photoURL ?? ''} alt={user.displayName ?? 'User'} />
-                  <AvatarFallback>{user.displayName?.charAt(0).toUpperCase()}</AvatarFallback>
-                </Avatar>
+          <div className="hidden items-center gap-4 md:flex">
+            {user ? (
+              <>
+                <Button variant="outline" asChild>
+                  <Link href="/dashboard">
+                    <LayoutDashboard className="mr-2 h-4 w-4" />
+                    Dashboard
+                  </Link>
+                </Button>
+                <DropdownMenu>
+                  <DropdownMenuTrigger asChild>
+                    <Button variant="ghost" className="relative h-10 w-10 rounded-full">
+                      <Avatar className="h-10 w-10 border-2 border-primary/50">
+                        <AvatarImage src={user.photoURL ?? ''} alt={user.displayName ?? 'User'} />
+                        <AvatarFallback>{user.displayName?.charAt(0).toUpperCase()}</AvatarFallback>
+                      </Avatar>
+                    </Button>
+                  </DropdownMenuTrigger>
+                  <DropdownMenuContent className="w-56" align="end" forceMount>
+                    <DropdownMenuLabel className="font-normal">
+                      <div className="flex flex-col space-y-1">
+                        <p className="text-sm font-medium leading-none">{user.displayName}</p>
+                        <p className="text-xs leading-none text-muted-foreground">{user.email}</p>
+                      </div>
+                    </DropdownMenuLabel>
+                    <DropdownMenuSeparator />
+                    <DropdownMenuGroup>
+                       <DropdownMenuItem onClick={() => router.push('/dashboard')}>Dashboard</DropdownMenuItem>
+                       <DropdownMenuItem onClick={() => router.push('/gallery')}>Gallery</DropdownMenuItem>
+                       <DropdownMenuItem onClick={() => router.push('/background-remover')}>Image Upgrade</DropdownMenuItem>
+                       <DropdownMenuItem onClick={() => router.push('/settings')}>Settings</DropdownMenuItem>
+                    </DropdownMenuGroup>
+                    <DropdownMenuSeparator />
+                    <DropdownMenuItem onClick={handleLogout}>Log out</DropdownMenuItem>
+                  </DropdownMenuContent>
+                </DropdownMenu>
+              </>
+            ) : (
+              <Button variant="accent" onClick={() => setAuthModalOpen(true)}>
+                Get Started
               </Button>
-            </DropdownMenuTrigger>
-            <DropdownMenuContent className="w-56" align="end" forceMount>
-              <DropdownMenuLabel className="font-normal">
-                <div className="flex flex-col space-y-1">
-                  <p className="text-sm font-medium leading-none">{user.displayName}</p>
-                  <p className="text-xs leading-none text-muted-foreground">{user.email}</p>
-                </div>
-              </DropdownMenuLabel>
-              <DropdownMenuSeparator />
-              <DropdownMenuGroup>
-                <DropdownMenuItem onClick={() => router.push('/dashboard')}>
-                  <LayoutDashboard className="mr-2 h-4 w-4" />
-                  <span>Dashboard</span>
-                </DropdownMenuItem>
-                <DropdownMenuItem onClick={() => router.push('/settings')}>
-                  <Settings className="mr-2 h-4 w-4" />
-                  <span>Settings</span>
-                </DropdownMenuItem>
-              </DropdownMenuGroup>
-              <DropdownMenuSeparator />
-              <DropdownMenuItem onClick={handleLogout}>
-                <LogOut className="mr-2 h-4 w-4" />
-                <span>Log out</span>
-              </DropdownMenuItem>
-            </DropdownMenuContent>
-          </DropdownMenu>
-
+            )}
+          </div>
           <div className="md:hidden">
             <Sheet>
               <SheetTrigger asChild>
@@ -103,40 +100,35 @@ export default function Header() {
                 </Button>
               </SheetTrigger>
               <SheetContent side="right">
+                 <SheetTitle className="sr-only">Menu</SheetTitle>
+                 <SheetDescription className="sr-only">Main navigation menu</SheetDescription>
                 <div className="flex flex-col gap-6 p-6">
                   <Link href="/" className="flex items-center gap-2 text-lg font-bold">
                     <Bot className="h-7 w-7 text-primary" />
-                    <span>VisionHub AI</span>
+                    <span>VisionHub</span>
                   </Link>
                   <nav className="flex flex-col gap-4">
                     {navLinks.map((link) => (
-                       <Button 
-                         variant={pathname.startsWith(link.href) ? "secondary" : "ghost"}
-                         className="justify-start"
-                         asChild
-                         key={link.href}
-                       >
-                         <Link href={link.href}>{link.label}</Link>
-                       </Button>
+                      <Link key={link.href} href={link.href} className="text-lg transition-colors hover:text-primary">
+                        {link.label}
+                      </Link>
                     ))}
-                     <Button 
-                       variant={pathname.startsWith('/settings') ? "secondary" : "ghost"}
-                       className="justify-start"
-                       asChild
-                     >
-                       <Link href='/settings'><Settings className="mr-2 h-4 w-4" />Settings</Link>
-                     </Button>
                   </nav>
-                  <Button onClick={handleLogout} variant="outline" className="mt-4">
-                    <LogOut className="mr-2 h-5 w-5" />
-                    Logout
-                  </Button>
+                  <div className="flex flex-col gap-2 mt-4">
+                     {user ? (
+                        <Button variant="outline" asChild>
+                          <Link href="/dashboard">Dashboard</Link>
+                        </Button>
+                     ) : (
+                        <Button variant="accent" onClick={() => setAuthModalOpen(true)}>Get Started</Button>
+                     )}
+                  </div>
                 </div>
               </SheetContent>
             </Sheet>
           </div>
         </div>
-      </div>
-    </header>
+      </header>
+    </>
   );
 }
