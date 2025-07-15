@@ -15,7 +15,7 @@ import {
   sendPasswordResetEmail,
   sendEmailVerification,
 } from 'firebase/auth';
-import { firebaseApp } from '@/lib/firebase-config';
+import { getFirebaseApp } from '@/lib/firebase-config';
 import { createUserProfile } from '@/services/user-service';
 
 interface AuthContextType {
@@ -42,17 +42,17 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   const [auth, setAuth] = useState<Auth | null>(null);
 
   useEffect(() => {
-    if (firebaseApp) {
-      setAuth(getAuth(firebaseApp));
-    }
+    getFirebaseApp().then(app => {
+      if (app) {
+        setAuth(getAuth(app));
+      } else {
+        setLoading(false); // If app fails to initialize, stop loading.
+      }
+    });
   }, []);
 
   useEffect(() => {
     if (!auth) {
-      // Still waiting for firebaseApp to initialize
-      if (document.readyState === "complete") {
-          setLoading(false);
-      }
       return;
     }
     const unsubscribe = onAuthStateChanged(auth, async (user) => {

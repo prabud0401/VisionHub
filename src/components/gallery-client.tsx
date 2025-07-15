@@ -10,7 +10,7 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } f
 import { Button } from './ui/button';
 import { Download, Loader2, Trash2, Wand2, ArrowLeft, ArrowRight, Grid, Grid3x3, Square } from 'lucide-react';
 import { getFirestore, collection, query, where, getDocs, writeBatch, doc } from 'firebase/firestore';
-import firebaseApp from '@/lib/firebase-config';
+import { getFirebaseApp } from '@/lib/firebase-config';
 import {
   AlertDialog,
   AlertDialogAction,
@@ -26,9 +26,8 @@ import { format } from 'date-fns';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { ToggleGroup, ToggleGroupItem } from '@/components/ui/toggle-group';
 import { cn } from '@/lib/utils';
-import { CookieConsentBanner } from '@/components/cookie-consent-banner';
 import Image from 'next/image';
-
+import { CookieConsentBanner } from './cookie-consent-banner';
 
 interface PromptGroup {
   promptId: string;
@@ -56,6 +55,7 @@ export function GalleryClient() {
 
   useEffect(() => {
     async function fetchImages() {
+      const firebaseApp = await getFirebaseApp();
       if (!user || !firebaseApp) {
         setIsLoading(false);
         return;
@@ -147,6 +147,7 @@ export function GalleryClient() {
   };
 
   const handleDeleteGroup = async () => {
+    const firebaseApp = await getFirebaseApp();
     if (!groupToDelete || !firebaseApp) return;
     
     try {
