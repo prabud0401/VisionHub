@@ -26,6 +26,7 @@ import { format } from 'date-fns';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { ToggleGroup, ToggleGroupItem } from '@/components/ui/toggle-group';
 import { cn } from '@/lib/utils';
+import { CookieConsentBanner } from '@/components/cookie-consent-banner';
 
 
 interface PromptGroup {
@@ -39,7 +40,7 @@ interface PromptGroup {
 const ITEMS_PER_PAGE = 12;
 
 export function GalleryClient() {
-  const [allPromptGroups, setAllPromptGroups] = useState<PromptGroup[]>([]);
+  const [allPromptGroups, setAllPromptGroups] = useLocalStorage<PromptGroup[]>('galleryCache', []);
   const [selectedGroup, setSelectedGroup] = useState<PromptGroup | null>(null);
   const [groupToDelete, setGroupToDelete] = useState<PromptGroup | null>(null);
   const [isLoading, setIsLoading] = useState(true);
@@ -59,6 +60,7 @@ export function GalleryClient() {
         return;
       }
       
+      setIsLoading(true);
       try {
         const db = getFirestore(firebaseApp);
         const q = query(collection(db, 'images'), where('userId', '==', user.uid));
@@ -101,7 +103,7 @@ export function GalleryClient() {
     } else {
         setIsLoading(false);
     }
-  }, [user]);
+  }, [user, setAllPromptGroups]);
 
   const sortedGroups = useMemo(() => {
     return [...allPromptGroups].sort((a, b) => {
@@ -303,6 +305,9 @@ export function GalleryClient() {
           </AlertDialogFooter>
         </AlertDialogContent>
       </AlertDialog>
+      <CookieConsentBanner />
     </>
   );
 }
+
+    
