@@ -24,7 +24,7 @@ const nextConfig: NextConfig = {
         pathname: '/**',
       },
       {
-        protocol: 'https://',
+        protocol: 'https',
         hostname: 'mir-s3-cdn-cf.behance.net',
         port: '',
         pathname: '/**',
