@@ -1,3 +1,4 @@
+
 'use server';
 
 import { firestore, storage } from '@/lib/firebase-admin';
@@ -40,12 +41,13 @@ export async function submitPaymentForReview(data: PaymentSubmissionData): Promi
 
 
 export async function uploadPaymentSlip(
-  fileBuffer: Buffer,
+  base64Data: string,
   fileName: string,
   mimeType: string
 ): Promise<string> {
   if (!storage) throw new Error('Firebase Storage is not initialized.');
   
+  const fileBuffer = Buffer.from(base64Data, 'base64');
   const file = storage.file(`payment-slips/${fileName}`);
 
   await file.save(fileBuffer, {

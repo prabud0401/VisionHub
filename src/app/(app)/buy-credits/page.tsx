@@ -36,6 +36,17 @@ const GooglePayIcon = () => (
     </svg>
 );
 
+// Helper to convert ArrayBuffer to Base64
+function bufferToBase64(buffer: ArrayBuffer) {
+  let binary = '';
+  const bytes = new Uint8Array(buffer);
+  const len = bytes.byteLength;
+  for (let i = 0; i < len; i++) {
+    binary += String.fromCharCode(bytes[i]);
+  }
+  return window.btoa(binary);
+}
+
 
 export default function BuyCreditsPage() {
   const [selectedPlan, , planLoaded] = useLocalStorage<PlanDetails | null>('selectedPlan', null);
@@ -66,10 +77,10 @@ export default function BuyCreditsPage() {
     
     try {
       const fileBuffer = await paymentSlip.arrayBuffer();
-      const buffer = Buffer.from(fileBuffer);
+      const base64Data = bufferToBase64(fileBuffer);
       const fileName = `${user.uid}-${Date.now()}-${paymentSlip.name}`;
 
-      const slipUrl = await uploadPaymentSlip(buffer, fileName, paymentSlip.type);
+      const slipUrl = await uploadPaymentSlip(base64Data, fileName, paymentSlip.type);
       
       await submitPaymentForReview({
           userId: user.uid,
