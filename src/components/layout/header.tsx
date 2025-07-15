@@ -1,7 +1,8 @@
 
 'use client';
 import Link from 'next/link';
-import { Bot, Menu, LayoutDashboard, Gem } from 'lucide-react';
+import Image from 'next/image';
+import { Menu, LayoutDashboard, Gem } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Sheet, SheetContent, SheetTrigger, SheetTitle, SheetDescription } from '@/components/ui/sheet';
 import { useAuth } from '@/context/auth-context';
@@ -37,9 +38,8 @@ export default function Header() {
     <>
       <header className="fixed top-0 left-0 z-50 w-full bg-background/80 backdrop-blur-sm">
         <div className="container mx-auto flex h-20 items-center justify-between px-4 md:px-6">
-          <Link href="/" className="flex items-center gap-2 text-xl font-bold">
-            <Bot className="h-8 w-8 text-primary" />
-            <span>VisionHub</span>
+          <Link href="/">
+             <Image src="/visionhub.png" alt="VisionHub Logo" width={180} height={45} />
           </Link>
           <nav className="hidden items-center gap-6 text-sm font-medium md:flex">
             {navLinks.map((link) => (
@@ -115,9 +115,8 @@ export default function Header() {
                  <SheetTitle className="sr-only">Menu</SheetTitle>
                  <SheetDescription className="sr-only">Main navigation menu</SheetDescription>
                 <div className="flex h-full flex-col gap-6 p-6 overflow-y-auto">
-                  <Link href="/" className="flex items-center gap-2 text-lg font-bold">
-                    <Bot className="h-7 w-7 text-primary" />
-                    <span>VisionHub</span>
+                  <Link href="/">
+                    <Image src="/visionhub.png" alt="VisionHub Logo" width={180} height={45} />
                   </Link>
 
                   {user ? (

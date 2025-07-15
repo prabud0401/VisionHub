@@ -3,7 +3,7 @@
 
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
-import { Bot, Loader2, LogIn } from 'lucide-react';
+import { Loader2, LogIn } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
@@ -12,6 +12,7 @@ import { useToast } from '@/hooks/use-toast';
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
 import { verifyAdmin } from '@/services/admin-service';
 import Link from 'next/link';
+import Image from 'next/image';
 
 export default function AdminLoginPage() {
   const [email, setEmail] = useState('');
@@ -51,9 +52,11 @@ export default function AdminLoginPage() {
 
   return (
     <div className="min-h-screen flex flex-col items-center justify-center bg-background p-4">
-      <Link href="/" className="flex items-center gap-2 text-2xl font-bold mb-8">
-        <Bot className="h-8 w-8 text-primary" />
-        <span>VisionHub AI - Admin</span>
+      <Link href="/" className="mb-8">
+        <div className="flex items-end gap-2">
+            <Image src="/visionhub.png" alt="VisionHub Logo" width={200} height={50} />
+            <span className="text-2xl font-bold pb-1">Admin</span>
+        </div>
       </Link>
       <Card className="w-full max-w-md">
         <CardHeader className="text-center">

@@ -4,8 +4,9 @@
 import { useAuth } from '@/context/auth-context';
 import { useRouter } from 'next/navigation';
 import { useEffect, useState } from 'react';
-import { Bot, Users, ImageIcon, LayoutDashboard, CreditCard, LogOut, Menu } from 'lucide-react';
+import { Users, ImageIcon, LayoutDashboard, CreditCard, LogOut, Menu } from 'lucide-react';
 import Link from 'next/link';
+import Image from 'next/image';
 import { usePathname } from 'next/navigation';
 import { cn } from '@/lib/utils';
 import { Button } from '@/components/ui/button';
@@ -53,8 +54,8 @@ export default function AdminLayout({
       <aside className="hidden w-64 flex-col border-r bg-background sm:flex">
         <div className="flex h-[60px] items-center border-b px-6">
           <Link href="/admin/dashboard" className="flex items-center gap-2 font-semibold">
-            <Bot className="h-6 w-6 text-primary" />
-            <span>Admin Panel</span>
+            <Image src="/visionhub.png" alt="VisionHub Logo" width={120} height={30} />
+            <span className="text-sm text-muted-foreground">Admin</span>
           </Link>
         </div>
         <nav className="flex-1 overflow-auto py-4">
@@ -88,8 +89,7 @@ export default function AdminLayout({
             <SheetContent side="left" className="sm:max-w-xs">
               <nav className="grid gap-6 text-lg font-medium">
                 <Link href="/admin/dashboard" className="flex items-center gap-2 text-lg font-semibold">
-                  <Bot className="h-6 w-6 text-primary" />
-                  <span>Admin Panel</span>
+                  <Image src="/visionhub.png" alt="VisionHub Logo" width={150} height={37} />
                 </Link>
                 {navLinks.map((link) => (
                   <Link

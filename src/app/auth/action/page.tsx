@@ -2,6 +2,7 @@
 'use client';
 
 import { Suspense } from 'react';
+import Image from 'next/image';
 import { useSearchParams } from 'next/navigation';
 import { useState } from 'react';
 import { useForm, zodResolver } from '@mantine/form';
@@ -11,7 +12,7 @@ import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
-import { Bot, KeyRound, Loader2, MailCheck } from 'lucide-react';
+import { KeyRound, Loader2, MailCheck } from 'lucide-react';
 import { verifyEmail, confirmPasswordReset } from '@/lib/firebase-actions';
 import Link from 'next/link';
 
@@ -154,8 +155,8 @@ function AuthActionManager() {
   return (
     <Card className="w-full max-w-md">
         <CardHeader className="text-center">
-            <Bot className="mx-auto h-12 w-12 text-primary" />
-            <CardTitle>Invalid Action</CardTitle>
+            <Image src="/visionhub.png" alt="VisionHub Logo" width={150} height={40} className="mx-auto" />
+            <CardTitle className="pt-4">Invalid Action</CardTitle>
         </CardHeader>
         <CardContent>
             <p className="text-center text-muted-foreground">The link you followed is either invalid or has expired. Please try the action again.</p>
@@ -167,9 +168,8 @@ function AuthActionManager() {
 export default function AuthActionPage() {
     return (
         <div className="min-h-screen flex flex-col items-center justify-center bg-background text-foreground p-4">
-           <Link href="/" className="flex items-center gap-2 text-2xl font-bold mb-8">
-                <Bot className="h-8 w-8 text-primary" />
-                <span>VisionHub AI</span>
+           <Link href="/" className="mb-8">
+                <Image src="/visionhub.png" alt="VisionHub Logo" width={200} height={50} />
            </Link>
            <Suspense fallback={<Loader2 className="h-12 w-12 animate-spin" />}>
                <AuthActionManager />

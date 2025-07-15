@@ -1,15 +1,15 @@
 
 import Link from "next/link";
-import { Bot, Facebook, Twitter, Instagram, Linkedin } from "lucide-react";
+import Image from 'next/image';
+import { Facebook, Twitter, Instagram, Linkedin } from "lucide-react";
 
 export default function Footer() {
   return (
     <footer id="contact" className="w-full bg-card/80 backdrop-blur-sm border-t border-border/40 py-12">
       <div className="container mx-auto grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 text-sm">
         <div className="flex flex-col gap-4">
-           <Link href="/" className="flex items-center gap-2 text-xl font-bold">
-            <Bot className="h-8 w-8 text-primary" />
-            <span>VisionHub</span>
+           <Link href="/">
+            <Image src="/visionhub.png" alt="VisionHub Logo" width={180} height={45} />
           </Link>
           <p className="text-muted-foreground">
             The ultimate AI image generation platform for content creators.

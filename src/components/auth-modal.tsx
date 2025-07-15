@@ -1,6 +1,7 @@
 
 'use client';
 import { useState } from 'react';
+import Image from 'next/image';
 import {
   Dialog,
   DialogContent,
@@ -12,7 +13,7 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { useAuth } from '@/context/auth-context';
-import { Bot, Loader2 } from 'lucide-react';
+import { Loader2 } from 'lucide-react';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Alert, AlertDescription, AlertTitle } from './ui/alert';
 import { useToast } from '@/hooks/use-toast';
@@ -94,7 +95,7 @@ export function AuthModal() {
     <Dialog open={isAuthModalOpen} onOpenChange={setAuthModalOpen}>
       <DialogContent className="sm:max-w-md">
         <DialogHeader className="items-center text-center">
-          <Bot className="h-12 w-12 text-primary mb-2" />
+          <Image src="/visionhub.png" alt="VisionHub Logo" width={150} height={40} className="mb-2" />
           <DialogTitle className="text-2xl font-headline">Welcome Back</DialogTitle>
           <DialogDescription>
             Sign in to continue your creative journey.
