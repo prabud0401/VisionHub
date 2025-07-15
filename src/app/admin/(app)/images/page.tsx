@@ -50,7 +50,8 @@ export default function AdminImagesPage() {
     if (!imageToDelete) return;
 
     try {
-      await deleteImage(imageToDelete.id);
+      // Pass both the ID and the URL to the service function
+      await deleteImage(imageToDelete.id, imageToDelete.url);
       toast({ title: 'Image Deleted', description: 'The image has been permanently deleted.' });
       fetchImages(); // Refetch images after deletion
     } catch (error) {
@@ -101,7 +102,7 @@ export default function AdminImagesPage() {
           <AlertDialogHeader>
             <AlertDialogTitle>Are you sure?</AlertDialogTitle>
             <AlertDialogDescription>
-              This action will permanently delete this image. This cannot be undone.
+              This action will permanently delete this image from the database and storage. This cannot be undone.
             </AlertDialogDescription>
           </AlertDialogHeader>
           <AlertDialogFooter>

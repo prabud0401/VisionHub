@@ -1,7 +1,7 @@
 
 'use server';
 
-import { firestore } from '@/lib/firebase-admin';
+import { firestore, storage } from '@/lib/firebase-admin';
 import { getAuth } from 'firebase-admin/auth';
 import type { GeneratedImage } from '@/lib/types';
 
@@ -110,11 +110,31 @@ export async function getAllImages(): Promise<AdminImage[]> {
   }));
 }
 
-export async function deleteImage(imageId: string): Promise<void> {
-  if (!firestore) throw new Error('Firestore not initialized');
+export async function deleteImage(imageId: string, imageUrl: string): Promise<void> {
+  if (!firestore || !storage) throw new Error('Firestore or Storage not initialized');
+  
+  // 1. Delete the document from Firestore
   await firestore.collection('images').doc(imageId).delete();
-  // Note: This does not delete the image file from Firebase Storage.
-  // A complete implementation would also include a Cloud Function to handle file deletion from Storage.
+
+  // 2. Delete the file from Firebase Storage
+  try {
+    // Extract the file path from the public URL
+    // Example URL: https://storage.googleapis.com/your-bucket-name/generated-images/image-name.png
+    const url = new URL(imageUrl);
+    // Pathname will be /your-bucket-name/generated-images/image-name.png
+    // We need to remove the leading slash and the bucket name.
+    const pathParts = url.pathname.split('/');
+    const filePath = pathParts.slice(2).join('/'); // Skips bucket name, joins the rest
+
+    if (filePath) {
+      await storage.file(filePath).delete();
+      console.log(`Successfully deleted ${filePath} from Storage.`);
+    }
+  } catch (error) {
+    console.error(`Failed to delete image file from Storage for imageId ${imageId}. It might have already been deleted or the URL was malformed.`, error);
+    // We don't re-throw the error, as the primary goal (deleting from DB) was successful.
+    // The link is now broken anyway.
+  }
 }
 
 export async function getAdminStats(): Promise<{ userCount: number; imageCount: number }> {
