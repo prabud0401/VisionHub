@@ -13,6 +13,7 @@ import { Button } from '@/components/ui/button';
 import { ArrowRight, Brush, Gem, Sparkles } from 'lucide-react';
 import ToolsSuite from '@/components/landing/tools-suite';
 import SocialCta from '@/components/landing/social-cta';
+import FeatureHighlight from '@/components/landing/feature-highlight';
 
 const CtaSection = () => (
     <section className="py-20 lg:py-24 bg-card/50">
@@ -49,6 +50,31 @@ function LandingPage() {
             <HeroSection />
             <Partners />
             <ToolsSuite />
+            <FeatureHighlight
+                title="Image-to-Image Transformation"
+                description="Upload an image and transform it with a text prompt into something entirely new. The future of iterative design is on its way."
+                imageUrl="https://cdn.web.imagine.art/6c786763-941f-431e-b838-895180630b20"
+                imageHint="robot dog future"
+             />
+             <FeatureHighlight
+                title="AI Inpainting & Outpainting"
+                description="Edit images with precision. Erase parts of an image and regenerate them with a new prompt, or expand your canvas infinitely. Perfect for making targeted changes."
+                imageUrl="https://mir-s3-cdn-cf.behance.net/project_modules/1400/b383b3169312369.644a56a9a3b9d.jpg"
+                imageHint="photo editing"
+             />
+             <FeatureHighlight
+                title="Community Showcase"
+                description="A vibrant space to share your creations, discover what others are making, and connect with fellow artists. Get ready to be inspired."
+                imageUrl="https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEh6wH0a88aNax9yS3E9KnIZ4pL3gGv8PUFL09224OAbRO_31M9P6TNMh2PqY0j2j5pXJ7A-o2S-AQd21s2p9y1Bq9y1Bq9y1Bq9y1Bq9y1Bq9y1Bq/s1600/image-generation-of-people-in-an-art-gallery-viewing-a-painting-of-a-beautiful-landscape_839178-52.jpg"
+                imageHint="art gallery community"
+             />
+            <FeatureHighlight
+                title="AI Video Generation"
+                description="The next frontier of creativity. Our AI video tool will let you create dynamic clips from simple text prompts. The future of content creation is coming."
+                imageUrl="https://storage.googleapis.com/gweb-aip-images/default-videos/gemini_1_5/gemini_1_5_hero_split_video_2_dark_desktop.mp4"
+                imageHint="movie film"
+                isVideo
+             />
             <CtaSection />
             <Testimonials />
             <GalleryPreview />
