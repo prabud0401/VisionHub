@@ -70,7 +70,7 @@ export default function Header() {
                     <DropdownMenuLabel className="font-normal">
                       <div className="flex flex-col space-y-1">
                         <p className="text-sm font-medium leading-none">{user.displayName}</p>
-                        <p className="text-xs leading-none text-muted-foreground">{user.email}</p>
+                        <p className="text-xs leading-none text-muted-foreground">@{user.username}</p>
                       </div>
                     </DropdownMenuLabel>
                     <DropdownMenuSeparator />
@@ -125,7 +125,7 @@ export default function Header() {
                         </Avatar>
                         <div>
                             <p className="font-semibold">{user.displayName}</p>
-                            <p className="text-sm text-muted-foreground">{user.email}</p>
+                            <p className="text-sm text-muted-foreground">@{user.username}</p>
                         </div>
                       </div>
                       <div className="flex flex-col gap-2">

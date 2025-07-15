@@ -6,7 +6,7 @@ import { useAuth } from '@/context/auth-context';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
-import { KeyRound, User, Palette, Shield, CreditCard } from 'lucide-react';
+import { KeyRound, User, Palette, Shield, CreditCard, AtSign } from 'lucide-react';
 import { UpdatePasswordModal } from '@/components/update-password-modal';
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '@/components/ui/accordion';
 import { Input } from '@/components/ui/input';
@@ -84,7 +84,7 @@ export default function SettingsPage() {
               </Avatar>
               <div>
                 <h2 className="text-3xl font-bold font-headline">{user.displayName}</h2>
-                <p className="text-muted-foreground">{user.email}</p>
+                <p className="text-muted-foreground">@{user.username}</p>
               </div>
             </div>
         </div>
@@ -96,6 +96,10 @@ export default function SettingsPage() {
                     <CardDescription>View and manage your personal details.</CardDescription>
                 </CardHeader>
                 <CardContent className="space-y-4">
+                    <div className="flex flex-col">
+                        <span className="text-sm text-muted-foreground">Username</span>
+                        <span>@{user.username}</span>
+                    </div>
                     <div className="flex flex-col">
                         <span className="text-sm text-muted-foreground">Full Name</span>
                         <span>{user.displayName}</span>

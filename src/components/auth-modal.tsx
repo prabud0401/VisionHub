@@ -28,12 +28,12 @@ export function AuthModal() {
     isAuthModalOpen,
     setAuthModalOpen,
     signInWithGoogle,
-    signInWithEmail,
+    signInWithUsername,
     sendPasswordReset
   } = useAuth();
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
-  const [email, setEmail] = useState('');
+  const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const { toast } = useToast();
 
@@ -51,15 +51,15 @@ export function AuthModal() {
     }
   };
 
-  const handleEmailSignIn = async (e: React.FormEvent) => {
+  const handleUsernameSignIn = async (e: React.FormEvent) => {
     e.preventDefault();
     setIsLoading(true);
     setError(null);
     try {
-      await signInWithEmail(email, password);
+      await signInWithUsername(username, password);
       setAuthModalOpen(false);
     } catch (error) {
-      console.error('Email Sign-In Error:', error);
+      console.error('Username Sign-In Error:', error);
       setError(error instanceof Error ? error.message : 'Failed to sign in. Please check your credentials.');
     } finally {
       setIsLoading(false);
@@ -67,17 +67,19 @@ export function AuthModal() {
   };
 
   const handlePasswordReset = async () => {
-    if (!email) {
-      setError("Please enter your email address to reset your password.");
+    if (!username) {
+      setError("Please enter your username or email address to reset your password.");
       return;
     }
     setIsLoading(true);
     setError(null);
     try {
-      await sendPasswordReset(email);
+      // Note: sendPasswordResetEmail requires an email. For now, we ask users to enter an email.
+      // A more complex flow would look up the email from the username server-side.
+      await sendPasswordReset(username);
       toast({
         title: "Password Reset Email Sent",
-        description: "Please check your inbox for instructions to reset your password.",
+        description: "If an account exists for that email, you will receive reset instructions.",
       });
       setAuthModalOpen(false);
     } catch (error) {
@@ -102,7 +104,7 @@ export function AuthModal() {
         <Tabs defaultValue="google" className="w-full">
           <TabsList className="grid w-full grid-cols-2">
             <TabsTrigger value="google">Sign in with Google</TabsTrigger>
-            <TabsTrigger value="password">Use Password</TabsTrigger>
+            <TabsTrigger value="password">Use Username</TabsTrigger>
           </TabsList>
           <TabsContent value="google" className="py-4">
              <Button onClick={handleGoogleSignIn} className="w-full" disabled={isLoading}>
@@ -110,19 +112,19 @@ export function AuthModal() {
                 Continue with Google
             </Button>
             <p className="px-8 text-center text-sm text-muted-foreground mt-4">
-              First time? Sign in with Google to create your account.
+              First time? Sign in with Google to create your account and username.
             </p>
           </TabsContent>
           <TabsContent value="password">
-            <form onSubmit={handleEmailSignIn} className="space-y-4 py-4">
+            <form onSubmit={handleUsernameSignIn} className="space-y-4 py-4">
                 <div className="space-y-2">
-                  <Label htmlFor="email">Email</Label>
+                  <Label htmlFor="username">Username or Email</Label>
                   <Input
-                    id="email"
-                    type="email"
-                    placeholder="creator@visionhub.ai"
-                    value={email}
-                    onChange={(e) => setEmail(e.target.value)}
+                    id="username"
+                    type="text"
+                    placeholder="e.g., Jsmith1234"
+                    value={username}
+                    onChange={(e) => setUsername(e.target.value)}
                     required
                   />
                 </div>

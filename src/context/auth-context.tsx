@@ -16,13 +16,14 @@ import {
   sendEmailVerification,
 } from 'firebase/auth';
 import { getFirebaseApp } from '@/lib/firebase-config';
-import { createUserProfile } from '@/services/user-service';
+import { createUserProfile, getUserByUsername } from '@/services/user-service';
 
 interface AuthContextType {
-  user: User | null;
+  user: User & { username?: string } | null;
   loading: boolean;
   signInWithGoogle: () => Promise<void>;
   signInWithEmail: (email: string, pass: string) => Promise<void>;
+  signInWithUsername: (username: string, pass: string) => Promise<void>;
   updateUserPassword: (newPass: string) => Promise<void>;
   signOut: () => Promise<void>;
   isAuthModalOpen: boolean;
@@ -36,7 +37,7 @@ const AuthContext = createContext<AuthContextType | undefined>(undefined);
 const googleProvider = new GoogleAuthProvider();
 
 export function AuthProvider({ children }: { children: ReactNode }) {
-  const [user, setUser] = useState<User | null>(null);
+  const [user, setUser] = useState<User & { username?: string } | null>(null);
   const [loading, setLoading] = useState(true);
   const [isAuthModalOpen, setAuthModalOpen] = useState(false);
   const [auth, setAuth] = useState<Auth | null>(null);
@@ -56,7 +57,12 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       return;
     }
     const unsubscribe = onAuthStateChanged(auth, async (user) => {
-      setUser(user);
+      if (user) {
+        const profile = await getUserByUsername(user.uid, true);
+        setUser({ ...user, username: profile?.username });
+      } else {
+        setUser(null);
+      }
       setLoading(false);
     });
     return () => unsubscribe();
@@ -101,6 +107,15 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         setLoading(false);
     }
   }
+
+  const signInWithUsername = async (username: string, pass: string) => {
+    const userProfile = await getUserByUsername(username);
+    if (!userProfile?.email) {
+      throw new Error("User not found.");
+    }
+    return signInWithEmail(userProfile.email, pass);
+  };
+
 
   const updateUserPassword = async (newPass: string) => {
     if (!auth?.currentUser) throw new Error("No user is currently signed in.");
@@ -150,6 +165,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     loading,
     signInWithGoogle,
     signInWithEmail,
+    signInWithUsername,
     updateUserPassword,
     signOut,
     isAuthModalOpen,
