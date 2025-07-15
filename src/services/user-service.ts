@@ -2,6 +2,7 @@
 'use server';
 
 import { firestore } from '@/lib/firebase-admin';
+import { FieldValue } from 'firebase-admin/firestore';
 
 interface UserProfile {
     uid: string;
@@ -11,6 +12,7 @@ interface UserProfile {
     emailVerified: boolean;
     createdAt?: string;
     username?: string;
+    credits?: number;
 }
 
 async function generateUniqueUsername(email: string | null): Promise<string> {
@@ -61,6 +63,7 @@ export async function createUserProfile(userData: UserProfile): Promise<void> {
         photoURL: userData.photoURL,
         emailVerified: userData.emailVerified,
         createdAt: new Date().toISOString(),
+        credits: 5, // Start with 5 free credits
       });
     } else {
        await userRef.update({
@@ -69,8 +72,6 @@ export async function createUserProfile(userData: UserProfile): Promise<void> {
     }
   } catch (error) {
     console.error("Error in createUserProfile: ", error);
-    // Depending on the use case, you might want to throw the error
-    // so the client can handle it.
   }
 }
 
@@ -99,5 +100,20 @@ export async function getUserByUsername(identifier: string, isUid: boolean = fal
     } catch (error) {
         console.error("Error getting user by username:", error);
         return null;
+    }
+}
+
+
+export async function deductUserCredit(userId: string, amount: number = 1): Promise<void> {
+    if (!firestore) throw new Error('Firestore not initialized');
+    const userRef = firestore.collection('users').doc(userId);
+    
+    try {
+        await userRef.update({
+            credits: FieldValue.increment(-amount)
+        });
+    } catch (error) {
+        console.error(`Failed to deduct ${amount} credit(s) for user ${userId}:`, error);
+        throw new Error('Failed to update user credits.');
     }
 }

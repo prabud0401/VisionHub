@@ -6,17 +6,13 @@ import { useAuth } from '@/context/auth-context';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
-import { KeyRound, User, Palette, Shield, CreditCard, AtSign } from 'lucide-react';
+import { KeyRound, User, Palette, Shield, CreditCard, AtSign, Gem, PlusCircle } from 'lucide-react';
 import { UpdatePasswordModal } from '@/components/update-password-modal';
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '@/components/ui/accordion';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { cn } from '@/lib/utils';
-
-// export const metadata: Metadata = { // Metadata must be defined in a server component
-//   title: 'Settings | VisionHub AI',
-//   description: 'Manage your account settings.',
-// };
+import Link from 'next/link';
 
 const GooglePayIcon = () => (
     <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6 mr-2" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
@@ -127,7 +123,28 @@ export default function SettingsPage() {
                 </CardContent>
             </SettingsCard>
 
-            <SettingsCard className="md:col-span-2">
+            <SettingsCard>
+                <CardHeader>
+                    <CardTitle className="flex items-center gap-2"><Gem /> Credits</CardTitle>
+                    <CardDescription>Your current image generation credit balance.</CardDescription>
+                </CardHeader>
+                <CardContent className="space-y-4">
+                    <div className="flex items-center justify-between">
+                        <div>
+                            <p className="text-4xl font-bold">{user.credits ?? 0}</p>
+                            <p className="text-muted-foreground">Credits remaining</p>
+                        </div>
+                        <Button asChild>
+                           <Link href="/pricing">
+                               <PlusCircle className="mr-2 h-4 w-4" />
+                               Get More Credits
+                           </Link>
+                        </Button>
+                    </div>
+                </CardContent>
+            </SettingsCard>
+
+            <SettingsCard>
                 <CardHeader>
                     <CardTitle className="flex items-center gap-2"><CreditCard /> Payment & Billing</CardTitle>
                     <CardDescription>Manage your payment methods and view your billing history. This is a visual placeholder and is not functional.</CardDescription>
@@ -170,18 +187,6 @@ export default function SettingsPage() {
                             </AccordionContent>
                         </AccordionItem>
                     </Accordion>
-                </CardContent>
-            </SettingsCard>
-
-            <SettingsCard className="md:col-span-2">
-                <CardHeader>
-                    <CardTitle className="flex items-center gap-2"><Palette /> Creator Preferences</CardTitle>
-                    <CardDescription>Customize your image generation experience.</CardDescription>
-                </CardHeader>
-                <CardContent>
-                     <p className="text-muted-foreground">
-                        More customization options coming soon!
-                     </p>
                 </CardContent>
             </SettingsCard>
         </div>

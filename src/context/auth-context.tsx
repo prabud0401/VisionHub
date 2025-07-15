@@ -1,7 +1,7 @@
 
 'use client';
 
-import { createContext, useContext, useEffect, useState, ReactNode } from 'react';
+import { createContext, useContext, useEffect, useState, ReactNode, useCallback } from 'react';
 import { 
   getAuth, 
   onAuthStateChanged, 
@@ -18,8 +18,13 @@ import {
 import { getFirebaseApp } from '@/lib/firebase-config';
 import { createUserProfile, getUserByUsername } from '@/services/user-service';
 
+interface AppUser extends User {
+  username?: string;
+  credits?: number;
+}
+
 interface AuthContextType {
-  user: User & { username?: string } | null;
+  user: AppUser | null;
   loading: boolean;
   signInWithGoogle: () => Promise<void>;
   signInWithEmail: (email: string, pass: string) => Promise<void>;
@@ -30,6 +35,7 @@ interface AuthContextType {
   setAuthModalOpen: (isOpen: boolean) => void;
   sendPasswordReset: (email: string) => Promise<void>;
   sendVerificationEmail: () => Promise<void>;
+  refreshUserData: () => Promise<void>;
 }
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
@@ -37,7 +43,7 @@ const AuthContext = createContext<AuthContextType | undefined>(undefined);
 const googleProvider = new GoogleAuthProvider();
 
 export function AuthProvider({ children }: { children: ReactNode }) {
-  const [user, setUser] = useState<User & { username?: string } | null>(null);
+  const [user, setUser] = useState<AppUser | null>(null);
   const [loading, setLoading] = useState(true);
   const [isAuthModalOpen, setAuthModalOpen] = useState(false);
   const [auth, setAuth] = useState<Auth | null>(null);
@@ -52,6 +58,13 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     });
   }, []);
 
+  const refreshUserData = useCallback(async () => {
+    if (auth?.currentUser) {
+      const profile = await getUserByUsername(auth.currentUser.uid, true);
+      setUser({ ...auth.currentUser, ...profile });
+    }
+  }, [auth]);
+
   useEffect(() => {
     if (!auth) {
       return;
@@ -59,7 +72,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     const unsubscribe = onAuthStateChanged(auth, async (user) => {
       if (user) {
         const profile = await getUserByUsername(user.uid, true);
-        setUser({ ...user, username: profile?.username });
+        setUser({ ...user, ...profile });
       } else {
         setUser(null);
       }
@@ -172,6 +185,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     setAuthModalOpen,
     sendPasswordReset,
     sendVerificationEmail,
+    refreshUserData
   };
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;

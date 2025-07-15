@@ -1,3 +1,4 @@
+
 'use server';
 
 /**
@@ -15,6 +16,7 @@ import {
   uploadImageFromDataUri,
 } from '@/services/image-service';
 import type { GeneratedImage } from '@/lib/types';
+import { deductUserCredit, getUserByUsername } from '@/services/user-service';
 
 const GenerateImagesInputSchema = z.object({
   prompt: z.string().describe('The text prompt to generate an image from.'),
@@ -38,6 +40,14 @@ const generateImagesFlow = ai.defineFlow(
     outputSchema: z.custom<GenerateImagesOutput>(),
   },
   async input => {
+    // Check user credits before proceeding
+    const userProfile = await getUserByUsername(input.userId, true);
+    const creditsToDeduct = input.models.length;
+
+    if (!userProfile || (userProfile.credits ?? 0) < creditsToDeduct) {
+        throw new Error("You don't have enough credits to generate these images.");
+    }
+
     const generationTasks = input.models.map(async (modelName) => {
       const {media} = await ai.generate({
         model: 'googleai/gemini-2.0-flash-preview-image-generation',
@@ -50,6 +60,9 @@ const generateImagesFlow = ai.defineFlow(
       if (!media?.url) {
         throw new Error(`No image was generated for model ${modelName}.`);
       }
+
+      // Deduct credit *after* successful generation
+      await deductUserCredit(input.userId, 1);
 
       const imageId = crypto.randomUUID();
       const fileName = `${imageId}.png`;

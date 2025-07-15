@@ -8,24 +8,42 @@ import { Button } from '@/components/ui/button';
 import { Check } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { useAuth } from '@/context/auth-context';
+import { useRouter } from 'next/navigation';
+import { useLocalStorage } from '@/hooks/use-local-storage';
 
 const plans = {
   monthly: [
-    { name: 'Basic', price: '$10', features: ['500 credits', 'Standard quality', 'Limited access to models'] },
-    { name: 'Standard', price: '$25', features: ['1500 credits', 'High quality outputs', 'Full access to models', 'Priority support'], highlighted: true },
-    { name: 'Premium', price: '$50', features: ['4000 credits', '4K+ resolution', 'API access', 'Dedicated support'] },
+    { id: 'price_basic_monthly', name: 'Basic', price: '$10', credits: 500, features: ['Standard quality', 'Limited access to models'] },
+    { id: 'price_standard_monthly', name: 'Standard', price: '$25', credits: 1500, features: ['High quality outputs', 'Full access to models', 'Priority support'], highlighted: true },
+    { id: 'price_premium_monthly', name: 'Premium', price: '$50', credits: 4000, features: ['4K+ resolution', 'API access', 'Dedicated support'] },
   ],
   annually: [
-    { name: 'Basic', price: '$96', features: ['500 credits/mo', 'Standard quality', 'Limited access to models'] },
-    { name: 'Standard', price: '$240', features: ['1500 credits/mo', 'High quality outputs', 'Full access to models', 'Priority support'], highlighted: true },
-    { name: 'Premium', price: '$480', features: ['4000 credits/mo', '4K+ resolution', 'API access', 'Dedicated support'] },
+    { id: 'price_basic_annual', name: 'Basic', price: '$96', credits: 500, features: ['500 credits/mo', 'Standard quality', 'Limited access to models'] },
+    { id: 'price_standard_annual', name: 'Standard', price: '$240', credits: 1500, features: ['1500 credits/mo', 'High quality outputs', 'Full access to models', 'Priority support'], highlighted: true },
+    { id: 'price_premium_annual', name: 'Premium', price: '$480', credits: 4000, features: ['4000 credits/mo', '4K+ resolution', 'API access', 'Dedicated support'] },
   ],
 };
 
 export function PricingClient() {
   const [isAnnual, setIsAnnual] = useState(false);
-  const { setAuthModalOpen } = useAuth();
+  const { user, setAuthModalOpen } = useAuth();
+  const router = useRouter();
+  const [, setSelectedPlan] = useLocalStorage('selectedPlan', null);
+  
   const currentPlans = isAnnual ? plans.annually : plans.monthly;
+
+  const handleChoosePlan = (plan: typeof currentPlans[0]) => {
+    if (!user) {
+      setAuthModalOpen(true);
+      return;
+    }
+    const planDetails = {
+      ...plan,
+      billing: isAnnual ? 'annually' : 'monthly'
+    };
+    setSelectedPlan(planDetails);
+    router.push('/buy-credits');
+  };
 
   return (
     <div className="w-full">
@@ -37,7 +55,7 @@ export function PricingClient() {
         
         <div className="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-5xl mx-auto">
           {currentPlans.map((plan) => (
-            <Card key={plan.name} className={cn(
+            <Card key={plan.id} className={cn(
               "flex flex-col text-left transform hover:-translate-y-2 transition-transform duration-300 relative overflow-hidden",
               plan.highlighted ? "border-accent shadow-accent/20 shadow-lg" : "border-border"
             )}>
@@ -52,6 +70,7 @@ export function PricingClient() {
                   <CardDescription className="text-4xl font-bold pt-4">{plan.price}<span className="text-sm font-normal text-muted-foreground">/{isAnnual ? 'year' : 'month'}</span></CardDescription>
                 </CardHeader>
                 <CardContent className="flex flex-col flex-grow">
+                  <p className="text-lg font-semibold text-primary mb-4">{plan.credits} credits</p>
                   <ul className="space-y-3 mb-8 flex-grow">
                     {plan.features.map((feature) => (
                       <li key={feature} className="flex items-center gap-3">
@@ -61,7 +80,7 @@ export function PricingClient() {
                     ))}
                   </ul>
                   <Button 
-                    onClick={() => setAuthModalOpen(true)}
+                    onClick={() => handleChoosePlan(plan)}
                     variant={plan.highlighted ? 'accent' : 'outline'} 
                     className="w-full"
                   >

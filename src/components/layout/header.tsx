@@ -1,7 +1,7 @@
 
 'use client';
 import Link from 'next/link';
-import { Bot, Menu, LayoutDashboard } from 'lucide-react';
+import { Bot, Menu, LayoutDashboard, Gem } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Sheet, SheetContent, SheetTrigger, SheetTitle, SheetDescription } from '@/components/ui/sheet';
 import { useAuth } from '@/context/auth-context';
@@ -51,6 +51,10 @@ export default function Header() {
           <div className="hidden items-center gap-4 md:flex">
             {user ? (
               <>
+                <div className="flex items-center gap-2 text-sm font-medium border border-border/50 rounded-full px-3 py-1.5">
+                    <Gem className="h-4 w-4 text-primary" />
+                    <span>{user.credits ?? 0} Credits</span>
+                </div>
                 <Button variant="outline" asChild>
                   <Link href="/dashboard">
                     <LayoutDashboard className="mr-2 h-4 w-4" />
@@ -127,6 +131,10 @@ export default function Header() {
                             <p className="font-semibold">{user.displayName}</p>
                             <p className="text-sm text-muted-foreground">@{user.username}</p>
                         </div>
+                      </div>
+                      <div className="flex items-center gap-2 text-sm font-medium border border-border/50 rounded-full px-3 py-1.5 w-fit mb-4">
+                          <Gem className="h-4 w-4 text-primary" />
+                          <span>{user.credits ?? 0} Credits</span>
                       </div>
                       <div className="flex flex-col gap-2">
                         <Button asChild variant="outline" className="justify-start">
