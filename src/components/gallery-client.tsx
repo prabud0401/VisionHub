@@ -1,16 +1,15 @@
+
 'use client';
 
-import { useState, useEffect } from 'react';
-import Image from 'next/image';
+import { useState, useEffect, useMemo } from 'react';
 import { useRouter } from 'next/navigation';
-import { format } from 'date-fns';
 import { useAuth } from '@/context/auth-context';
 import type { GeneratedImage } from '@/lib/types';
 import { PromptGroupCard } from './prompt-group-card';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from '@/components/ui/dialog';
 import { Button } from './ui/button';
-import { Download, Loader2, Trash2, Wand2 } from 'lucide-react';
-import { getFirestore, collection, query, where, getDocs, deleteDoc, doc, writeBatch } from 'firebase/firestore';
+import { Download, Loader2, Trash2, Wand2, ArrowLeft, ArrowRight, Grid, Grid3x3, Square } from 'lucide-react';
+import { getFirestore, collection, query, where, getDocs, writeBatch, doc } from 'firebase/firestore';
 import firebaseApp from '@/lib/firebase-config';
 import {
   AlertDialog,
@@ -23,6 +22,11 @@ import {
   AlertDialogTitle,
 } from "@/components/ui/alert-dialog"
 import { useLocalStorage } from '@/hooks/use-local-storage';
+import { format } from 'date-fns';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+import { ToggleGroup, ToggleGroupItem } from '@/components/ui/toggle-group';
+import { cn } from '@/lib/utils';
+
 
 interface PromptGroup {
   promptId: string;
@@ -32,32 +36,21 @@ interface PromptGroup {
   coverImage: string;
 }
 
+const ITEMS_PER_PAGE = 12;
+
 export function GalleryClient() {
-  const [promptGroups, setPromptGroups] = useState<PromptGroup[]>([]);
+  const [allPromptGroups, setAllPromptGroups] = useState<PromptGroup[]>([]);
   const [selectedGroup, setSelectedGroup] = useState<PromptGroup | null>(null);
   const [groupToDelete, setGroupToDelete] = useState<PromptGroup | null>(null);
   const [isLoading, setIsLoading] = useState(true);
+  const [sortOrder, setSortOrder] = useState<'newest' | 'oldest'>('newest');
+  const [viewMode, setViewMode] = useState<'small' | 'medium' | 'large'>('medium');
+  const [currentPage, setCurrentPage] = useState(1);
+
   const { user } = useAuth();
   const router = useRouter();
   const [, setImageForUpgrade] = useLocalStorage<string | null>('imageForUpgrade', null);
 
-
-  const handleUpgradeImage = async (imageUrl: string) => {
-    try {
-      // Fetch the image and convert it to a data URI
-      const response = await fetch(imageUrl);
-      const blob = await response.blob();
-      const reader = new FileReader();
-      reader.onloadend = () => {
-        const dataUri = reader.result as string;
-        setImageForUpgrade(dataUri);
-        router.push('/background-remover');
-      };
-      reader.readAsDataURL(blob);
-    } catch (error) {
-      console.error("Failed to process image for upgrade:", error);
-    }
-  };
 
   useEffect(() => {
     async function fetchImages() {
@@ -65,6 +58,7 @@ export function GalleryClient() {
         setIsLoading(false);
         return;
       }
+      setIsLoading(true);
       try {
         const db = getFirestore(firebaseApp);
         const q = query(collection(db, 'images'), where('userId', '==', user.uid));
@@ -87,15 +81,13 @@ export function GalleryClient() {
             };
           }
           groups[promptId].images.push(image);
-          // Update created at to the latest image in group for sorting
           if (new Date(image.createdAt) > new Date(groups[promptId].createdAt)) {
             groups[promptId].createdAt = image.createdAt;
             groups[promptId].coverImage = image.url;
           }
         });
         
-        const sortedGroups = Object.values(groups).sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime());
-        setPromptGroups(sortedGroups);
+        setAllPromptGroups(Object.values(groups));
 
       } catch (error) {
         console.error("Error fetching images: ", error);
@@ -105,6 +97,38 @@ export function GalleryClient() {
     }
     fetchImages();
   }, [user]);
+
+  const sortedGroups = useMemo(() => {
+    return [...allPromptGroups].sort((a, b) => {
+      const dateA = new Date(a.createdAt).getTime();
+      const dateB = new Date(b.createdAt).getTime();
+      return sortOrder === 'newest' ? dateB - dateA : dateA - dateB;
+    });
+  }, [allPromptGroups, sortOrder]);
+
+
+  const totalPages = Math.ceil(sortedGroups.length / ITEMS_PER_PAGE);
+  const paginatedGroups = sortedGroups.slice(
+    (currentPage - 1) * ITEMS_PER_PAGE,
+    currentPage * ITEMS_PER_PAGE
+  );
+
+  const handleUpgradeImage = async (imageUrl: string) => {
+    try {
+      const response = await fetch(imageUrl);
+      const blob = await response.blob();
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        const dataUri = reader.result as string;
+        setImageForUpgrade(dataUri);
+        router.push('/background-remover');
+      };
+      reader.readAsDataURL(blob);
+    } catch (error) {
+      console.error("Failed to process image for upgrade:", error);
+    }
+  };
+
 
   const handleSelectGroup = (group: PromptGroup) => {
     setSelectedGroup(group);
@@ -128,14 +152,14 @@ export function GalleryClient() {
 
         await batch.commit();
 
-        setPromptGroups(promptGroups.filter((g) => g.promptId !== groupToDelete.promptId));
-        // TODO: Also delete from Firebase Storage
+        setAllPromptGroups(allPromptGroups.filter((g) => g.promptId !== groupToDelete.promptId));
     } catch (error) {
         console.error("Error deleting image group: ", error);
     } finally {
       setGroupToDelete(null);
     }
   };
+
 
   if (isLoading) {
     return (
@@ -145,7 +169,7 @@ export function GalleryClient() {
     );
   }
 
-  if (promptGroups.length === 0) {
+  if (allPromptGroups.length === 0) {
     return (
       <div className="text-center py-20">
         <h2 className="text-2xl font-semibold">Your gallery is empty</h2>
@@ -154,10 +178,39 @@ export function GalleryClient() {
     );
   }
 
+  const gridClasses = {
+    small: 'grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6',
+    medium: 'grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4',
+    large: 'grid-cols-1 sm:grid-cols-2 lg:grid-cols-3',
+  }
+
   return (
     <>
-      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
-        {promptGroups.map((group) => (
+      <div className="flex flex-col sm:flex-row justify-between items-center gap-4 mb-8 p-4 bg-card rounded-lg border">
+        <div className="flex items-center gap-2">
+            <span className="text-sm font-medium">Sort by:</span>
+             <Select value={sortOrder} onValueChange={(v) => setSortOrder(v as 'newest' | 'oldest')}>
+                <SelectTrigger className="w-[140px]">
+                    <SelectValue placeholder="Sort order" />
+                </SelectTrigger>
+                <SelectContent>
+                    <SelectItem value="newest">Newest</SelectItem>
+                    <SelectItem value="oldest">Oldest</SelectItem>
+                </SelectContent>
+            </Select>
+        </div>
+        <div className="flex items-center gap-2">
+           <span className="text-sm font-medium">View:</span>
+            <ToggleGroup type="single" value={viewMode} onValueChange={(v) => v && setViewMode(v as 'small' | 'medium' | 'large')} variant="outline">
+                <ToggleGroupItem value="small" aria-label="Small grid"><Grid3x3 className="h-4 w-4" /></ToggleGroupItem>
+                <ToggleGroupItem value="medium" aria-label="Medium grid"><Grid className="h-4 w-4" /></ToggleGroupItem>
+                <ToggleGroupItem value="large" aria-label="Large grid"><Square className="h-4 w-4" /></ToggleGroupItem>
+            </ToggleGroup>
+        </div>
+      </div>
+
+      <div className={cn("grid gap-4", gridClasses[viewMode])}>
+        {paginatedGroups.map((group) => (
           <PromptGroupCard
             key={group.promptId}
             group={group}
@@ -167,6 +220,21 @@ export function GalleryClient() {
           />
         ))}
       </div>
+
+      {totalPages > 1 && (
+        <div className="flex justify-center items-center gap-4 mt-12">
+            <Button variant="outline" size="icon" onClick={() => setCurrentPage(p => p - 1)} disabled={currentPage === 1}>
+                <ArrowLeft className="h-4 w-4" />
+            </Button>
+            <span className="text-sm font-medium">
+                Page {currentPage} of {totalPages}
+            </span>
+             <Button variant="outline" size="icon" onClick={() => setCurrentPage(p => p + 1)} disabled={currentPage === totalPages}>
+                <ArrowRight className="h-4 w-4" />
+            </Button>
+        </div>
+      )}
+
 
       <Dialog open={!!selectedGroup} onOpenChange={(isOpen) => !isOpen && setSelectedGroup(null)}>
         <DialogContent className="max-w-5xl">
