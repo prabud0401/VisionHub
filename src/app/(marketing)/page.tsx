@@ -13,8 +13,6 @@ import { Button } from '@/components/ui/button';
 import { ArrowRight, Brush, Gem, Sparkles } from 'lucide-react';
 import ToolsSuite from '@/components/landing/tools-suite';
 import SocialCta from '@/components/landing/social-cta';
-import Header from '@/components/layout/header';
-import Footer from '@/components/layout/footer';
 
 const CtaSection = () => (
     <section className="py-20 lg:py-24 bg-card/50">
@@ -47,19 +45,15 @@ const CtaSection = () => (
 
 function LandingPage() {
     return (
-        <div className="flex flex-col min-h-screen bg-background">
-            <Header />
-            <main className="flex-1 pt-20">
-                <HeroSection />
-                <Partners />
-                <ToolsSuite />
-                <CtaSection />
-                <Testimonials />
-                <GalleryPreview />
-                <SocialCta />
-            </main>
-            <Footer />
-        </div>
+        <>
+            <HeroSection />
+            <Partners />
+            <ToolsSuite />
+            <CtaSection />
+            <Testimonials />
+            <GalleryPreview />
+            <SocialCta />
+        </>
     );
 }
 
@@ -74,18 +68,9 @@ export default function Home() {
   }, [user, loading, router]);
 
 
-  if (loading) {
+  if (loading || user) {
     return (
       <div className="flex h-screen items-center justify-center bg-background">
-        <div className="h-16 w-16 animate-spin rounded-full border-4 border-dashed border-primary"></div>
-      </div>
-    );
-  }
-  
-  if (user) {
-    // Return a loader or null while redirecting
-    return (
-       <div className="flex h-screen items-center justify-center bg-background">
         <div className="h-16 w-16 animate-spin rounded-full border-4 border-dashed border-primary"></div>
       </div>
     );
