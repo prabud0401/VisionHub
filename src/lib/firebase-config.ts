@@ -3,7 +3,7 @@ import { initializeApp, getApps, getApp, type FirebaseApp } from "firebase/app";
 
 // --- Dual-Environment Firebase Configuration ---
 
-const firebaseConfig = {
+const localFirebaseConfig = {
   apiKey: process.env.NEXT_PUBLIC_FIREBASE_API_KEY,
   authDomain: process.env.NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN,
   projectId: process.env.NEXT_PUBLIC_FIREBASE_PROJECT_ID,
@@ -17,11 +17,14 @@ async function getFirebaseConfig() {
   const hostingConfigUrl = `/__/firebase/init.json`;
   
   try {
-    const response = await fetch(hostingConfigUrl);
-    if (response.ok) {
-      const config = await response.json();
-      console.log("Successfully fetched Firebase config from hosting URL.");
-      return config;
+    // Only try to fetch in the browser
+    if (typeof window !== 'undefined') {
+      const response = await fetch(hostingConfigUrl);
+      if (response.ok) {
+        const config = await response.json();
+        console.log("Successfully fetched Firebase config from hosting URL.");
+        return { ...config, storageBucket: "visionhub-ai-s813r.firebasestorage.app" };
+      }
     }
   } catch (error) {
     // This will typically fail in a local dev environment.
@@ -31,8 +34,8 @@ async function getFirebaseConfig() {
   console.log("Could not fetch Firebase config from hosting. Falling back to environment variables.");
   // If the fetch fails, it means we are likely in a local or non-Firebase environment.
   // We fall back to the manually configured environment variables.
-  if (firebaseConfig.apiKey && firebaseConfig.apiKey !== 'YOUR_API_KEY') {
-    return firebaseConfig;
+  if (localFirebaseConfig.apiKey && localFirebaseConfig.apiKey !== 'YOUR_API_KEY') {
+    return localFirebaseConfig;
   }
   
   return null;

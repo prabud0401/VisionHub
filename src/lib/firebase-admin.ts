@@ -11,7 +11,7 @@ if (!admin.apps.length) {
             admin.initializeApp({
                 storageBucket: "visionhub-ai-s813r.firebasestorage.app",
             });
-            console.log("Firebase Admin SDK initialized for a deployed environment.");
+            console.log("Firebase Admin SDK initialized with Application Default Credentials.");
         } catch (e) {
             console.error("Failed to initialize Firebase Admin SDK in deployed environment:", e);
         }
