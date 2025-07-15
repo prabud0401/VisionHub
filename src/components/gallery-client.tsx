@@ -27,7 +27,6 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 import { ToggleGroup, ToggleGroupItem } from '@/components/ui/toggle-group';
 import { cn } from '@/lib/utils';
 import Image from 'next/image';
-import { CookieConsentBanner } from './cookie-consent-banner';
 
 interface PromptGroup {
   promptId: string;
@@ -306,7 +305,7 @@ export function GalleryClient() {
             <AlertDialogDescription>
               This action cannot be undone. This will permanently delete all {groupToDelete?.images.length} images
               associated with this prompt.
-            </AlertDialogDescription>
+            </AlexDialogDescription>
           </AlertDialogHeader>
           <AlertDialogFooter>
             <AlertDialogCancel>Cancel</AlertDialogCancel>
@@ -317,7 +316,6 @@ export function GalleryClient() {
           </AlertDialogFooter>
         </AlertDialogContent>
       </AlertDialog>
-      <CookieConsentBanner />
     </>
   );
 }

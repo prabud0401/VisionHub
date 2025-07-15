@@ -3,6 +3,7 @@ import './globals.css';
 import { Toaster } from '@/components/ui/toaster';
 import { AuthProvider } from '@/context/auth-context';
 import { AuthModal } from '@/components/auth-modal';
+import { CookieConsentBanner } from '@/components/cookie-consent-banner';
 
 export default function RootLayout({
   children,
@@ -26,6 +27,7 @@ export default function RootLayout({
             {children}
             <AuthModal />
             <Toaster />
+            <CookieConsentBanner />
           </AuthProvider>
       </body>
     </html>
