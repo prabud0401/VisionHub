@@ -108,3 +108,58 @@ h1, h2, h3, h4, h5, h6 {
 .animate-pulse-once {
   animation: pulse-once 1.5s ease-out;
 }
+
+@keyframes loader-rotate {
+    0% {
+        transform: rotate(0);
+    }
+    100% {
+        transform: rotate(360deg);
+    }
+}
+
+@keyframes loader-inner-rotate {
+    0% {
+        transform: rotate(0);
+    }
+    100% {
+        transform: rotate(-360deg);
+    }
+}
+
+@keyframes loader-inner-orbit {
+    0% {
+        transform: scale(1) rotate(0deg);
+    }
+    50% {
+        transform: scale(0.8) rotate(180deg);
+    }
+    100% {
+        transform: scale(1) rotate(360deg);
+    }
+}
+
+.ai-loader {
+    @apply relative h-20 w-20;
+    animation: loader-rotate 2s linear infinite;
+}
+
+.ai-loader::before,
+.ai-loader::after {
+    content: '';
+    @apply absolute box-border rounded-full;
+}
+
+.ai-loader::before {
+    @apply inset-0 border-2 border-primary/30;
+}
+
+.ai-loader::after {
+    @apply inset-2 border-2 border-dashed border-primary/60;
+    animation: loader-inner-rotate 2s ease-in-out infinite;
+}
+
+.ai-loader-dot {
+    @apply absolute top-0 left-1/2 h-2 w-2 -ml-1 rounded-full bg-primary;
+    animation: loader-inner-orbit 2s ease-in-out infinite;
+}

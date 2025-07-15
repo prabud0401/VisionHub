@@ -41,7 +41,9 @@ export default function AdminLayout({
   if (loading || !user) {
     return (
       <div className="flex h-screen items-center justify-center bg-background">
-        <div className="h-16 w-16 animate-spin rounded-full border-4 border-dashed border-primary"></div>
+        <div className="ai-loader">
+            <div className="ai-loader-dot"></div>
+        </div>
       </div>
     );
   }
