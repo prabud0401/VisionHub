@@ -6,7 +6,6 @@ import { useSearchParams } from 'next/navigation';
 import { useState } from 'react';
 import { useForm, zodResolver } from '@mantine/form';
 import { z } from 'zod';
-import { Toaster, toast } from 'react-hot-toast';
 
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
@@ -175,7 +174,6 @@ export default function AuthActionPage() {
            <Suspense fallback={<Loader2 className="h-12 w-12 animate-spin" />}>
                <AuthActionManager />
            </Suspense>
-           <Toaster />
         </div>
     )
 }
