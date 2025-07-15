@@ -305,7 +305,7 @@ export function GalleryClient() {
             <AlertDialogDescription>
               This action cannot be undone. This will permanently delete all {groupToDelete?.images.length} images
               associated with this prompt.
-            </AlexDialogDescription>
+            </AlertDialogDescription>
           </AlertDialogHeader>
           <AlertDialogFooter>
             <AlertDialogCancel>Cancel</AlertDialogCancel>
