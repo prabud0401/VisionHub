@@ -6,9 +6,13 @@ import { useRouter } from 'next/navigation';
 import { useLocalStorage } from '@/hooks/use-local-storage';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle, CardFooter } from '@/components/ui/card';
-import { Loader2, Check, CreditCard, Gem } from 'lucide-react';
+import { Loader2, Check, CreditCard, Gem, Landmark, Upload, CheckCircle } from 'lucide-react';
 import { useAuth } from '@/context/auth-context';
 import { Separator } from '@/components/ui/separator';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+import { Input } from '@/components/ui/input';
+import { Label } from '@/components/ui/label';
+import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
 
 interface PlanDetails {
   id: string;
@@ -19,14 +23,29 @@ interface PlanDetails {
   billing: 'monthly' | 'annually';
 }
 
+const GooglePayIcon = () => (
+    <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 mr-2" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+      <path d="M12 12m-8 0a8 8 0 1 0 16 0a8 8 0 1 0 -16 0" />
+      <path d="M6 12l2 -2" />
+      <path d="M8 12l2 2" />
+      <path d="M12 8l2 2" />
+      <path d="M12 14l2 -2" />
+      <path d="M14 12l2 -2" />
+      <path d="M16 12l2 2" />
+    </svg>
+);
+
+
 export default function BuyCreditsPage() {
   const [selectedPlan] = useLocalStorage<PlanDetails | null>('selectedPlan', null);
   const [isLoading, setIsLoading] = useState(true);
+  const [paymentMethod, setPaymentMethod] = useState<string>('bank-transfer');
+  const [paymentSlip, setPaymentSlip] = useState<File | null>(null);
+  const [isSubmitted, setIsSubmitted] = useState(false);
   const router = useRouter();
   const { user } = useAuth();
 
   useEffect(() => {
-    // If no plan is selected, or user is not logged in, redirect.
     if (!selectedPlan || !user) {
       router.push('/pricing');
     } else {
@@ -35,8 +54,7 @@ export default function BuyCreditsPage() {
   }, [selectedPlan, user, router]);
 
   const handlePayment = () => {
-    // This is a placeholder for a real payment integration
-    alert('Payment functionality is a placeholder. In a real app, this would redirect to a payment processor like Stripe or PayPal.');
+    setIsSubmitted(true);
   };
 
   if (isLoading || !selectedPlan) {
@@ -45,6 +63,25 @@ export default function BuyCreditsPage() {
         <Loader2 className="h-16 w-16 animate-spin text-primary" />
       </div>
     );
+  }
+
+  if (isSubmitted) {
+    return (
+        <div className="container mx-auto max-w-2xl py-20 px-4">
+            <Card className="text-center p-8 shadow-lg">
+                <CardHeader>
+                    <CheckCircle className="h-16 w-16 text-green-500 mx-auto mb-4" />
+                    <CardTitle className="text-3xl">Payment Submitted!</CardTitle>
+                </CardHeader>
+                <CardContent>
+                    <p className="text-muted-foreground mb-6">
+                        Thank you for your purchase. Your payment is currently under review. You will receive an email confirmation once your credits have been added to your account. This usually takes 1-2 business days.
+                    </p>
+                    <Button onClick={() => router.push('/dashboard')}>Go to Dashboard</Button>
+                </CardContent>
+            </Card>
+        </div>
+    )
   }
 
   return (
@@ -58,41 +95,91 @@ export default function BuyCreditsPage() {
         </p>
       </div>
 
-      <Card className="shadow-lg">
-        <CardHeader>
-          <div className="flex justify-between items-start">
-            <div>
-              <CardTitle className="text-2xl">{selectedPlan.name} Plan</CardTitle>
-              <CardDescription className="capitalize">{selectedPlan.billing} Billing</CardDescription>
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+        <Card className="shadow-lg md:col-span-2">
+          <CardHeader>
+            <div className="flex justify-between items-start">
+              <div>
+                <CardTitle className="text-2xl">{selectedPlan.name} Plan</CardTitle>
+                <CardDescription className="capitalize">{selectedPlan.billing} Billing</CardDescription>
+              </div>
+              <div className="text-right">
+                  <p className="text-4xl font-bold">{selectedPlan.price}</p>
+                  <p className="flex items-center justify-end gap-2 text-primary font-semibold">
+                      <Gem className="h-5 w-5" />
+                      {selectedPlan.credits} credits
+                  </p>
+              </div>
             </div>
-            <div className="text-right">
-                <p className="text-4xl font-bold">{selectedPlan.price}</p>
-                <p className="flex items-center justify-end gap-2 text-primary font-semibold">
-                    <Gem className="h-5 w-5" />
-                    {selectedPlan.credits} credits
-                </p>
-            </div>
-          </div>
-        </CardHeader>
-        <CardContent>
-          <Separator className="my-6" />
-          <h3 className="font-semibold mb-4">Plan Features:</h3>
-          <ul className="space-y-3 mb-8">
-            {selectedPlan.features.map((feature) => (
-              <li key={feature} className="flex items-center gap-3">
-                <Check className="h-5 w-5 text-green-500" />
-                <span className="text-muted-foreground">{feature}</span>
-              </li>
-            ))}
-          </ul>
-        </CardContent>
-        <CardFooter>
-          <Button onClick={handlePayment} size="lg" className="w-full">
-            <CreditCard className="mr-2 h-5 w-5" />
-            Pay {selectedPlan.price} Now
-          </Button>
-        </CardFooter>
-      </Card>
+          </CardHeader>
+        </Card>
+        
+        <Card className="shadow-lg md:col-span-2">
+            <CardHeader>
+                <CardTitle>Payment Method</CardTitle>
+                <CardDescription>Select how you'd like to pay.</CardDescription>
+            </CardHeader>
+            <CardContent>
+                 <Select value={paymentMethod} onValueChange={setPaymentMethod}>
+                    <SelectTrigger className="w-full">
+                        <SelectValue placeholder="Select a payment method" />
+                    </SelectTrigger>
+                    <SelectContent>
+                        <SelectItem value="bank-transfer">
+                            <span className="flex items-center"><Landmark className="mr-2 h-4 w-4" /> Bank Transfer</span>
+                        </SelectItem>
+                        <SelectItem value="google-pay" disabled>
+                            <span className="flex items-center"><GooglePayIcon /> Google Pay (Coming Soon)</span>
+                        </SelectItem>
+                         <SelectItem value="card" disabled>
+                             <span className="flex items-center"><CreditCard className="mr-2 h-4 w-4" /> Visa/Debit Card (Coming Soon)</span>
+                        </SelectItem>
+                    </SelectContent>
+                </Select>
+
+                {paymentMethod === 'bank-transfer' && (
+                    <div className="mt-6 space-y-6">
+                        <Separator />
+                        <Alert>
+                            <Landmark className="h-4 w-4" />
+                            <AlertTitle>Bank Transfer Instructions</AlertTitle>
+                            <AlertDescription className="space-y-2 mt-2">
+                                <p>Please transfer the total amount to the following bank account:</p>
+                                <ul className="text-xs list-disc list-inside">
+                                    <li><strong>Bank Name:</strong> Visionary Bank Inc.</li>
+                                    <li><strong>Account Number:</strong> 1234 5678 9012</li>
+                                    <li><strong>Account Holder:</strong> VisionHub AI</li>
+                                    <li><strong>Reference:</strong> Your Username ({user.username})</li>
+                                </ul>
+                            </AlertDescription>
+                        </Alert>
+                         <div className="space-y-2">
+                            <Label htmlFor="payment-slip">Upload Payment Slip</Label>
+                            <Input 
+                                id="payment-slip" 
+                                type="file" 
+                                onChange={(e) => setPaymentSlip(e.target.files?.[0] || null)}
+                                accept="image/png, image/jpeg, application/pdf"
+                                className="file:text-primary file:font-semibold"
+                             />
+                            <p className="text-xs text-muted-foreground">Please upload a screenshot or PDF of your transaction receipt.</p>
+                        </div>
+                    </div>
+                )}
+            </CardContent>
+             <CardFooter>
+                <Button 
+                    onClick={handlePayment} 
+                    size="lg" 
+                    className="w-full"
+                    disabled={paymentMethod === 'bank-transfer' && !paymentSlip}
+                >
+                    Pay {selectedPlan.price} Now
+                </Button>
+            </CardFooter>
+        </Card>
+
+      </div>
     </div>
   );
 }
