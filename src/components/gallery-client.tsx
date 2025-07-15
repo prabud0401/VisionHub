@@ -9,7 +9,7 @@ import { PromptGroupCard } from './prompt-group-card';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from '@/components/ui/dialog';
 import { Button } from './ui/button';
 import { Download, Loader2, Trash2, Wand2, ArrowLeft, ArrowRight, Grid, Grid3x3, Square } from 'lucide-react';
-import { getFirestore, collection, query, where, getDocs, writeBatch, doc } from 'firebase/firestore';
+import { getFirestore, collection, query, where, writeBatch, doc, onSnapshot } from 'firebase/firestore';
 import { getFirebaseApp } from '@/lib/firebase-config';
 import {
   AlertDialog,
@@ -54,7 +54,9 @@ export function GalleryClient() {
 
 
   useEffect(() => {
-    async function fetchImages() {
+    let unsubscribe = () => {};
+
+    const setupListener = async () => {
       const firebaseApp = await getFirebaseApp();
       if (!user || !firebaseApp) {
         setIsLoading(false);
@@ -65,45 +67,53 @@ export function GalleryClient() {
       try {
         const db = getFirestore(firebaseApp);
         const q = query(collection(db, 'images'), where('userId', '==', user.uid));
-        const querySnapshot = await getDocs(q);
-        const fetchedImages: GeneratedImage[] = [];
-        querySnapshot.forEach((doc) => {
-          fetchedImages.push({ id: doc.id, ...doc.data() } as GeneratedImage);
-        });
         
-        const groups: { [key: string]: PromptGroup } = {};
-        fetchedImages.forEach(image => {
-          const promptId = image.promptId || image.prompt; // Fallback for older images
-          if (!groups[promptId]) {
-            groups[promptId] = {
-              promptId: promptId,
-              prompt: image.prompt,
-              images: [],
-              createdAt: image.createdAt,
-              coverImage: image.url,
-            };
-          }
-          groups[promptId].images.push(image);
-          if (new Date(image.createdAt) > new Date(groups[promptId].createdAt)) {
-            groups[promptId].createdAt = image.createdAt;
-            groups[promptId].coverImage = image.url;
-          }
+        unsubscribe = onSnapshot(q, (querySnapshot) => {
+          const fetchedImages: GeneratedImage[] = [];
+          querySnapshot.forEach((doc) => {
+            fetchedImages.push({ id: doc.id, ...doc.data() } as GeneratedImage);
+          });
+          
+          const groups: { [key: string]: PromptGroup } = {};
+          fetchedImages.forEach(image => {
+            const promptId = image.promptId || image.prompt; // Fallback for older images
+            if (!groups[promptId]) {
+              groups[promptId] = {
+                promptId: promptId,
+                prompt: image.prompt,
+                images: [],
+                createdAt: image.createdAt,
+                coverImage: image.url,
+              };
+            }
+            groups[promptId].images.push(image);
+            if (new Date(image.createdAt) > new Date(groups[promptId].createdAt)) {
+              groups[promptId].createdAt = image.createdAt;
+              groups[promptId].coverImage = image.url;
+            }
+          });
+          
+          setAllPromptGroups(Object.values(groups));
+          setIsLoading(false);
+        }, (error) => {
+          console.error("Error with snapshot listener: ", error);
+          setIsLoading(false);
         });
-        
-        setAllPromptGroups(Object.values(groups));
 
       } catch (error) {
-        console.error("Error fetching images: ", error);
-      } finally {
+        console.error("Error setting up snapshot listener: ", error);
         setIsLoading(false);
       }
-    }
-
+    };
+    
     if (user) {
-        fetchImages();
+      setupListener();
     } else {
-        setIsLoading(false);
+      setIsLoading(false);
     }
+    
+    // Cleanup the listener when the component unmounts
+    return () => unsubscribe();
   }, [user]);
 
   const sortedGroups = useMemo(() => {
@@ -161,7 +171,7 @@ export function GalleryClient() {
 
         await batch.commit();
 
-        setAllPromptGroups(allPromptGroups.filter((g) => g.promptId !== groupToDelete.promptId));
+        // No need to update local state here, onSnapshot will do it automatically
     } catch (error) {
         console.error("Error deleting image group: ", error);
     } finally {
