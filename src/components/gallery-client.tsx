@@ -27,6 +27,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 import { ToggleGroup, ToggleGroupItem } from '@/components/ui/toggle-group';
 import { cn } from '@/lib/utils';
 import { CookieConsentBanner } from '@/components/cookie-consent-banner';
+import Image from 'next/image';
 
 
 interface PromptGroup {
