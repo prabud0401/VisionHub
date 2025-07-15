@@ -107,22 +107,32 @@ export default function Header() {
                     <Bot className="h-7 w-7 text-primary" />
                     <span>VisionHub</span>
                   </Link>
-                  <nav className="flex flex-col gap-4">
+                   <div className="flex flex-col gap-2 mt-4">
+                     {user ? (
+                       <>
+                        <Button variant="outline" asChild>
+                          <Link href="/dashboard">Dashboard</Link>
+                        </Button>
+                        <Button variant="ghost" onClick={handleLogout}>Log Out</Button>
+                       </>
+                     ) : (
+                        <Button variant="accent" onClick={() => setAuthModalOpen(true)}>Get Started</Button>
+                     )}
+                  </div>
+                  <nav className="flex flex-col gap-4 border-t pt-6">
                     {navLinks.map((link) => (
                       <Link key={link.href} href={link.href} className="text-lg transition-colors hover:text-primary">
                         {link.label}
                       </Link>
                     ))}
+                    {user && (
+                      <>
+                        <Link href="/gallery" className="text-lg transition-colors hover:text-primary">Gallery</Link>
+                        <Link href="/background-remover" className="text-lg transition-colors hover:text-primary">Image Upgrade</Link>
+                        <Link href="/settings" className="text-lg transition-colors hover:text-primary">Settings</Link>
+                      </>
+                    )}
                   </nav>
-                  <div className="flex flex-col gap-2 mt-4">
-                     {user ? (
-                        <Button variant="outline" asChild>
-                          <Link href="/dashboard">Dashboard</Link>
-                        </Button>
-                     ) : (
-                        <Button variant="accent" onClick={() => setAuthModalOpen(true)}>Get Started</Button>
-                     )}
-                  </div>
                 </div>
               </SheetContent>
             </Sheet>
