@@ -1,10 +1,11 @@
 
 import { Metadata } from 'next';
 import { PricingClient } from '@/components/pricing-client';
+import { FeatureComparison } from '@/components/feature-comparison';
 
 export const metadata: Metadata = {
   title: 'Pricing | VisionHub AI',
-  description: 'Choose a plan that fits your creative needs.',
+  description: 'Choose a plan that fits your creative needs and compare features.',
 };
 
 export default function PricingPage() {
@@ -19,6 +20,7 @@ export default function PricingPage() {
         </p>
       </div>
       <PricingClient />
+      <FeatureComparison />
     </div>
   );
 }
