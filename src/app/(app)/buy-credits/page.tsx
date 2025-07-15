@@ -13,13 +13,14 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
+import { useToast } from '@/hooks/use-toast';
+import { submitPaymentForReview, uploadPaymentSlip } from '@/services/payment-service';
 
 interface PlanDetails {
   id: string;
   name: string;
   price: string;
   credits: number;
-  features: string[];
   billing: 'monthly' | 'annually';
 }
 
@@ -39,11 +40,13 @@ const GooglePayIcon = () => (
 export default function BuyCreditsPage() {
   const [selectedPlan] = useLocalStorage<PlanDetails | null>('selectedPlan', null);
   const [isLoading, setIsLoading] = useState(true);
+  const [isSubmitting, setIsSubmitting] = useState(false);
   const [paymentMethod, setPaymentMethod] = useState<string>('bank-transfer');
   const [paymentSlip, setPaymentSlip] = useState<File | null>(null);
   const [isSubmitted, setIsSubmitted] = useState(false);
   const router = useRouter();
   const { user } = useAuth();
+  const { toast } = useToast();
 
   useEffect(() => {
     if (!selectedPlan || !user) {
@@ -53,8 +56,37 @@ export default function BuyCreditsPage() {
     }
   }, [selectedPlan, user, router]);
 
-  const handlePayment = () => {
-    setIsSubmitted(true);
+  const handlePayment = async () => {
+    if (!paymentSlip || !user || !selectedPlan) {
+        toast({ variant: "destructive", title: "Error", description: "Payment slip is required." });
+        return;
+    }
+
+    setIsSubmitting(true);
+    
+    try {
+      const fileBuffer = await paymentSlip.arrayBuffer();
+      const buffer = Buffer.from(fileBuffer);
+      const fileName = `${user.uid}-${Date.now()}-${paymentSlip.name}`;
+
+      const slipUrl = await uploadPaymentSlip(buffer, fileName, paymentSlip.type);
+      
+      await submitPaymentForReview({
+          userId: user.uid,
+          userEmail: user.email,
+          userDisplayName: user.displayName,
+          plan: selectedPlan,
+          paymentSlipUrl: slipUrl,
+      });
+
+      setIsSubmitted(true);
+
+    } catch(error) {
+        console.error("Payment submission failed:", error);
+        toast({ variant: "destructive", title: "Submission Failed", description: "Could not submit your payment for review. Please try again." });
+    } finally {
+        setIsSubmitting(false);
+    }
   };
 
   if (isLoading || !selectedPlan) {
@@ -172,13 +204,12 @@ export default function BuyCreditsPage() {
                     onClick={handlePayment} 
                     size="lg" 
                     className="w-full"
-                    disabled={paymentMethod === 'bank-transfer' && !paymentSlip}
+                    disabled={isSubmitting || (paymentMethod === 'bank-transfer' && !paymentSlip)}
                 >
-                    Pay {selectedPlan.price} Now
+                    {isSubmitting ? <Loader2 className="animate-spin" /> : `Pay ${selectedPlan.price} Now`}
                 </Button>
             </CardFooter>
         </Card>
-
       </div>
     </div>
   );

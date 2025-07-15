@@ -4,7 +4,7 @@
 import { useAuth } from '@/context/auth-context';
 import { useRouter } from 'next/navigation';
 import { useEffect, useState } from 'react';
-import { Bot, Users, ImageIcon, LayoutDashboard, BarChart, LogOut } from 'lucide-react';
+import { Bot, Users, ImageIcon, LayoutDashboard, CreditCard, LogOut } from 'lucide-react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { cn } from '@/lib/utils';
@@ -14,6 +14,7 @@ const navLinks = [
   { href: '/admin/dashboard', label: 'Dashboard', icon: LayoutDashboard },
   { href: '/admin/users', label: 'Users', icon: Users },
   { href: '/admin/images', label: 'Images', icon: ImageIcon },
+  { href: '/admin/payments', label: 'Payments', icon: CreditCard },
 ];
 
 export default function AdminLayout({
