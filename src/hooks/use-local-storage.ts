@@ -15,8 +15,9 @@ function useIsClient() {
 export function useLocalStorage<T>(
   key: string,
   initialValue: T
-): [T, (value: T | ((val: T) => T)) => void] {
+): [T, (value: T | ((val: T) => T)) => void, boolean] {
   const isClient = useIsClient();
+  const [loaded, setLoaded] = useState(false);
 
   // This function reads the value from localStorage
   const readValue = useCallback((): T => {
@@ -27,14 +28,17 @@ export function useLocalStorage<T>(
     // Read from localStorage
     try {
       const item = window.localStorage.getItem(key);
-      return item ? (JSON.parse(item) as T) : initialValue;
+      if (item) {
+        return JSON.parse(item) as T;
+      }
     } catch (error) {
       console.warn(`Error reading localStorage key “${key}”:`, error);
-      return initialValue;
     }
+    setLoaded(true);
+    return initialValue;
   }, [isClient, key, initialValue]);
 
-  const [storedValue, setStoredValue] = useState<T>(readValue);
+  const [storedValue, setStoredValue] = useState<T>(initialValue);
 
   // This function sets the value in both state and localStorage
   const setValue = (value: T | ((val: T) => T)) => {
@@ -55,8 +59,11 @@ export function useLocalStorage<T>(
   // Re-read from localStorage when the key or client status changes.
   useEffect(() => {
     setStoredValue(readValue());
+    if (isClient) {
+      setLoaded(true);
+    }
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [key, isClient]);
 
-  return [storedValue, setValue];
+  return [storedValue, setValue, loaded];
 }

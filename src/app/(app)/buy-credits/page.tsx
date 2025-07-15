@@ -38,8 +38,7 @@ const GooglePayIcon = () => (
 
 
 export default function BuyCreditsPage() {
-  const [selectedPlan] = useLocalStorage<PlanDetails | null>('selectedPlan', null);
-  const [isLoading, setIsLoading] = useState(true);
+  const [selectedPlan, , planLoaded] = useLocalStorage<PlanDetails | null>('selectedPlan', null);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [paymentMethod, setPaymentMethod] = useState<string>('bank-transfer');
   const [paymentSlip, setPaymentSlip] = useState<File | null>(null);
@@ -49,12 +48,13 @@ export default function BuyCreditsPage() {
   const { toast } = useToast();
 
   useEffect(() => {
-    if (!selectedPlan || !user) {
-      router.push('/pricing');
-    } else {
-      setIsLoading(false);
+    // Wait until the plan has been loaded from local storage
+    if (planLoaded) {
+      if (!selectedPlan || !user) {
+        router.push('/pricing');
+      }
     }
-  }, [selectedPlan, user, router]);
+  }, [selectedPlan, user, router, planLoaded]);
 
   const handlePayment = async () => {
     if (!paymentSlip || !user || !selectedPlan) {
@@ -89,7 +89,7 @@ export default function BuyCreditsPage() {
     }
   };
 
-  if (isLoading || !selectedPlan) {
+  if (!planLoaded || !selectedPlan) {
     return (
       <div className="flex h-screen items-center justify-center bg-background">
         <Loader2 className="h-16 w-16 animate-spin text-primary" />
@@ -181,7 +181,7 @@ export default function BuyCreditsPage() {
                                     <li><strong>Bank Name:</strong> Visionary Bank Inc.</li>
                                     <li><strong>Account Number:</strong> 1234 5678 9012</li>
                                     <li><strong>Account Holder:</strong> VisionHub AI</li>
-                                    <li><strong>Reference:</strong> Your Username ({user.username})</li>
+                                    <li><strong>Reference:</strong> Your Username ({user?.username})</li>
                                 </ul>
                             </AlertDescription>
                         </Alert>
