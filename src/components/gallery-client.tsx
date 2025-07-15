@@ -40,12 +40,12 @@ interface PromptGroup {
 const ITEMS_PER_PAGE = 12;
 
 export function GalleryClient() {
-  const [allPromptGroups, setAllPromptGroups] = useLocalStorage<PromptGroup[]>('galleryCache', []);
+  const [allPromptGroups, setAllPromptGroups] = useState<PromptGroup[]>([]);
   const [selectedGroup, setSelectedGroup] = useState<PromptGroup | null>(null);
   const [groupToDelete, setGroupToDelete] = useState<PromptGroup | null>(null);
   const [isLoading, setIsLoading] = useState(true);
   const [sortOrder, setSortOrder] = useState<'newest' | 'oldest'>('newest');
-  const [viewMode, setViewMode] = useState<'small' | 'medium' | 'large'>('medium');
+  const [viewMode, setViewMode] = useState<'medium' | 'small' | 'large'>('medium');
   const [currentPage, setCurrentPage] = useState(1);
 
   const { user } = useAuth();
@@ -103,7 +103,7 @@ export function GalleryClient() {
     } else {
         setIsLoading(false);
     }
-  }, [user, setAllPromptGroups]);
+  }, [user]);
 
   const sortedGroups = useMemo(() => {
     return [...allPromptGroups].sort((a, b) => {
@@ -309,5 +309,3 @@ export function GalleryClient() {
     </>
   );
 }
-
-    
