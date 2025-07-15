@@ -58,7 +58,7 @@ export function GalleryClient() {
         setIsLoading(false);
         return;
       }
-      setIsLoading(true);
+      
       try {
         const db = getFirestore(firebaseApp);
         const q = query(collection(db, 'images'), where('userId', '==', user.uid));
@@ -95,7 +95,12 @@ export function GalleryClient() {
         setIsLoading(false);
       }
     }
-    fetchImages();
+
+    if (user) {
+        fetchImages();
+    } else {
+        setIsLoading(false);
+    }
   }, [user]);
 
   const sortedGroups = useMemo(() => {
@@ -169,7 +174,7 @@ export function GalleryClient() {
     );
   }
 
-  if (allPromptGroups.length === 0) {
+  if (!isLoading && allPromptGroups.length === 0) {
     return (
       <div className="text-center py-20">
         <h2 className="text-2xl font-semibold">Your gallery is empty</h2>
