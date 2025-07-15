@@ -1,3 +1,4 @@
+
 import * as admin from 'firebase-admin';
 
 // Check if the app is already initialized
