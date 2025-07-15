@@ -81,6 +81,14 @@ export default function Header() {
                        <DropdownMenuItem onClick={() => router.push('/settings')}>Settings</DropdownMenuItem>
                     </DropdownMenuGroup>
                     <DropdownMenuSeparator />
+                     <DropdownMenuGroup>
+                       <DropdownMenuLabel className="text-xs text-muted-foreground">Coming Soon</DropdownMenuLabel>
+                       <DropdownMenuItem onClick={() => router.push('/image-to-image')}>Image-to-Image</DropdownMenuItem>
+                       <DropdownMenuItem onClick={() => router.push('/inpainting')}>Inpainting</DropdownMenuItem>
+                       <DropdownMenuItem onClick={() => router.push('/community')}>Community</DropdownMenuItem>
+                       <DropdownMenuItem onClick={() => router.push('/video-generation')}>Video Generation</DropdownMenuItem>
+                    </DropdownMenuGroup>
+                    <DropdownMenuSeparator />
                     <DropdownMenuItem onClick={handleLogout}>Log out</DropdownMenuItem>
                   </DropdownMenuContent>
                 </DropdownMenu>
@@ -130,6 +138,12 @@ export default function Header() {
                         <Link href="/gallery" className="text-lg transition-colors hover:text-primary">Gallery</Link>
                         <Link href="/background-remover" className="text-lg transition-colors hover:text-primary">Image Upgrade</Link>
                         <Link href="/settings" className="text-lg transition-colors hover:text-primary">Settings</Link>
+                        <DropdownMenuSeparator />
+                        <p className="px-2 text-sm text-muted-foreground">Coming Soon</p>
+                        <Link href="/image-to-image" className="text-lg transition-colors hover:text-primary">Image-to-Image</Link>
+                        <Link href="/inpainting" className="text-lg transition-colors hover:text-primary">Inpainting</Link>
+                        <Link href="/community" className="text-lg transition-colors hover:text-primary">Community</Link>
+                        <Link href="/video-generation" className="text-lg transition-colors hover:text-primary">Video Generation</Link>
                       </>
                     )}
                   </nav>
