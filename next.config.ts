@@ -12,6 +12,10 @@ const nextConfig: NextConfig = {
     domains: [
       "firebasestorage.googleapis.com",
       "static.vecteezy.com",
+      "content-management-files.canva.com",
+      "blog.segmind.com",
+      "www.dignited.com",
+      "blogs-cdn.imagine.art",
       // add any other domains you need here
     ],
     remotePatterns: [

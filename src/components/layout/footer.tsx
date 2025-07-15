@@ -33,17 +33,18 @@ export default function Footer() {
         <div>
           <h4 className="font-semibold mb-4">Resources</h4>
           <ul className="space-y-2">
-            <li><Link href="#" className="text-muted-foreground hover:text-primary">Blog</Link></li>
-            <li><Link href="#" className="text-muted-foreground hover:text-primary">Documentation</Link></li>
-            <li><Link href="#" className="text-muted-foreground hover:text-primary">Tutorials</Link></li>
+            <li><Link href="/blog" className="text-muted-foreground hover:text-primary">Blog</Link></li>
+            <li><Link href="/documentation" className="text-muted-foreground hover:text-primary">Documentation</Link></li>
+            <li><Link href="/tutorials" className="text-muted-foreground hover:text-primary">Tutorials</Link></li>
+            <li><Link href="/get-api" className="text-muted-foreground hover:text-primary">Get API</Link></li>
           </ul>
         </div>
         <div>
           <h4 className="font-semibold mb-4">Legal</h4>
           <ul className="space-y-2">
-            <li><Link href="#" className="text-muted-foreground hover:text-primary">Terms of Service</Link></li>
-            <li><Link href="#" className="text-muted-foreground hover:text-primary">Privacy Policy</Link></li>
-            <li><Link href="#" className="text-muted-foreground hover:text-primary">Contact Us</Link></li>
+            <li><Link href="/terms" className="text-muted-foreground hover:text-primary">Terms of Service</Link></li>
+            <li><Link href="/privacy" className="text-muted-foreground hover:text-primary">Privacy Policy</Link></li>
+            <li><Link href="/contact" className="text-muted-foreground hover:text-primary">Contact Us</Link></li>
           </ul>
         </div>
       </div>
