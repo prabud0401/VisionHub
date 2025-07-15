@@ -11,6 +11,7 @@ import { UpdatePasswordModal } from '@/components/update-password-modal';
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '@/components/ui/accordion';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
+import { cn } from '@/lib/utils';
 
 // export const metadata: Metadata = { // Metadata must be defined in a server component
 //   title: 'Settings | VisionHub AI',
@@ -27,6 +28,19 @@ const GooglePayIcon = () => (
       <path d="M14 12l2 -2" />
       <path d="M16 12l2 2" />
     </svg>
+);
+
+const SettingsCard = ({ className, children, ...props }: React.ComponentProps<typeof Card>) => (
+    <Card className={cn("relative overflow-hidden", className)} {...props}>
+        <div
+            className="absolute inset-0 bg-cover bg-center opacity-5"
+            style={{ backgroundImage: "url('https://firebasestorage.googleapis.com/v0/b/visionhub-ai-s813r.firebasestorage.app/o/generated-images%2F6e8b8d45-91cc-4c58-afa3-0794a536b89d.png?alt=media')" }}
+        />
+        <div className="absolute inset-0 bg-background/80" />
+        <div className="relative">
+            {children}
+        </div>
+    </Card>
 );
 
 
@@ -55,21 +69,28 @@ export default function SettingsPage() {
           </p>
         </div>
 
-        <div className="flex items-center gap-6 mb-12 bg-card p-6 rounded-lg">
-          <Avatar className="h-24 w-24 border-4 border-primary/50">
-            <AvatarImage src={user.photoURL ?? ''} alt={user.displayName ?? 'User'} />
-            <AvatarFallback className="text-4xl">
-                {user.displayName?.charAt(0).toUpperCase()}
-            </AvatarFallback>
-          </Avatar>
-          <div>
-            <h2 className="text-3xl font-bold font-headline">{user.displayName}</h2>
-            <p className="text-muted-foreground">{user.email}</p>
-          </div>
+        <div className="flex items-center gap-6 mb-12 bg-card p-6 rounded-lg relative overflow-hidden">
+            <div
+                className="absolute inset-0 bg-cover bg-center opacity-10"
+                style={{ backgroundImage: "url('https://firebasestorage.googleapis.com/v0/b/visionhub-ai-s813r.firebasestorage.app/o/generated-images%2F3859edeb-c27b-4a27-bc8b-b78405da06e5.png?alt=media')" }}
+            />
+            <div className="absolute inset-0 bg-background/60" />
+            <div className="relative flex items-center gap-6">
+              <Avatar className="h-24 w-24 border-4 border-primary/50">
+                <AvatarImage src={user.photoURL ?? ''} alt={user.displayName ?? 'User'} />
+                <AvatarFallback className="text-4xl">
+                    {user.displayName?.charAt(0).toUpperCase()}
+                </AvatarFallback>
+              </Avatar>
+              <div>
+                <h2 className="text-3xl font-bold font-headline">{user.displayName}</h2>
+                <p className="text-muted-foreground">{user.email}</p>
+              </div>
+            </div>
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-            <Card>
+            <SettingsCard>
                 <CardHeader>
                     <CardTitle className="flex items-center gap-2"><User /> Profile Information</CardTitle>
                     <CardDescription>View and manage your personal details.</CardDescription>
@@ -84,9 +105,9 @@ export default function SettingsPage() {
                         <span>{user.email}</span>
                     </div>
                 </CardContent>
-            </Card>
+            </SettingsCard>
 
-            <Card>
+            <SettingsCard>
                 <CardHeader>
                     <CardTitle className="flex items-center gap-2"><Shield /> Security</CardTitle>
                     <CardDescription>Update your password and manage account security.</CardDescription>
@@ -100,9 +121,9 @@ export default function SettingsPage() {
                         </Button>
                     </div>
                 </CardContent>
-            </Card>
+            </SettingsCard>
 
-            <Card className="md:col-span-2">
+            <SettingsCard className="md:col-span-2">
                 <CardHeader>
                     <CardTitle className="flex items-center gap-2"><CreditCard /> Payment & Billing</CardTitle>
                     <CardDescription>Manage your payment methods and view your billing history. This is a visual placeholder and is not functional.</CardDescription>
@@ -146,9 +167,9 @@ export default function SettingsPage() {
                         </AccordionItem>
                     </Accordion>
                 </CardContent>
-            </Card>
+            </SettingsCard>
 
-            <Card className="md:col-span-2">
+            <SettingsCard className="md:col-span-2">
                 <CardHeader>
                     <CardTitle className="flex items-center gap-2"><Palette /> Creator Preferences</CardTitle>
                     <CardDescription>Customize your image generation experience.</CardDescription>
@@ -158,7 +179,7 @@ export default function SettingsPage() {
                         More customization options coming soon!
                      </p>
                 </CardContent>
-            </Card>
+            </SettingsCard>
         </div>
       </div>
     </>

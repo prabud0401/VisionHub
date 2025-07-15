@@ -1,3 +1,4 @@
+
 'use client';
 import { useState } from 'react';
 import { Switch } from '@/components/ui/switch';
@@ -37,30 +38,37 @@ export function PricingClient() {
         <div className="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-5xl mx-auto">
           {currentPlans.map((plan) => (
             <Card key={plan.name} className={cn(
-              "flex flex-col text-left transform hover:-translate-y-2 transition-transform duration-300 bg-background/50",
+              "flex flex-col text-left transform hover:-translate-y-2 transition-transform duration-300 relative overflow-hidden",
               plan.highlighted ? "border-accent shadow-accent/20 shadow-lg" : "border-border"
             )}>
-              <CardHeader>
-                <CardTitle className="text-2xl">{plan.name}</CardTitle>
-                <CardDescription className="text-4xl font-bold pt-4">{plan.price}<span className="text-sm font-normal text-muted-foreground">/{isAnnual ? 'year' : 'month'}</span></CardDescription>
-              </CardHeader>
-              <CardContent className="flex flex-col flex-grow">
-                <ul className="space-y-3 mb-8 flex-grow">
-                  {plan.features.map((feature) => (
-                    <li key={feature} className="flex items-center gap-3">
-                      <Check className="h-5 w-5 text-green-500" />
-                      <span className="text-muted-foreground">{feature}</span>
-                    </li>
-                  ))}
-                </ul>
-                <Button 
-                  onClick={() => setAuthModalOpen(true)}
-                  variant={plan.highlighted ? 'accent' : 'outline'} 
-                  className="w-full"
-                >
-                  Choose Plan
-                </Button>
-              </CardContent>
+              <div
+                  className="absolute inset-0 bg-cover bg-center opacity-5"
+                  style={{ backgroundImage: "url('https://firebasestorage.googleapis.com/v0/b/visionhub-ai-s813r.firebasestorage.app/o/generated-images%2Fbc9bc6be-11b4-4125-bb38-668b9539b00c.png?alt=media')" }}
+              />
+              <div className="absolute inset-0 bg-background/90" />
+              <div className="relative flex flex-col flex-grow">
+                <CardHeader>
+                  <CardTitle className="text-2xl">{plan.name}</CardTitle>
+                  <CardDescription className="text-4xl font-bold pt-4">{plan.price}<span className="text-sm font-normal text-muted-foreground">/{isAnnual ? 'year' : 'month'}</span></CardDescription>
+                </CardHeader>
+                <CardContent className="flex flex-col flex-grow">
+                  <ul className="space-y-3 mb-8 flex-grow">
+                    {plan.features.map((feature) => (
+                      <li key={feature} className="flex items-center gap-3">
+                        <Check className="h-5 w-5 text-green-500" />
+                        <span className="text-muted-foreground">{feature}</span>
+                      </li>
+                    ))}
+                  </ul>
+                  <Button 
+                    onClick={() => setAuthModalOpen(true)}
+                    variant={plan.highlighted ? 'accent' : 'outline'} 
+                    className="w-full"
+                  >
+                    Choose Plan
+                  </Button>
+                </CardContent>
+              </div>
             </Card>
           ))}
         </div>

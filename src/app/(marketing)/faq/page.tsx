@@ -3,6 +3,7 @@ import { Metadata } from 'next';
 import { Button } from '@/components/ui/button';
 import Faq from '@/components/faq';
 import Link from 'next/link';
+import { Card, CardContent } from '@/components/ui/card';
 
 export const metadata: Metadata = {
   title: 'FAQ | VisionHub AI',
@@ -23,15 +24,22 @@ export default function FaqPage() {
             
             <Faq />
 
-            <div className="mt-16 text-center bg-card p-8 rounded-lg">
-                <h2 className="text-2xl font-bold">Still have questions?</h2>
-                <p className="mt-2 text-muted-foreground">
-                    Our support team is here to help you on your creative journey.
-                </p>
-                <Button asChild size="lg" className="mt-6">
-                    <Link href="#">Contact Support</Link>
-                </Button>
-            </div>
+            <Card className="mt-16 text-center p-8 rounded-lg relative overflow-hidden">
+                <div
+                    className="absolute inset-0 bg-cover bg-center opacity-10"
+                    style={{ backgroundImage: "url('https://firebasestorage.googleapis.com/v0/b/visionhub-ai-s813r.firebasestorage.app/o/generated-images%2Fbf6ab35f-9f35-4c21-a6e7-8dd307a5c82b.png?alt=media')" }}
+                 />
+                <div className="absolute inset-0 bg-background/70" />
+                <CardContent className="relative">
+                    <h2 className="text-2xl font-bold">Still have questions?</h2>
+                    <p className="mt-2 text-muted-foreground">
+                        Our support team is here to help you on your creative journey.
+                    </p>
+                    <Button asChild size="lg" className="mt-6">
+                        <Link href="#">Contact Support</Link>
+                    </Button>
+                </CardContent>
+            </Card>
         </div>
     );
 }

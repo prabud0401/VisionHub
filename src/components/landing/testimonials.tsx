@@ -1,7 +1,9 @@
+
 'use client';
 import { Card, CardContent } from '@/components/ui/card';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Star } from 'lucide-react';
+import { cn } from '@/lib/utils';
 
 const testimonials = [
   { name: 'Sarah J.', title: 'Digital Artist', avatar: 'https://i.pravatar.cc/150?u=a042581f4e29026704d', quote: "VisionHub has completely transformed my creative process. The prompt enhancer and multi-model support is a game-changer!" },
@@ -19,8 +21,13 @@ export default function Testimonials() {
 
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
           {testimonials.map((testimonial, index) => (
-            <Card key={index} className="bg-card border-border/50 text-left">
-              <CardContent className="p-6">
+            <Card key={index} className="bg-card border-border/50 text-left relative overflow-hidden">
+                <div
+                    className="absolute inset-0 bg-cover bg-center opacity-5"
+                    style={{ backgroundImage: "url('https://firebasestorage.googleapis.com/v0/b/visionhub-ai-s813r.firebasestorage.app/o/generated-images%2F6e8b8d45-91cc-4c58-afa3-0794a536b89d.png?alt=media')" }}
+                />
+                <div className="absolute inset-0 bg-background/80" />
+              <CardContent className="p-6 relative">
                 <div className="flex items-center mb-4">
                   <Avatar>
                     <AvatarImage src={testimonial.avatar} alt={testimonial.name} />
