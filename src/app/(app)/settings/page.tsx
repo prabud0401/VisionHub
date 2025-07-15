@@ -72,7 +72,7 @@ export default function SettingsPage() {
         <div className="flex items-center gap-6 mb-12 bg-card p-6 rounded-lg relative overflow-hidden">
             <div
                 className="absolute inset-0 bg-cover bg-center opacity-10"
-                style={{ backgroundImage: "url('https://firebasestorage.googleapis.com/v0/b/visionhub-ai-s813r.firebasestorage.app/o/generated-images%2F3859edeb-c27b-4a27-bc8b-b78405da06e5.png?alt=media')" }}
+                style={{ backgroundImage: "url('https://static.vecteezy.com/system/resources/previews/021/171/659/large_2x/colorful-abstract-wallpaper-modern-background-ai-generated-free-photo.jpg')" }}
             />
             <div className="absolute inset-0 bg-background/60" />
             <div className="relative flex items-center gap-6">

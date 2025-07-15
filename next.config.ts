@@ -11,6 +11,7 @@ const nextConfig: NextConfig = {
   images: {
     domains: [
       "firebasestorage.googleapis.com",
+      "static.vecteezy.com",
       // add any other domains you need here
     ],
     remotePatterns: [

@@ -27,7 +27,7 @@ export default function FaqPage() {
             <Card className="mt-16 text-center p-8 rounded-lg relative overflow-hidden">
                 <div
                     className="absolute inset-0 bg-cover bg-center opacity-10"
-                    style={{ backgroundImage: "url('https://firebasestorage.googleapis.com/v0/b/visionhub-ai-s813r.firebasestorage.app/o/generated-images%2Fbf6ab35f-9f35-4c21-a6e7-8dd307a5c82b.png?alt=media')" }}
+                    style={{ backgroundImage: "url('https://static.vecteezy.com/system/resources/previews/021/171/659/large_2x/colorful-abstract-wallpaper-modern-background-ai-generated-free-photo.jpg')" }}
                  />
                 <div className="absolute inset-0 bg-background/70" />
                 <CardContent className="relative">

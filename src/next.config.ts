@@ -9,6 +9,11 @@ const nextConfig: NextConfig = {
     ignoreDuringBuilds: true,
   },
   images: {
+    domains: [
+      "firebasestorage.googleapis.com",
+      "static.vecteezy.com",
+      // add any other domains you need here
+    ],
     remotePatterns: [
       {
         protocol: 'https',
@@ -46,6 +51,12 @@ const nextConfig: NextConfig = {
         port: '',
         pathname: '/**',
       },
+      {
+        protocol: 'https',
+        hostname: 'i.pravatar.cc',
+        port: '',
+        pathname: '/**',
+      }
     ],
   },
   webpack(config) {

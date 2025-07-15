@@ -14,7 +14,7 @@ export default function SocialCta() {
                     <Card className="bg-card/90 backdrop-blur-sm overflow-hidden relative">
                          <div
                             className="absolute inset-0 bg-cover bg-center opacity-10"
-                            style={{ backgroundImage: "url('https://firebasestorage.googleapis.com/v0/b/visionhub-ai-s813r.firebasestorage.app/o/generated-images%2Fe6b176e0-fd43-4c40-a798-70e3ff23a025.png?alt=media')" }}
+                            style={{ backgroundImage: "url('https://static.vecteezy.com/system/resources/previews/021/171/659/large_2x/colorful-abstract-wallpaper-modern-background-ai-generated-free-photo.jpg')" }}
                          />
                         <div className="absolute inset-0 bg-background/50" />
                         <CardContent className="p-0 relative">
