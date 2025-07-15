@@ -10,41 +10,48 @@ export default function SocialCta() {
     return (
         <section className="py-20 bg-transparent">
             <div className="container mx-auto px-4">
-                <Card className="bg-card/90 backdrop-blur-sm overflow-hidden">
-                    <CardContent className="p-0">
-                        <div className="grid grid-cols-1 md:grid-cols-2 items-center">
-                            <div className="p-8 md:p-12 text-center md:text-left">
-                                <h2 className="text-2xl md:text-3xl font-bold tracking-tighter mb-4">Join Our Creative Community</h2>
-                                <p className="max-w-2xl mx-auto md:mx-0 text-muted-foreground mb-8">
-                                    Connect with over 10K+ like-minded creators, share your work, and get inspired. Follow us on social media for the latest updates, tips, and showcases.
-                                </p>
-                                <div className="flex justify-center md:justify-start gap-6">
-                                    <Button asChild variant="outline" size="icon" className="h-12 w-12 rounded-full">
-                                        <Link href="#" aria-label="Facebook"><Facebook /></Link>
-                                    </Button>
-                                     <Button asChild variant="outline" size="icon" className="h-12 w-12 rounded-full">
-                                        <Link href="#" aria-label="Twitter"><Twitter /></Link>
-                                    </Button>
-                                     <Button asChild variant="outline" size="icon" className="h-12 w-12 rounded-full">
-                                        <Link href="#" aria-label="Instagram"><Instagram /></Link>
-                                    </Button>
-                                     <Button asChild variant="outline" size="icon" className="h-12 w-12 rounded-full">
-                                        <Link href="#" aria-label="LinkedIn"><Linkedin /></Link>
-                                    </Button>
+                <div className="max-w-5xl mx-auto">
+                    <Card className="bg-card/90 backdrop-blur-sm overflow-hidden relative">
+                         <div
+                            className="absolute inset-0 bg-cover bg-center opacity-10"
+                            style={{ backgroundImage: "url('https://firebasestorage.googleapis.com/v0/b/visionhub-ai-s813r.firebasestorage.app/o/generated-images%2Fe6b176e0-fd43-4c40-a798-70e3ff23a025.png?alt=media')" }}
+                         />
+                        <div className="absolute inset-0 bg-background/50" />
+                        <CardContent className="p-0 relative">
+                            <div className="grid grid-cols-1 md:grid-cols-2 items-center">
+                                <div className="p-8 md:p-12 text-center md:text-left">
+                                    <h2 className="text-2xl md:text-3xl font-bold tracking-tighter mb-4">Join Our Creative Community</h2>
+                                    <p className="max-w-2xl mx-auto md:mx-0 text-muted-foreground mb-8">
+                                        Connect with over 10K+ like-minded creators, share your work, and get inspired. Follow us on social media for the latest updates, tips, and showcases.
+                                    </p>
+                                    <div className="flex justify-center md:justify-start gap-6">
+                                        <Button asChild variant="outline" size="icon" className="h-12 w-12 rounded-full">
+                                            <Link href="#" aria-label="Facebook"><Facebook /></Link>
+                                        </Button>
+                                        <Button asChild variant="outline" size="icon" className="h-12 w-12 rounded-full">
+                                            <Link href="#" aria-label="Twitter"><Twitter /></Link>
+                                        </Button>
+                                        <Button asChild variant="outline" size="icon" className="h-12 w-12 rounded-full">
+                                            <Link href="#" aria-label="Instagram"><Instagram /></Link>
+                                        </Button>
+                                        <Button asChild variant="outline" size="icon" className="h-12 w-12 rounded-full">
+                                            <Link href="#" aria-label="LinkedIn"><Linkedin /></Link>
+                                        </Button>
+                                    </div>
+                                </div>
+                                <div className="relative h-64 md:h-full w-full">
+                                    <Image
+                                        src="https://firebasestorage.googleapis.com/v0/b/visionhub-ai-s813r.firebasestorage.app/o/generated-images%2F3859edeb-c27b-4a27-bc8b-b78405da06e5.png?alt=media"
+                                        alt="A vibrant community of creators"
+                                        data-ai-hint="community abstract art"
+                                        fill
+                                        className="object-cover"
+                                    />
                                 </div>
                             </div>
-                            <div className="relative h-64 md:h-full w-full">
-                                <Image
-                                    src="https://firebasestorage.googleapis.com/v0/b/visionhub-ai-s813r.firebasestorage.app/o/generated-images%2F3859edeb-c27b-4a27-bc8b-b78405da06e5.png?alt=media"
-                                    alt="A vibrant community of creators"
-                                    data-ai-hint="community abstract art"
-                                    fill
-                                    className="object-cover"
-                                />
-                            </div>
-                        </div>
-                    </CardContent>
-                </Card>
+                        </CardContent>
+                    </Card>
+                </div>
             </div>
         </section>
     );
