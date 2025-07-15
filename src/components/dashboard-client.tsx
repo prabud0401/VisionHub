@@ -1,11 +1,12 @@
 
 'use client';
 
-import { useState, useRef } from 'react';
+import { useState, useRef, useEffect } from 'react';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useForm } from 'react-hook-form';
 import { z } from 'zod';
 import Image from 'next/image';
+import { useSearchParams } from 'next/navigation';
 import { Bot, Download, ImageIcon, Loader2, Sparkles, WandSparkles, UploadCloud, BrainCircuit } from 'lucide-react';
 
 import { generateImages } from '@/ai/flows/generate-image';
@@ -54,6 +55,9 @@ const formSchema = z.object({
 type FormValues = z.infer<typeof formSchema>;
 
 export function DashboardClient() {
+  const searchParams = useSearchParams();
+  const initialPrompt = searchParams.get('prompt') || '';
+
   const [generatedImages, setGeneratedImages] = useState<GeneratedImage[] | null>(null);
   const [isGenerating, setIsGenerating] = useState(false);
   const [isEnhancing, setIsEnhancing] = useState(false);
@@ -71,12 +75,24 @@ export function DashboardClient() {
   const form = useForm<FormValues>({
     resolver: zodResolver(formSchema),
     defaultValues: {
-      prompt: '',
+      prompt: initialPrompt,
       models: ["Gemini AI"],
       tones: [],
       aspectRatio: '1:1',
     },
   });
+
+  useEffect(() => {
+    // This effect ensures the form field updates if the user navigates
+    // back and forth with a new prompt in the URL.
+    form.reset({
+      prompt: initialPrompt,
+      models: form.getValues('models'),
+      tones: form.getValues('tones'),
+      aspectRatio: form.getValues('aspectRatio'),
+    });
+  }, [initialPrompt, form]);
+
 
   const handleEnhancePrompt = async () => {
     const currentPrompt = form.getValues('prompt');

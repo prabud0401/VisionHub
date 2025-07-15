@@ -1,5 +1,6 @@
 
 'use client';
+import { useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { useAuth } from '@/context/auth-context';
@@ -7,11 +8,21 @@ import { ArrowRight } from 'lucide-react';
 import { useRouter } from 'next/navigation';
 
 export default function HeroSection() {
-  const { setAuthModalOpen } = useAuth();
+  const { user, setAuthModalOpen } = useAuth();
   const router = useRouter();
+  const [prompt, setPrompt] = useState('');
 
   const handleCreate = () => {
-    setAuthModalOpen(true);
+    if (!user) {
+      setAuthModalOpen(true);
+    } else {
+      if (prompt) {
+        // Pass the prompt as a query parameter
+        router.push(`/dashboard?prompt=${encodeURIComponent(prompt)}`);
+      } else {
+        router.push('/dashboard');
+      }
+    }
   };
 
   return (
@@ -33,8 +44,9 @@ export default function HeroSection() {
             type="text"
             placeholder="A majestic lion with a crown of stars, digital painting"
             className="flex-grow bg-transparent border-none focus-visible:ring-0 text-white placeholder:text-muted-foreground"
-            onFocus={handleCreate}
-            readOnly
+            value={prompt}
+            onChange={(e) => setPrompt(e.target.value)}
+            onKeyDown={(e) => e.key === 'Enter' && handleCreate()}
           />
           <Button variant="accent" size="lg" onClick={handleCreate}>
             <span className="hidden sm:inline">Start Creating</span>
