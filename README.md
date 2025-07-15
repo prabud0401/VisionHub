@@ -60,9 +60,36 @@ Follow these instructions to set up and run the project on your local machine fo
 
 - [Node.js](https://nodejs.org/) (v18 or later recommended)
 - [npm](https://www.npmjs.com/) (usually comes with Node.js)
-- A Firebase project with **Authentication**, **Firestore**, and **Storage** enabled.
+- A Google account to create a Firebase project.
 
-### Installation
+### **Step 1: Create and Configure Your Firebase Project**
+
+This application requires a Firebase project with several services enabled.
+
+1.  **Create a Firebase Project:**
+    - Go to the [Firebase Console](https://console.firebase.google.com/).
+    - Click **"Add project"** and follow the on-screen instructions.
+
+2.  **Enable Authentication:**
+    - In your new project, go to **Build > Authentication**.
+    - Click **"Get started"**.
+    - On the **Sign-in method** tab, enable the following providers:
+        - **Email/Password**
+        - **Google**
+
+3.  **Enable Firestore Database:**
+    - Go to **Build > Firestore Database**.
+    - Click **"Create database"**.
+    - Start in **Production mode**.
+    - Choose a location for your database (e.g., `us-central`).
+    - Click **"Enable"**.
+
+4.  **Enable Firebase Storage:**
+    - Go to **Build > Storage**.
+    - Click **"Get started"**.
+    - Follow the prompts to set up your storage bucket. You can use the default security rules for now.
+
+### **Step 2: Install Project Dependencies**
 
 1.  **Clone the repository:**
     ```bash
@@ -75,7 +102,7 @@ Follow these instructions to set up and run the project on your local machine fo
     npm install
     ```
 
-### Environment Variables
+### **Step 3: Set Up Environment Variables**
 
 This project requires Firebase credentials to connect to your backend services.
 
@@ -84,7 +111,7 @@ This project requires Firebase credentials to connect to your backend services.
 
 2.  **Set up Firebase Client-Side Keys:**
     - Go to your Firebase Project Settings > General.
-    - Under "Your apps," find your web app.
+    - Under "Your apps," find your web app. If one doesn't exist, create one.
     - Under "SDK setup and configuration," select "Config."
     - Copy the configuration values into your `.env` file like this:
 
@@ -100,7 +127,7 @@ This project requires Firebase credentials to connect to your backend services.
 3.  **Set up Firebase Admin (Server-Side) Key:**
     - Go to your Firebase Project Settings > Service accounts.
     - Click "Generate new private key" and save the JSON file securely.
-    - **Do not commit this file to Git.** Open the downloaded JSON file, copy its entire content, and paste it into your `.env` file for the `FIREBASE_SERVICE_ACCOUNT_KEY` variable. It should be a single line.
+    - **Do not commit this file to Git.** Open the downloaded JSON file, copy its entire content, and paste it into your `.env` file for the `FIREBASE_SERVICE_ACCOUNT_KEY` variable. It must be a single line.
 
     ```env
     # This must be the full JSON content, escaped for a single line if necessary.
@@ -113,8 +140,7 @@ This project requires Firebase credentials to connect to your backend services.
     ADMIN_SECRET_CODE=YourSuperSecretAdminPassword123
     ```
 
-
-### Running the Application
+### **Step 4: Running the Application**
 
 Once your environment variables are set, you can start the development server.
 
@@ -130,3 +156,4 @@ The application will be running at `http://localhost:9002`.
 2. Log in using:
    - **Email:** `prabud0401@gmail.com`
    - **Secret Code:** The value you set for `ADMIN_SECRET_CODE` in your `.env` file.
+```
