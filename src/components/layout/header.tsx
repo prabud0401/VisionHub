@@ -39,7 +39,7 @@ export default function Header() {
       <header className="fixed top-0 left-0 z-50 w-full bg-background/80 backdrop-blur-sm">
         <div className="container mx-auto flex h-20 items-center justify-between px-4 md:px-6">
           <Link href="/">
-             <Image src="/visionhub.png" alt="VisionHub Logo" width={180} height={45} />
+             <Image src="/visionhub.png" alt="VisionHub Logo" width={180} height={45} className="w-[150px] md:w-[180px]" />
           </Link>
           <nav className="hidden items-center gap-6 text-sm font-medium md:flex">
             {navLinks.map((link) => (
@@ -106,7 +106,7 @@ export default function Header() {
           <div className="md:hidden">
             <Sheet>
               <SheetTrigger asChild>
-                <Button variant="ghost" size="icon">
+                <Button variant="ghost" size="icon" className="h-12 w-12">
                   <Menu className="h-6 w-6" />
                   <span className="sr-only">Toggle navigation menu</span>
                 </Button>
@@ -115,10 +115,6 @@ export default function Header() {
                  <SheetTitle className="sr-only">Menu</SheetTitle>
                  <SheetDescription className="sr-only">Main navigation menu</SheetDescription>
                 <div className="flex h-full flex-col gap-6 p-6 overflow-y-auto">
-                  <Link href="/">
-                    <Image src="/visionhub.png" alt="VisionHub Logo" width={180} height={45} />
-                  </Link>
-
                   {user ? (
                     <div className="border-b pb-6">
                       <div className="flex items-center gap-4 mb-4">
