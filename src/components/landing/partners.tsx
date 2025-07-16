@@ -35,9 +35,9 @@ export default function Partners() {
                     
                     <PartnerLogo name="OpenAI" href="https://openai.com/">
                        <div className="flex items-center gap-3">
-                         <div className="relative h-8 w-8 text-green-500">
+                         <div className="relative h-8 w-8">
                            <Image
-                                src="https://www.svgrepo.com/show/306500/openai.svg"
+                                src="https://socialmarketing90.com/wp-content/uploads/2023/12/OpenAI-Insta-Version-SVG-3.svg"
                                 alt="OpenAI Icon"
                                 fill
                                 className="object-contain"
@@ -48,7 +48,9 @@ export default function Partners() {
                     </PartnerLogo>
                      
                      <PartnerLogo name="Stability AI" href="https://stability.ai/">
-                        <span className="text-3xl font-bold tracking-tighter bg-gradient-to-r from-violet-500 to-pink-500 bg-clip-text text-transparent">stability.ai</span>
+                        <span className="text-3xl font-bold tracking-tighter bg-gradient-to-r from-violet-500 to-pink-500 bg-clip-text text-transparent">
+                            stability<span className="text-blue-500">.</span>ai
+                        </span>
                     </PartnerLogo>
                     
                     <PartnerLogo name="Midjourney" href="https://www.midjourney.com/">
