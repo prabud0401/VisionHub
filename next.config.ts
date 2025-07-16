@@ -73,6 +73,18 @@ const nextConfig: NextConfig = {
         protocol: 'https',
         hostname: 'static.vecteezy.com',
       },
+      {
+        protocol: 'https',
+        hostname: 'logos-world.net',
+      },
+      {
+        protocol: 'https',
+        hostname: 'cdn.80.lv',
+      },
+      {
+        protocol: 'https',
+        hostname: 'upload.wikimedia.org',
+      },
     ],
   },
   webpack(config) {
