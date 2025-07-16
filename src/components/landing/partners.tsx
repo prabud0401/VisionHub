@@ -1,3 +1,4 @@
+
 'use client';
 import Image from 'next/image';
 import Link from 'next/link';
@@ -33,8 +34,8 @@ export default function Partners() {
                     </PartnerLogo>
                     
                     <PartnerLogo name="OpenAI" href="https://openai.com/">
-                       <div className="flex items-center gap-3 text-green-500">
-                         <div className="relative h-8 w-8">
+                       <div className="flex items-center gap-3">
+                         <div className="relative h-8 w-8 text-green-500">
                            <Image
                                 src="https://www.svgrepo.com/show/306500/openai.svg"
                                 alt="OpenAI Icon"
