@@ -8,7 +8,6 @@ const partners = [
         name: 'Google Gemini', 
         logo: 'https://logos-world.net/wp-content/uploads/2025/01/Google-Gemini-Logo.png',
         href: 'https://gemini.google.com/',
-        className: 'invert',
     },
     { 
         name: 'OpenAI', 
