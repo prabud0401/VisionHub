@@ -1,0 +1,226 @@
+
+'use client';
+
+import { useEffect, useState } from 'react';
+import { useRouter } from 'next/navigation';
+import { useLocalStorage } from '@/hooks/use-local-storage';
+import { Button } from '@/components/ui/button';
+import { Card, CardContent, CardDescription, CardHeader, CardTitle, CardFooter } from '@/components/ui/card';
+import { Loader2, Check, CreditCard, Gem, Landmark, Upload, CheckCircle } from 'lucide-react';
+import { useAuth } from '@/context/auth-context';
+import { Separator } from '@/components/ui/separator';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+import { Input } from '@/components/ui/input';
+import { Label } from '@/components/ui/label';
+import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
+import { useToast } from '@/hooks/use-toast';
+import { submitPaymentForReview, uploadPaymentSlip } from '@/services/payment-service';
+
+interface PlanDetails {
+  id: string;
+  name: string;
+  price: string;
+  credits: number;
+  billing: 'monthly' | 'annually';
+}
+
+const GooglePayIcon = () => (
+    <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 mr-2" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+      <path d="M12 12m-8 0a8 8 0 1 0 16 0a8 8 0 1 0 -16 0" />
+      <path d="M6 12l2 -2" />
+      <path d="M8 12l2 2" />
+      <path d="M12 8l2 2" />
+      <path d="M12 14l2 -2" />
+      <path d="M14 12l2 -2" />
+      <path d="M16 12l2 2" />
+    </svg>
+);
+
+// Helper to convert ArrayBuffer to Base64
+function bufferToBase64(buffer: ArrayBuffer) {
+  let binary = '';
+  const bytes = new Uint8Array(buffer);
+  const len = bytes.byteLength;
+  for (let i = 0; i < len; i++) {
+    binary += String.fromCharCode(bytes[i]);
+  }
+  return window.btoa(binary);
+}
+
+
+export default function BuyCreditsPage() {
+  const [selectedPlan, , planLoaded] = useLocalStorage<PlanDetails | null>('selectedPlan', null);
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [paymentMethod, setPaymentMethod] = useState<string>('bank-transfer');
+  const [paymentSlip, setPaymentSlip] = useState<File | null>(null);
+  const [isSubmitted, setIsSubmitted] = useState(false);
+  const router = useRouter();
+  const { user } = useAuth();
+  const { toast } = useToast();
+
+  useEffect(() => {
+    // Wait until the plan has been loaded from local storage
+    if (planLoaded) {
+      if (!selectedPlan || !user) {
+        router.push('/pricing');
+      }
+    }
+  }, [selectedPlan, user, router, planLoaded]);
+
+  const handlePayment = async () => {
+    if (!paymentSlip || !user || !selectedPlan) {
+        toast({ variant: "destructive", title: "Error", description: "Payment slip is required." });
+        return;
+    }
+
+    setIsSubmitting(true);
+    
+    try {
+      const fileBuffer = await paymentSlip.arrayBuffer();
+      const base64Data = bufferToBase64(fileBuffer);
+      const fileName = `${user.uid}-${Date.now()}-${paymentSlip.name}`;
+
+      const slipUrl = await uploadPaymentSlip(base64Data, fileName, paymentSlip.type);
+      
+      await submitPaymentForReview({
+          userId: user.uid,
+          userEmail: user.email,
+          userDisplayName: user.displayName,
+          plan: selectedPlan,
+          paymentSlipUrl: slipUrl,
+      });
+
+      setIsSubmitted(true);
+
+    } catch(error) {
+        console.error("Payment submission failed:", error);
+        toast({ variant: "destructive", title: "Submission Failed", description: "Could not submit your payment for review. Please try again." });
+    } finally {
+        setIsSubmitting(false);
+    }
+  };
+
+  if (!planLoaded || !selectedPlan) {
+    return (
+      <div className="flex h-screen items-center justify-center bg-background">
+        <Loader2 className="h-16 w-16 animate-spin text-primary" />
+      </div>
+    );
+  }
+
+  if (isSubmitted) {
+    return (
+        <div className="container mx-auto max-w-2xl py-20 px-4">
+            <Card className="text-center p-8 shadow-lg">
+                <CardHeader>
+                    <CheckCircle className="h-16 w-16 text-green-500 mx-auto mb-4" />
+                    <CardTitle className="text-3xl">Payment Submitted!</CardTitle>
+                </CardHeader>
+                <CardContent>
+                    <p className="text-muted-foreground mb-6">
+                        Thank you for your purchase. Your payment is currently under review. You will receive an email confirmation once your credits have been added to your account. This usually takes 1-2 business days.
+                    </p>
+                    <Button onClick={() => router.push('/dashboard')}>Go to Dashboard</Button>
+                </CardContent>
+            </Card>
+        </div>
+    )
+  }
+
+  return (
+    <div className="container mx-auto max-w-2xl py-20 px-4">
+      <div className="text-center mb-12">
+        <h1 className="font-headline text-4xl font-bold tracking-tight lg:text-5xl">
+          Complete Your Purchase
+        </h1>
+        <p className="mt-4 text-lg text-muted-foreground">
+          You're about to add more credits to your account.
+        </p>
+      </div>
+
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+        <Card className="shadow-lg md:col-span-2">
+          <CardHeader>
+            <div className="flex justify-between items-start">
+              <div>
+                <CardTitle className="text-2xl">{selectedPlan.name} Plan</CardTitle>
+                <CardDescription className="capitalize">{selectedPlan.billing} Billing</CardDescription>
+              </div>
+              <div className="text-right">
+                  <p className="text-4xl font-bold">{selectedPlan.price}</p>
+                  <p className="flex items-center justify-end gap-2 text-primary font-semibold">
+                      <Gem className="h-5 w-5" />
+                      {selectedPlan.credits} credits
+                  </p>
+              </div>
+            </div>
+          </CardHeader>
+        </Card>
+        
+        <Card className="shadow-lg md:col-span-2">
+            <CardHeader>
+                <CardTitle>Payment Method</CardTitle>
+                <CardDescription>Select how you'd like to pay.</CardDescription>
+            </CardHeader>
+            <CardContent>
+                 <Select value={paymentMethod} onValueChange={setPaymentMethod}>
+                    <SelectTrigger>
+                        <SelectValue placeholder="Select a payment method" />
+                    </SelectTrigger>
+                    <SelectContent>
+                        <SelectItem value="bank-transfer">
+                            <span className="flex items-center"><Landmark className="mr-2 h-4 w-4" /> Bank Transfer</span>
+                        </SelectItem>
+                        <SelectItem value="google-pay" disabled>
+                            <span className="flex items-center"><GooglePayIcon /> Google Pay (Coming Soon)</span>
+                        </SelectItem>
+                         <SelectItem value="card" disabled>
+                             <span className="flex items-center"><CreditCard className="mr-2 h-4 w-4" /> Visa/Debit Card (Coming Soon)</span>
+                        </SelectItem>
+                    </SelectContent>
+                </Select>
+
+                {paymentMethod === 'bank-transfer' && (
+                    <div className="mt-6 space-y-6">
+                        <Separator />
+                        <Alert>
+                            <Landmark className="h-4 w-4" />
+                            <AlertTitle>Bank Transfer Instructions</AlertTitle>
+                            <AlertDescription className="space-y-2 mt-2">
+                                <p>Please transfer the total amount to the following bank account:</p>
+                                <ul className="text-xs list-disc list-inside">
+                                    <li><strong>Bank Name:</strong> Visionary Bank Inc.</li>
+                                    <li><strong>Account Number:</strong> 1234 5678 9012</li>
+                                    <li><strong>Account Holder:</strong> VisionHub AI</li>
+                                    <li><strong>Reference:</strong> Your Username ({user?.username})</li>
+                                </ul>
+                            </AlertDescription>
+                        </Alert>
+                         <div className="space-y-2">
+                            <Label htmlFor="payment-slip">Upload Payment Slip</Label>
+                            <Input 
+                                id="payment-slip" 
+                                type="file" 
+                                onChange={(e) => setPaymentSlip(e.target.files?.[0] || null)}
+                                accept="image/png, image/jpeg, application/pdf"
+                                className="file:text-primary file:font-semibold"
+                             />
+                            <p className="text-xs text-muted-foreground">Please upload a screenshot or PDF of your transaction receipt.</p>
+                        </div>
+                    </div>
+                )}
+            </CardContent>
+             <CardFooter>
+                <Button 
+                    onClick={handlePayment} 
+                    size="lg" 
+                    disabled={isSubmitting || (paymentMethod === 'bank-transfer' && !paymentSlip)}
+                >
+                    {isSubmitting ? <Loader2 className="animate-spin" /> : `Pay ${selectedPlan.price} Now`}
+                </Button>
+            </CardFooter>
+        </Card>
+      </div>
+    </div>
+  );
+}

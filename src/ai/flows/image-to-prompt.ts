@@ -5,7 +5,7 @@
  *
  * - imageToPrompt - A function that analyzes an image and creates a descriptive prompt.
  * - ImageToPromptInput - The input type for the imageToPrompt function.
- * - ImageToPromptOutput - The return type for the imageToPrompt function.
+ * - ImageToPromptOutput - The return type for the imageToPtompt function.
  */
 
 import {ai} from '@/ai/genkit';
@@ -52,7 +52,15 @@ const imageToPromptFlow = ai.defineFlow(
     outputSchema: ImageToPromptOutputSchema,
   },
   async input => {
-    const {output} = await prompt(input);
-    return output!;
+    const llmResponse = await prompt(input);
+    const output = llmResponse.output();
+
+    if (!output) {
+      throw new Error(
+        `The AI model failed to return a valid prompt. Raw response: ${llmResponse.text()}`
+      );
+    }
+    
+    return output;
   }
 );

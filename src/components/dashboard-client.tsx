@@ -285,7 +285,7 @@ export function DashboardClient() {
                                 <div className="relative aspect-video w-full rounded-lg overflow-hidden border">
                                   <Image src={uploadedImage} alt="Uploaded for analysis" fill className="object-contain" />
                                 </div>
-                                <Button type="button" onClick={handleImageToPrompt} disabled={isAnalyzing} className="w-full">
+                                <Button type="button" onClick={handleImageToPrompt} disabled={isAnalyzing}>
                                   {isAnalyzing ? (
                                     <Loader2 className="mr-2 h-4 w-4 animate-spin" />
                                   ) : (
@@ -384,7 +384,7 @@ export function DashboardClient() {
                     </CardContent>
                  </Card>
                 
-                <Button type="submit" disabled={isGenerating} size="lg" className="w-full">
+                <Button type="submit" disabled={isGenerating} size="lg">
                   {isGenerating ? (
                     <>
                       <Loader2 className="mr-2 h-4 w-4 animate-spin" />
@@ -440,7 +440,7 @@ export function DashboardClient() {
                       ))}
                     </div>
                     {generatedImages.length > 0 && (
-                        <Button asChild variant="outline" className="w-full mt-4">
+                        <Button asChild variant="outline" className="mt-4">
                           <a href={generatedImages[0].url} download={`visionhub-ai-${generatedImages[0].id}.png`}>
                             <Download className="mr-2 h-4 w-4" />
                             Download First Image

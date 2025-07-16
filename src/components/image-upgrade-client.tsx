@@ -160,10 +160,10 @@ export function ImageUpgradeClient() {
                     {isLoading ? 'Processing...' : 'Remove Background'}
                   </Button>
               </TabsContent>
-              <TabsContent value="upscale" className="pt-4 space-y-4 text-center">
-                 <div className="flex justify-center items-center gap-4">
+              <TabsContent value="upscale" className="pt-4 space-y-4">
+                 <div className="flex justify-center items-center gap-4 flex-wrap">
                     <Select value={aspectRatio} onValueChange={setAspectRatio}>
-                        <SelectTrigger className="w-[280px]">
+                        <SelectTrigger className="w-full sm:w-[280px]">
                         <SelectValue placeholder="Select an aspect ratio" />
                         </SelectTrigger>
                         <SelectContent>
