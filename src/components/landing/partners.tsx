@@ -1,4 +1,3 @@
-
 'use client';
 import Image from 'next/image';
 import Link from 'next/link';
@@ -34,13 +33,13 @@ export default function Partners() {
                     </PartnerLogo>
                     
                     <PartnerLogo name="OpenAI" href="https://openai.com/">
-                       <div className="flex items-center gap-3">
+                       <div className="flex items-center gap-3 text-green-500">
                          <div className="relative h-8 w-8">
                            <Image
                                 src="https://www.svgrepo.com/show/306500/openai.svg"
                                 alt="OpenAI Icon"
                                 fill
-                                className="object-contain invert"
+                                className="object-contain"
                            />
                          </div>
                          <span className="text-3xl font-bold">OpenAI</span>
@@ -53,7 +52,7 @@ export default function Partners() {
                     
                     <PartnerLogo name="Midjourney" href="https://www.midjourney.com/">
                         <div className="flex items-center gap-3">
-                           <div className="relative h-8 w-8">
+                           <div className="relative h-10 w-10">
                              <Image
                                 src="https://companieslogo.com/img/orig/midjourney.D-733962ee.png?t=1720244494"
                                 alt="Midjourney Icon"
