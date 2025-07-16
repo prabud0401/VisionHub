@@ -32,7 +32,7 @@ const partners = [
 const PartnerLogo = ({ name, logo, href, className }: { name: string, logo: string, href: string, className?: string }) => (
     <Link href={href} target="_blank" rel="noopener noreferrer" className="group">
         <div className="h-24 w-48 flex items-center justify-center p-4 bg-secondary rounded-lg transition-all duration-300 group-hover:bg-primary/10 group-hover:border-primary/50 border border-transparent">
-           <div className="relative h-12 w-full">
+           <div className="relative h-16 w-full">
              <Image
                 src={logo}
                 alt={`${name} logo`}
