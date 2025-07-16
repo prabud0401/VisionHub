@@ -92,6 +92,14 @@ const nextConfig: NextConfig = {
       {
         protocol: 'https',
         hostname: 'socialmarketing90.com',
+      },
+      {
+        protocol: 'https',
+        hostname: 'www.svgrepo.com',
+      },
+      {
+        protocol: 'https',
+        hostname: 'companieslogo.com',
       }
     ],
   },
