@@ -1,9 +1,7 @@
 
 import { initializeApp, getApps, getApp, type FirebaseApp } from "firebase/app";
 
-// --- Dual-Environment Firebase Configuration ---
-
-const localFirebaseConfig = {
+const firebaseConfig = {
   apiKey: process.env.NEXT_PUBLIC_FIREBASE_API_KEY,
   authDomain: process.env.NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN,
   projectId: process.env.NEXT_PUBLIC_FIREBASE_PROJECT_ID,
@@ -12,72 +10,38 @@ const localFirebaseConfig = {
   appId: process.env.NEXT_PUBLIC_FIREBASE_APP_ID,
 };
 
-async function getFirebaseConfig() {
-  // In a deployed Firebase environment, this endpoint is automatically available.
-  const hostingConfigUrl = `/__/firebase/init.json`;
-  
-  try {
-    // Only try to fetch in the browser
-    if (typeof window !== 'undefined') {
-      const response = await fetch(hostingConfigUrl);
-      if (response.ok) {
-        const config = await response.json();
-        console.log("Successfully fetched Firebase config from hosting URL.");
-        return { ...config, storageBucket: "visionhub-ai-s813r.firebasestorage.app" };
-      }
-    }
-  } catch (error) {
-    // This will typically fail in a local dev environment.
-    // That's expected, so we'll fall back to environment variables.
-  }
-
-  console.log("Could not fetch Firebase config from hosting. Falling back to environment variables.");
-  // If the fetch fails, it means we are likely in a local or non-Firebase environment.
-  // We fall back to the manually configured environment variables.
-  if (localFirebaseConfig.apiKey && localFirebaseConfig.apiKey !== 'YOUR_API_KEY') {
-    return localFirebaseConfig;
-  }
-  
-  return null;
-}
-
-
 let firebaseApp: FirebaseApp | null = null;
 let firebaseInitializationPromise: Promise<FirebaseApp | null> | null = null;
 
-async function initializeFirebase() {
-    if (firebaseApp) return firebaseApp;
-    if (firebaseInitializationPromise) return firebaseInitializationPromise;
+function initializeFirebase() {
+  // Prevent re-initialization
+  if (firebaseApp || firebaseInitializationPromise) {
+    return;
+  }
 
-    firebaseInitializationPromise = (async () => {
-        const config = await getFirebaseConfig();
+  firebaseInitializationPromise = (async () => {
+    if (!firebaseConfig.apiKey || firebaseConfig.apiKey === 'YOUR_API_KEY') {
+        console.warn("Firebase configuration is missing or incomplete. Firebase services will be disabled.");
+        return null;
+    }
 
-        if (!config || !config.apiKey) {
-            console.warn("Firebase configuration is missing or incomplete. Firebase services will be disabled.");
-            return null;
-        }
-
-        if (getApps().length) {
-            firebaseApp = getApp();
-        } else {
-            firebaseApp = initializeApp(config);
-        }
-        return firebaseApp;
-    })();
-
-    return firebaseInitializationPromise;
+    if (!getApps().length) {
+        firebaseApp = initializeApp(firebaseConfig);
+    } else {
+        firebaseApp = getApp();
+    }
+    return firebaseApp;
+  })();
 }
 
-// We don't export the app directly, but a promise that resolves to it.
-// This ensures that any part of the app trying to use Firebase
-// will wait until initialization is complete.
-export const getFirebaseApp = () => {
-    return initializeFirebase();
+// Initialize Firebase as soon as this file is loaded
+initializeFirebase();
+
+// Asynchronous getter for the initialized app
+export const getFirebaseApp = async (): Promise<FirebaseApp | null> => {
+  if (firebaseApp) return firebaseApp;
+  return firebaseInitializationPromise;
 };
 
-// For components that need direct access (though getFirebaseApp is preferred)
-if (typeof window !== 'undefined') {
-    initializeFirebase();
-}
-
+// Export the app instance for legacy imports if needed, though getFirebaseApp is preferred
 export { firebaseApp };
