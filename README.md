@@ -5,7 +5,13 @@ VisionHub AI is a powerful, full-stack web application designed to be the ultima
 
 The platform features a complete user authentication system, a credit-based usage model, and a dedicated admin panel for comprehensive application management.
 
-## 🚀 Tech Stack
+## 🚀 Live Demo
+
+You can view the live, deployed version of the application here:
+
+**[https://studio--visionhub-ai-s813r.us-central1.hosted.app/](https://studio--visionhub-ai-s813r.us-central1.hosted.app/)**
+
+## 🔧 Tech Stack
 
 VisionHub AI is built with a modern, robust, and scalable technology stack:
 
@@ -52,7 +58,7 @@ VisionHub AI is built with a modern, robust, and scalable technology stack:
 
 ---
 
-## 🔧 Getting Started
+## 🛠️ Getting Started
 
 Follow these instructions to set up and run the project on your local machine for development and testing.
 
@@ -156,4 +162,3 @@ The application will be running at `http://localhost:9002`.
 2. Log in using:
    - **Email:** `prabud0401@gmail.com`
    - **Secret Code:** The value you set for `ADMIN_SECRET_CODE` in your `.env` file.
-```
