@@ -1,6 +1,7 @@
 'use client';
 import Image from 'next/image';
 import Link from 'next/link';
+import { cn } from '@/lib/utils';
 
 const partners = [
     { 
@@ -8,7 +9,8 @@ const partners = [
         logo: 'https://logos-world.net/wp-content/uploads/2025/01/Google-Gemini-Logo.png',
         href: 'https://gemini.google.com/',
         width: 140,
-        height: 40
+        height: 40,
+        className: 'invert',
     },
     { 
         name: 'OpenAI DALL-E 3', 
@@ -22,18 +24,20 @@ const partners = [
         logo: 'https://upload.wikimedia.org/wikipedia/commons/9/90/Stability_Ai_%E2%80%94_wordmark.png',
         href: 'https://stability.ai/',
         width: 150,
-        height: 40
+        height: 40,
+        className: 'invert'
     },
     { 
         name: 'Midjourney', 
         logo: 'https://upload.wikimedia.org/wikipedia/commons/2/24/Midjourney_Emblem.svg',
         href: 'https://www.midjourney.com/',
         width: 120,
-        height: 40
+        height: 40,
+        className: 'invert'
     },
 ];
 
-const PartnerLogo = ({ name, logo, href, width, height }: { name: string, logo: string, href: string, width: number, height: number }) => (
+const PartnerLogo = ({ name, logo, href, width, height, className }: { name: string, logo: string, href: string, width: number, height: number, className?: string }) => (
     <Link href={href} target="_blank" rel="noopener noreferrer" className="grayscale opacity-60 hover:opacity-100 hover:grayscale-0 transition-all duration-300">
         <div className="relative" style={{ width, height }}>
            <Image
@@ -41,7 +45,7 @@ const PartnerLogo = ({ name, logo, href, width, height }: { name: string, logo: 
             alt={`${name} logo`}
             title={name}
             fill
-            className="object-contain"
+            className={cn("object-contain", className)}
           />
         </div>
     </Link>
