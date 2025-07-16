@@ -16,6 +16,7 @@ import {
   uploadImageFromDataUri,
 } from '@/services/image-service';
 import type { GeneratedImage } from '@/lib/types';
+import { CreditError } from '@/lib/types';
 import { deductUserCredit, getUserByUsername } from '@/services/user-service';
 
 const GenerateImagesInputSchema = z.object({
@@ -30,7 +31,17 @@ export type GenerateImagesInput = z.infer<typeof GenerateImagesInputSchema>;
 export type GenerateImagesOutput = GeneratedImage[];
 
 export async function generateImages(input: GenerateImagesInput): Promise<GenerateImagesOutput> {
-  return generateImagesFlow(input);
+  try {
+    return await generateImagesFlow(input);
+  } catch(e) {
+    if (e instanceof CreditError) {
+      // Re-throw the custom error so the client can catch it specifically.
+      throw e;
+    }
+    // For other errors, wrap them in a standard Error object.
+    const errorMessage = e instanceof Error ? e.message : 'An unknown error occurred during image generation.';
+    throw new Error(errorMessage);
+  }
 }
 
 const generateImagesFlow = ai.defineFlow(
@@ -45,7 +56,8 @@ const generateImagesFlow = ai.defineFlow(
     const creditsToDeduct = input.models.length;
 
     if (!userProfile || (userProfile.credits ?? 0) < creditsToDeduct) {
-        throw new Error("You don't have enough credits to generate these images.");
+        // Throw a specific error for credits
+        throw new CreditError("You don't have enough credits to generate these images.");
     }
 
     const generationTasks = input.models.map(async (modelName) => {

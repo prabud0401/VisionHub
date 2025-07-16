@@ -53,11 +53,11 @@ const imageToPromptFlow = ai.defineFlow(
   },
   async input => {
     const llmResponse = await prompt(input);
-    const output = llmResponse.output();
+    const output = llmResponse.output;
 
     if (!output) {
       throw new Error(
-        `The AI model failed to return a valid prompt. Raw response: ${llmResponse.text()}`
+        `The AI model failed to return a valid prompt. Raw response: ${llmResponse.text}`
       );
     }
     

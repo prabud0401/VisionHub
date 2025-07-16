@@ -7,7 +7,7 @@ import { useForm } from 'react-hook-form';
 import { z } from 'zod';
 import Image from 'next/image';
 import { useSearchParams } from 'next/navigation';
-import { Bot, Download, ImageIcon, Loader2, Sparkles, WandSparkles, UploadCloud, BrainCircuit } from 'lucide-react';
+import { Bot, Download, ImageIcon, Loader2, Sparkles, WandSparkles, UploadCloud, BrainCircuit, Gem } from 'lucide-react';
 
 import { generateImages } from '@/ai/flows/generate-image';
 import { enhancePrompt } from '@/ai/flows/enhance-prompt';
@@ -18,6 +18,7 @@ import { Form, FormControl, FormDescription, FormField, FormItem, FormLabel, For
 import { Textarea } from '@/components/ui/textarea';
 import { useToast } from '@/hooks/use-toast';
 import type { GeneratedImage } from '@/lib/types';
+import { CreditError } from '@/lib/types';
 import { Alert, AlertDescription, AlertTitle } from './ui/alert';
 import { GenerationProgressModal } from './generation-progress-modal';
 import { PromptEnhancerDialog } from './prompt-enhancer-dialog';
@@ -27,6 +28,7 @@ import { ToggleGroup, ToggleGroupItem } from './ui/toggle-group';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from './ui/select';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { VerifyEmailCard } from './verify-email-card';
+import Link from 'next/link';
 
 const models = [
   "Gemini AI",
@@ -69,7 +71,7 @@ export function DashboardClient() {
   const fileInputRef = useRef<HTMLInputElement>(null);
   
   const { toast } = useToast();
-  const { user, sendVerificationEmail } = useAuth();
+  const { user, sendVerificationEmail, refreshUserData } = useAuth();
 
 
   const form = useForm<FormValues>({
@@ -185,17 +187,33 @@ export function DashboardClient() {
       
       setGeneratedImages(result);
       
+      await refreshUserData(); // Refresh user data to get new credit count
+      
       setProgressState('done');
       await new Promise(resolve => setTimeout(resolve, 1000));
 
     } catch (e) {
-      const errorMessage = e instanceof Error ? e.message : 'An unknown error occurred.';
-      setError(errorMessage);
-      toast({
-        variant: 'destructive',
-        title: 'Generation Failed',
-        description: errorMessage,
-      });
+      if (e instanceof CreditError) {
+        // Handle specific credit error
+        toast({
+          variant: 'destructive',
+          title: 'Insufficient Credits',
+          description: "You don't have enough credits for this generation. Please purchase more.",
+          action: (
+             <Button asChild variant="secondary">
+                <Link href="/pricing">Get Credits</Link>
+             </Button>
+          )
+        });
+      } else {
+        const errorMessage = e instanceof Error ? e.message : 'An unknown error occurred.';
+        setError(errorMessage);
+        toast({
+          variant: 'destructive',
+          title: 'Generation Failed',
+          description: errorMessage,
+        });
+      }
     } finally {
       setIsGenerating(false);
       setProgressState('idle');
