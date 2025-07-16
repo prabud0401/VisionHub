@@ -11,13 +11,14 @@ const partners = [
         className: 'invert',
     },
     { 
-        name: 'OpenAI DALL-E 3', 
-        logo: 'https://cdn.80.lv/api/upload/content/f5/663d87b3b199a.jpg',
-        href: 'https://openai.com/dall-e-3',
+        name: 'OpenAI', 
+        logo: 'https://socialmarketing90.com/wp-content/uploads/2023/12/OpenAI-Insta-Version-SVG-13.svg',
+        href: 'https://openai.com/',
+        className: 'invert'
     },
     { 
         name: 'Stability AI', 
-        logo: 'https://upload.wikimedia.org/wikipedia/commons/9/90/Stability_Ai_%E2%80%94_wordmark.png',
+        logo: 'https://res.cloudinary.com/sup/image/upload/v1674538939/uikdmhg2fm1yfdzpoud4.png',
         href: 'https://stability.ai/',
         className: 'invert'
     },
@@ -31,16 +32,14 @@ const partners = [
 
 const PartnerLogo = ({ name, logo, href, className }: { name: string, logo: string, href: string, className?: string }) => (
     <Link href={href} target="_blank" rel="noopener noreferrer" className="group">
-        <div className="h-24 w-48 flex items-center justify-center p-4 bg-secondary rounded-lg transition-all duration-300 group-hover:bg-primary/10 group-hover:border-primary/50 border border-transparent">
-           <div className="relative h-16 w-full">
-             <Image
-                src={logo}
-                alt={`${name} logo`}
-                title={name}
-                fill
-                className={cn("object-contain", className)}
-            />
-           </div>
+        <div className="relative h-12 w-48 transition-transform duration-300 group-hover:scale-110">
+           <Image
+            src={logo}
+            alt={`${name} logo`}
+            title={name}
+            fill
+            className={cn("object-contain", className)}
+           />
         </div>
     </Link>
 )
@@ -50,7 +49,7 @@ export default function Partners() {
         <section className="py-20 lg:py-24">
             <div className="container mx-auto px-4 text-center">
                 <h3 className="text-sm font-semibold tracking-wider text-primary uppercase">Powered By Leading AI Models</h3>
-                <div className="mt-8 flex justify-center items-center gap-8 flex-wrap">
+                <div className="mt-8 flex justify-center items-center gap-12 flex-wrap">
                     {partners.map(partner => (
                         <PartnerLogo key={partner.name} {...partner} />
                     ))}
