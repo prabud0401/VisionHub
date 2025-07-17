@@ -1,19 +1,25 @@
 
+import { VideoGenerationClient } from '@/components/video-generation-client';
 import { Metadata } from 'next';
-import { ComingSoon } from '@/components/coming-soon';
 
 export const metadata: Metadata = {
   title: 'Video Generation | VisionHub AI',
-  description: 'Coming Soon: AI-powered text-to-video generation.',
+  description: 'Create dynamic videos from text prompts with AI.',
 };
 
 export default function VideoGenerationPage() {
   return (
-    <ComingSoon
-      title="AI Video Generation"
-      description="The next frontier of creativity is on its way. Our AI video generation tool will let you create dynamic video clips from simple text prompts. The future of content creation is coming soon."
-      imageUrl="https://placehold.co/600x400.png"
-      imageHint="movie film"
-    />
+    <div className="container mx-auto py-12 px-4">
+      <div className="text-center mb-12">
+        <h1 className="font-headline text-4xl font-bold tracking-tight lg:text-5xl">
+          AI Video Generation
+        </h1>
+        <p className="mt-4 text-lg text-muted-foreground">
+          Describe your scene and watch our AI bring it to life in motion.
+        </p>
+      </div>
+      <VideoGenerationClient />
+    </div>
   );
 }
+

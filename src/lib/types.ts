@@ -8,6 +8,16 @@ export interface GeneratedImage {
   userId: string;
 }
 
+export interface GeneratedVideo {
+  id: string;
+  url: string;
+  prompt: string;
+  promptId: string;
+  model: string;
+  createdAt: string;
+  userId: string;
+}
+
 /**
  * Custom error for credit-related issues.
  */
