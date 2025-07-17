@@ -15,6 +15,7 @@ export default function RootLayout({
       <head>
         <title>VisionHub</title>
         <meta name="description" content="Generate stunning visuals with the power of AI" />
+        <meta name="google-adsense-account" content="ca-pub-4363233136452065" />
         <link rel="preconnect" href="https://fonts.googleapis.com" />
         <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
         <link
