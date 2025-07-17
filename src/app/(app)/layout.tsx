@@ -7,6 +7,7 @@ import { useEffect } from 'react';
 import Header from '@/components/layout/header';
 import Footer from '@/components/layout/footer';
 import { Bot } from 'lucide-react';
+import Image from 'next/image';
 
 export default function AppLayout({
   children,
@@ -24,10 +25,9 @@ export default function AppLayout({
 
   if (loading || !user) {
     return (
-      <div className="flex h-screen items-center justify-center bg-background">
-        <div className="ai-loader">
-            <div className="ai-loader-dot"></div>
-        </div>
+      <div className="flex h-screen flex-col items-center justify-center bg-background gap-4">
+        <Image src="/visionhub.png" alt="VisionHub Logo" width={240} height={60} />
+        <p className="text-muted-foreground animate-pulse">Unleashing Creativity...</p>
       </div>
     );
   }

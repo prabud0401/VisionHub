@@ -14,6 +14,7 @@ import { ArrowRight, Brush, Gem, Sparkles } from 'lucide-react';
 import ToolsSuite from '@/components/landing/tools-suite';
 import SocialCta from '@/components/landing/social-cta';
 import FeatureHighlight from '@/components/landing/feature-highlight';
+import Image from 'next/image';
 
 const CtaSection = () => (
     <section className="py-20 lg:py-24 bg-card/50">
@@ -87,10 +88,9 @@ export default function Home() {
 
   if (loading) {
     return (
-      <div className="flex h-screen items-center justify-center bg-background">
-        <div className="ai-loader">
-            <div className="ai-loader-dot"></div>
-        </div>
+      <div className="flex h-screen flex-col items-center justify-center bg-background gap-4">
+        <Image src="/visionhub.png" alt="VisionHub Logo" width={240} height={60} />
+        <p className="text-muted-foreground animate-pulse">Unleashing Creativity...</p>
       </div>
     );
   }

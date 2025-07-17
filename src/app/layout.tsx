@@ -13,7 +13,7 @@ export default function RootLayout({
   return (
     <html lang="en" className="dark">
       <head>
-        <title>VisionHub AI</title>
+        <title>VisionHub</title>
         <meta name="description" content="Generate stunning visuals with the power of AI" />
         <link rel="preconnect" href="https://fonts.googleapis.com" />
         <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />

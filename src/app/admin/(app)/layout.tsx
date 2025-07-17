@@ -41,10 +41,9 @@ export default function AdminLayout({
 
   if (loading || !user) {
     return (
-      <div className="flex h-screen items-center justify-center bg-background">
-        <div className="ai-loader">
-            <div className="ai-loader-dot"></div>
-        </div>
+      <div className="flex h-screen flex-col items-center justify-center bg-background gap-4">
+        <Image src="/visionhub.png" alt="VisionHub Logo" width={240} height={60} />
+        <p className="text-muted-foreground animate-pulse">Loading Admin Panel...</p>
       </div>
     );
   }
@@ -58,7 +57,7 @@ export default function AdminLayout({
             <span className="text-sm text-muted-foreground">Admin</span>
           </Link>
         </div>
-        <nav className="flex-1 overflow-auto py-4">
+        <nav className="flex-1 overflow-y-auto py-4">
           <ul className="grid items-start px-4 text-sm font-medium">
             {navLinks.map((link) => (
               <li key={link.href}>
