@@ -2,7 +2,7 @@
 'use client';
 import Link from 'next/link';
 import Image from 'next/image';
-import { Menu, LayoutDashboard, Gem } from 'lucide-react';
+import { Menu, LayoutDashboard, Gem, ChevronRight, User, Bot, Brush, HelpCircle, FileText } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Sheet, SheetContent, SheetTrigger, SheetTitle, SheetDescription } from '@/components/ui/sheet';
 import { useAuth } from '@/context/auth-context';
@@ -14,16 +14,38 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
   DropdownMenuGroup,
+  DropdownMenuSub,
+  DropdownMenuSubTrigger,
+  DropdownMenuSubContent,
+  DropdownMenuPortal,
 } from '@/components/ui/dropdown-menu';
+import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '@/components/ui/accordion';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { useRouter } from 'next/navigation';
 import { useState } from 'react';
 
-const navLinks = [
+const mainNavLinks = [
   { href: '/about', label: 'About' },
   { href: '/services', label: 'Services' },
   { href: '/pricing', label: 'Pricing' },
   { href: '/faq', label: 'FAQ' },
+];
+
+const accountLinks = [
+  { href: '/dashboard', label: 'Dashboard' },
+  { href: '/gallery', label: 'My Gallery' },
+  { href: '/settings', label: 'Settings' },
+];
+
+const aiToolsLinks = [
+  { href: '/background-remover', label: 'Image Upgrade Suite' },
+];
+
+const comingSoonLinks = [
+  { href: '/image-to-image', label: 'Image-to-Image' },
+  { href: '/inpainting', label: 'Inpainting Tool' },
+  { href: '/community', label: 'Community Showcase' },
+  { href: '/video-generation', label: 'Video Generation' },
 ];
 
 export default function Header() {
@@ -50,7 +72,7 @@ export default function Header() {
              <Image src="/visionhub.png" alt="VisionHub Logo" width={180} height={45} className="w-[150px] md:w-[180px]" />
           </Link>
           <nav className="hidden items-center gap-6 text-sm font-medium md:flex">
-            {navLinks.map((link) => (
+            {mainNavLinks.map((link) => (
               <Link key={link.href} href={link.href} className="transition-colors hover:text-primary">
                 {link.label}
               </Link>
@@ -87,19 +109,26 @@ export default function Header() {
                     </DropdownMenuLabel>
                     <DropdownMenuSeparator />
                     <DropdownMenuGroup>
-                       <DropdownMenuItem onClick={() => router.push('/dashboard')}>Dashboard</DropdownMenuItem>
-                       <DropdownMenuItem onClick={() => router.push('/gallery')}>Gallery</DropdownMenuItem>
-                       <DropdownMenuItem onClick={() => router.push('/background-remover')}>Image Upgrade</DropdownMenuItem>
-                       <DropdownMenuItem onClick={() => router.push('/settings')}>Settings</DropdownMenuItem>
+                      {accountLinks.map(link => (
+                        <DropdownMenuItem key={link.href} onClick={() => router.push(link.href)}>{link.label}</DropdownMenuItem>
+                      ))}
                     </DropdownMenuGroup>
                     <DropdownMenuSeparator />
-                     <DropdownMenuGroup>
-                       <DropdownMenuLabel className="text-xs text-muted-foreground">Coming Soon</DropdownMenuLabel>
-                       <DropdownMenuItem onClick={() => router.push('/image-to-image')}>Image-to-Image</DropdownMenuItem>
-                       <DropdownMenuItem onClick={() => router.push('/inpainting')}>Inpainting</DropdownMenuItem>
-                       <DropdownMenuItem onClick={() => router.push('/community')}>Community</DropdownMenuItem>
-                       <DropdownMenuItem onClick={() => router.push('/video-generation')}>Video Generation</DropdownMenuItem>
-                    </DropdownMenuGroup>
+                    <DropdownMenuSub>
+                        <DropdownMenuSubTrigger>AI Tools</DropdownMenuSubTrigger>
+                        <DropdownMenuPortal>
+                            <DropdownMenuSubContent>
+                                {aiToolsLinks.map(link => (
+                                    <DropdownMenuItem key={link.href} onClick={() => router.push(link.href)}>{link.label}</DropdownMenuItem>
+                                ))}
+                                <DropdownMenuSeparator />
+                                <DropdownMenuLabel className="text-xs text-muted-foreground">Coming Soon</DropdownMenuLabel>
+                                {comingSoonLinks.map(link => (
+                                    <DropdownMenuItem key={link.href} onClick={() => router.push(link.href)}>{link.label}</DropdownMenuItem>
+                                ))}
+                            </DropdownMenuSubContent>
+                        </DropdownMenuPortal>
+                    </DropdownMenuSub>
                     <DropdownMenuSeparator />
                     <DropdownMenuItem onClick={handleLogout}>Log out</DropdownMenuItem>
                   </DropdownMenuContent>
@@ -119,69 +148,81 @@ export default function Header() {
                   <span className="sr-only">Toggle navigation menu</span>
                 </Button>
               </SheetTrigger>
-              <SheetContent side="right" className="p-0">
+              <SheetContent side="right" className="p-0 flex flex-col">
                  <SheetTitle className="sr-only">Menu</SheetTitle>
                  <SheetDescription className="sr-only">Main navigation menu</SheetDescription>
-                <div className="flex h-full flex-col overflow-y-auto">
-                  <div className="p-6">
-                    {user ? (
-                      <div className="border-b pb-6">
-                        <div className="flex items-center gap-4 mb-4">
-                          <Avatar className="h-12 w-12 border-2 border-primary/50">
-                              <AvatarImage src={user.photoURL ?? ''} alt={user.displayName ?? 'User'} />
-                              <AvatarFallback>{user.displayName?.charAt(0).toUpperCase()}</AvatarFallback>
-                          </Avatar>
-                          <div>
-                              <p className="font-semibold">{user.displayName}</p>
-                              <p className="text-sm text-muted-foreground">@{user.username}</p>
-                          </div>
-                        </div>
-                        <div className="flex items-center gap-2 text-sm font-medium border border-border/50 rounded-full px-3 py-1.5 w-fit mb-4">
-                            <Gem className="mr-2 h-4 w-4 text-primary" />
-                            <span>{user.credits ?? 0} Credits</span>
-                        </div>
-                        <div className="flex flex-col gap-2">
-                          <Button asChild variant="outline" className="justify-start">
-                            <Link href="/dashboard" onClick={() => setIsMobileMenuOpen(false)}>Dashboard</Link>
-                          </Button>
-                          <Button asChild variant="ghost" className="justify-start">
-                            <Link href="/settings" onClick={() => setIsMobileMenuOpen(false)}>Settings</Link>
-                          </Button>
-                           <Button variant="ghost" className="justify-start" onClick={() => { handleLogout(); setIsMobileMenuOpen(false); }}>Log Out</Button>
+                <div className="p-6 pb-0">
+                  {user ? (
+                    <div>
+                      <div className="flex items-center gap-4 mb-4">
+                        <Avatar className="h-12 w-12 border-2 border-primary/50">
+                            <AvatarImage src={user.photoURL ?? ''} alt={user.displayName ?? 'User'} />
+                            <AvatarFallback>{user.displayName?.charAt(0).toUpperCase()}</AvatarFallback>
+                        </Avatar>
+                        <div>
+                            <p className="font-semibold">{user.displayName}</p>
+                            <p className="text-sm text-muted-foreground">@{user.username}</p>
                         </div>
                       </div>
-                    ) : (
-                       <div className="flex flex-col gap-2 mt-4">
-                          <Button variant="accent" onClick={() => { setAuthModalOpen(true); setIsMobileMenuOpen(false); }}>Get Started</Button>
-                       </div>
-                    )}
-                  </div>
-
-                  <nav className="flex flex-col gap-4 text-lg p-6 pt-0">
-                    {user && (
-                      <>
-                        <button onClick={() => handleMobileNav('/gallery')} className="text-left transition-colors hover:text-primary">Gallery</button>
-                        <button onClick={() => handleMobileNav('/background-remover')} className="text-left transition-colors hover:text-primary">Image Upgrade</button>
-                         <DropdownMenuSeparator />
-                      </>
-                    )}
-                    {navLinks.map((link) => (
-                      <button key={link.href} onClick={() => handleMobileNav(link.href)} className="text-left transition-colors hover:text-primary">
-                        {link.label}
-                      </button>
-                    ))}
-                    {user && (
-                      <>
-                        <DropdownMenuSeparator />
-                        <p className="text-sm text-muted-foreground">Coming Soon</p>
-                        <button onClick={() => handleMobileNav('/image-to-image')} className="text-left transition-colors hover:text-primary">Image-to-Image</button>
-                        <button onClick={() => handleMobileNav('/inpainting')} className="text-left transition-colors hover:text-primary">Inpainting</button>
-                        <button onClick={() => handleMobileNav('/community')} className="text-left transition-colors hover:text-primary">Community</button>
-                        <button onClick={() => handleMobileNav('/video-generation')} className="text-left transition-colors hover:text-primary">Video Generation</button>
-                      </>
-                    )}
-                  </nav>
+                      <div className="flex items-center gap-2 text-sm font-medium border border-border/50 rounded-full px-3 py-1.5 w-fit mb-4">
+                          <Gem className="mr-2 h-4 w-4 text-primary" />
+                          <span>{user.credits ?? 0} Credits</span>
+                      </div>
+                    </div>
+                  ) : (
+                     <div className="flex flex-col gap-2 mt-4">
+                        <Button variant="accent" onClick={() => { setAuthModalOpen(true); setIsMobileMenuOpen(false); }}>Get Started</Button>
+                     </div>
+                  )}
                 </div>
+                <div className="flex-1 overflow-y-auto">
+                    <Accordion type="multiple" className="w-full px-6">
+                        {user && (
+                            <AccordionItem value="account">
+                                <AccordionTrigger>My Account</AccordionTrigger>
+                                <AccordionContent>
+                                    <nav className="flex flex-col gap-4 text-lg pt-2">
+                                        {accountLinks.map(link => (
+                                            <button key={link.href} onClick={() => handleMobileNav(link.href)} className="text-left transition-colors hover:text-primary">{link.label}</button>
+                                        ))}
+                                    </nav>
+                                </AccordionContent>
+                            </AccordionItem>
+                        )}
+                        <AccordionItem value="ai-tools">
+                             <AccordionTrigger>AI Tools</AccordionTrigger>
+                             <AccordionContent>
+                                <nav className="flex flex-col gap-4 text-lg pt-2">
+                                     {aiToolsLinks.map(link => (
+                                        <button key={link.href} onClick={() => handleMobileNav(link.href)} className="text-left transition-colors hover:text-primary">{link.label}</button>
+                                    ))}
+                                    <DropdownMenuSeparator />
+                                    <p className="text-sm text-muted-foreground pt-2">Coming Soon</p>
+                                    {comingSoonLinks.map(link => (
+                                        <button key={link.href} onClick={() => handleMobileNav(link.href)} className="text-left transition-colors hover:text-primary text-muted-foreground">{link.label}</button>
+                                    ))}
+                                </nav>
+                             </AccordionContent>
+                        </AccordionItem>
+                         <AccordionItem value="resources">
+                             <AccordionTrigger>Resources</AccordionTrigger>
+                             <AccordionContent>
+                                <nav className="flex flex-col gap-4 text-lg pt-2">
+                                    {mainNavLinks.map((link) => (
+                                      <button key={link.href} onClick={() => handleMobileNav(link.href)} className="text-left transition-colors hover:text-primary">
+                                        {link.label}
+                                      </button>
+                                    ))}
+                                </nav>
+                             </AccordionContent>
+                        </AccordionItem>
+                    </Accordion>
+                </div>
+                 {user && (
+                    <div className="p-6 mt-auto border-t">
+                        <Button variant="ghost" className="w-full justify-start text-lg" onClick={() => { handleLogout(); setIsMobileMenuOpen(false); }}>Log Out</Button>
+                    </div>
+                 )}
               </SheetContent>
             </Sheet>
           </div>
