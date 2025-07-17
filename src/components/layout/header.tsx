@@ -17,6 +17,7 @@ import {
 } from '@/components/ui/dropdown-menu';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { useRouter } from 'next/navigation';
+import { useState } from 'react';
 
 const navLinks = [
   { href: '/about', label: 'About' },
@@ -28,11 +29,18 @@ const navLinks = [
 export default function Header() {
   const { user, setAuthModalOpen, signOut } = useAuth();
   const router = useRouter();
+  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+
 
   const handleLogout = async () => {
     await signOut();
     router.push('/');
   };
+
+  const handleMobileNav = (path: string) => {
+    router.push(path);
+    setIsMobileMenuOpen(false);
+  }
 
   return (
     <>
@@ -104,70 +112,72 @@ export default function Header() {
             )}
           </div>
           <div className="md:hidden">
-            <Sheet>
+            <Sheet open={isMobileMenuOpen} onOpenChange={setIsMobileMenuOpen}>
               <SheetTrigger asChild>
                 <Button variant="ghost" size="icon" className="h-12 w-12">
                   <Menu className="h-8 w-8" />
                   <span className="sr-only">Toggle navigation menu</span>
                 </Button>
               </SheetTrigger>
-              <SheetContent side="right">
+              <SheetContent side="right" className="p-0">
                  <SheetTitle className="sr-only">Menu</SheetTitle>
                  <SheetDescription className="sr-only">Main navigation menu</SheetDescription>
-                <div className="flex h-full flex-col gap-6 p-6 overflow-y-auto">
-                  {user ? (
-                    <div className="border-b pb-6">
-                      <div className="flex items-center gap-4 mb-4">
-                        <Avatar className="h-12 w-12 border-2 border-primary/50">
-                            <AvatarImage src={user.photoURL ?? ''} alt={user.displayName ?? 'User'} />
-                            <AvatarFallback>{user.displayName?.charAt(0).toUpperCase()}</AvatarFallback>
-                        </Avatar>
-                        <div>
-                            <p className="font-semibold">{user.displayName}</p>
-                            <p className="text-sm text-muted-foreground">@{user.username}</p>
+                <div className="flex h-full flex-col overflow-y-auto">
+                  <div className="p-6">
+                    {user ? (
+                      <div className="border-b pb-6">
+                        <div className="flex items-center gap-4 mb-4">
+                          <Avatar className="h-12 w-12 border-2 border-primary/50">
+                              <AvatarImage src={user.photoURL ?? ''} alt={user.displayName ?? 'User'} />
+                              <AvatarFallback>{user.displayName?.charAt(0).toUpperCase()}</AvatarFallback>
+                          </Avatar>
+                          <div>
+                              <p className="font-semibold">{user.displayName}</p>
+                              <p className="text-sm text-muted-foreground">@{user.username}</p>
+                          </div>
+                        </div>
+                        <div className="flex items-center gap-2 text-sm font-medium border border-border/50 rounded-full px-3 py-1.5 w-fit mb-4">
+                            <Gem className="mr-2 h-4 w-4 text-primary" />
+                            <span>{user.credits ?? 0} Credits</span>
+                        </div>
+                        <div className="flex flex-col gap-2">
+                          <Button asChild variant="outline" className="justify-start">
+                            <Link href="/dashboard" onClick={() => setIsMobileMenuOpen(false)}>Dashboard</Link>
+                          </Button>
+                          <Button asChild variant="ghost" className="justify-start">
+                            <Link href="/settings" onClick={() => setIsMobileMenuOpen(false)}>Settings</Link>
+                          </Button>
+                           <Button variant="ghost" className="justify-start" onClick={() => { handleLogout(); setIsMobileMenuOpen(false); }}>Log Out</Button>
                         </div>
                       </div>
-                      <div className="flex items-center gap-2 text-sm font-medium border border-border/50 rounded-full px-3 py-1.5 w-fit mb-4">
-                          <Gem className="mr-2 h-4 w-4 text-primary" />
-                          <span>{user.credits ?? 0} Credits</span>
-                      </div>
-                      <div className="flex flex-col gap-2">
-                        <Button asChild variant="outline" className="justify-start">
-                          <Link href="/dashboard">Dashboard</Link>
-                        </Button>
-                        <Button asChild variant="ghost" className="justify-start">
-                          <Link href="/settings">Settings</Link>
-                        </Button>
-                         <Button variant="ghost" className="justify-start" onClick={handleLogout}>Log Out</Button>
-                      </div>
-                    </div>
-                  ) : (
-                     <div className="flex flex-col gap-2 mt-4">
-                        <Button variant="accent" onClick={() => setAuthModalOpen(true)}>Get Started</Button>
-                     </div>
-                  )}
+                    ) : (
+                       <div className="flex flex-col gap-2 mt-4">
+                          <Button variant="accent" onClick={() => { setAuthModalOpen(true); setIsMobileMenuOpen(false); }}>Get Started</Button>
+                       </div>
+                    )}
+                  </div>
 
-                  <nav className="flex flex-col gap-4 text-lg">
+                  <nav className="flex flex-col gap-4 text-lg p-6 pt-0">
                     {user && (
                       <>
-                        <Link href="/gallery" className="transition-colors hover:text-primary">Gallery</Link>
-                        <Link href="/background-remover" className="transition-colors hover:text-primary">Image Upgrade</Link>
+                        <button onClick={() => handleMobileNav('/gallery')} className="text-left transition-colors hover:text-primary">Gallery</button>
+                        <button onClick={() => handleMobileNav('/background-remover')} className="text-left transition-colors hover:text-primary">Image Upgrade</button>
                          <DropdownMenuSeparator />
                       </>
                     )}
                     {navLinks.map((link) => (
-                      <Link key={link.href} href={link.href} className="transition-colors hover:text-primary">
+                      <button key={link.href} onClick={() => handleMobileNav(link.href)} className="text-left transition-colors hover:text-primary">
                         {link.label}
-                      </Link>
+                      </button>
                     ))}
                     {user && (
                       <>
                         <DropdownMenuSeparator />
                         <p className="text-sm text-muted-foreground">Coming Soon</p>
-                        <Link href="/image-to-image" className="transition-colors hover:text-primary">Image-to-Image</Link>
-                        <Link href="/inpainting" className="transition-colors hover:text-primary">Inpainting</Link>
-                        <Link href="/community" className="transition-colors hover:text-primary">Community</Link>
-                        <Link href="/video-generation" className="transition-colors hover:text-primary">Video Generation</Link>
+                        <button onClick={() => handleMobileNav('/image-to-image')} className="text-left transition-colors hover:text-primary">Image-to-Image</button>
+                        <button onClick={() => handleMobileNav('/inpainting')} className="text-left transition-colors hover:text-primary">Inpainting</button>
+                        <button onClick={() => handleMobileNav('/community')} className="text-left transition-colors hover:text-primary">Community</button>
+                        <button onClick={() => handleMobileNav('/video-generation')} className="text-left transition-colors hover:text-primary">Video Generation</button>
                       </>
                     )}
                   </nav>
