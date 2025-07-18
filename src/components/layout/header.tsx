@@ -2,7 +2,7 @@
 'use client';
 import Link from 'next/link';
 import Image from 'next/image';
-import { Menu, LayoutDashboard, Gem, ChevronRight, User, Bot, Brush, HelpCircle, FileText } from 'lucide-react';
+import { Menu, LayoutDashboard, Gem, User, PlusCircle } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Sheet, SheetContent, SheetTrigger, SheetTitle, SheetDescription } from '@/components/ui/sheet';
 import { useAuth } from '@/context/auth-context';
@@ -39,13 +39,13 @@ const accountLinks = [
 
 const aiToolsLinks = [
   { href: '/background-remover', label: 'Image Upgrade Suite' },
+  { href: '/video-generation', label: 'Video Generation' },
 ];
 
 const comingSoonLinks = [
   { href: '/image-to-image', label: 'Image-to-Image' },
   { href: '/inpainting', label: 'Inpainting Tool' },
   { href: '/community', label: 'Community Showcase' },
-  { href: '/video-generation', label: 'Video Generation' },
 ];
 
 export default function Header() {
@@ -78,14 +78,17 @@ export default function Header() {
               </Link>
             ))}
           </nav>
-          <div className="hidden items-center gap-4 md:flex">
+          <div className="hidden items-center gap-2 md:flex">
             {user ? (
               <>
-                <div className="flex items-center gap-2 text-sm font-medium border border-border/50 rounded-full px-3 py-1.5">
-                    <Gem className="mr-2 h-4 w-4 text-primary" />
+                <div className="flex items-center gap-2 text-sm font-medium border border-border/50 rounded-full px-3 py-1.5 bg-card/50">
+                    <Gem className="mr-1 h-4 w-4 text-primary" />
                     <span>{user.credits ?? 0} Credits</span>
+                     <Button variant="ghost" size="icon" className="h-6 w-6" asChild>
+                        <Link href="/pricing"><PlusCircle /></Link>
+                     </Button>
                 </div>
-                <Button variant="outline" asChild>
+                <Button asChild>
                   <Link href="/dashboard">
                     <LayoutDashboard className="mr-2 h-4 w-4" />
                     Dashboard
@@ -110,7 +113,7 @@ export default function Header() {
                     <DropdownMenuSeparator />
                     <DropdownMenuGroup>
                       {accountLinks.map(link => (
-                        <DropdownMenuItem key={link.href} onClick={() => router.push(link.href)}>{link.label}</DropdownMenuItem>
+                        <DropdownMenuItem key={link.href} onClick={() => router.push(link.href)}><User className="mr-2 h-4 w-4"/>{link.label}</DropdownMenuItem>
                       ))}
                     </DropdownMenuGroup>
                     <DropdownMenuSeparator />
@@ -164,9 +167,14 @@ export default function Header() {
                             <p className="text-sm text-muted-foreground">@{user.username}</p>
                         </div>
                       </div>
-                      <div className="flex items-center gap-2 text-sm font-medium border border-border/50 rounded-full px-3 py-1.5 w-fit mb-4">
-                          <Gem className="mr-2 h-4 w-4 text-primary" />
-                          <span>{user.credits ?? 0} Credits</span>
+                      <div className="flex items-center justify-between gap-2 text-sm font-medium border border-border/50 rounded-full px-3 py-1.5 w-full mb-4 bg-card/50">
+                          <div className="flex items-center gap-2">
+                             <Gem className="mr-1 h-4 w-4 text-primary" />
+                             <span>{user.credits ?? 0} Credits</span>
+                          </div>
+                         <Button variant="secondary" size="sm" asChild>
+                            <Link href="/pricing" onClick={() => setIsMobileMenuOpen(false)}>Get More</Link>
+                         </Button>
                       </div>
                     </div>
                   ) : (
