@@ -1,18 +1,23 @@
 
 'use client';
 
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useAuth } from '@/context/auth-context';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
-import { KeyRound, User, Palette, Shield, CreditCard, AtSign, Gem, PlusCircle } from 'lucide-react';
+import { KeyRound, User, Palette, Shield, CreditCard, AtSign, Gem, PlusCircle, CheckCircle } from 'lucide-react';
 import { UpdatePasswordModal } from '@/components/update-password-modal';
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '@/components/ui/accordion';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { cn } from '@/lib/utils';
 import Link from 'next/link';
+import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
+import { Badge } from '@/components/ui/badge';
+import { format, parseISO } from 'date-fns';
+import { getPaymentHistoryForUser, type UserPayment } from '@/services/payment-service';
+import { Loader2 } from 'lucide-react';
 
 const GooglePayIcon = () => (
     <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6 mr-2" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
@@ -38,6 +43,70 @@ const SettingsCard = ({ className, children, ...props }: React.ComponentProps<ty
         </div>
     </Card>
 );
+
+const PaymentHistory = ({ userId }: { userId: string }) => {
+    const [payments, setPayments] = useState<UserPayment[]>([]);
+    const [isLoading, setIsLoading] = useState(true);
+
+    useEffect(() => {
+        const fetchHistory = async () => {
+            setIsLoading(true);
+            try {
+                const history = await getPaymentHistoryForUser(userId);
+                setPayments(history);
+            } catch (error) {
+                console.error("Failed to fetch payment history:", error);
+            } finally {
+                setIsLoading(false);
+            }
+        };
+        fetchHistory();
+    }, [userId]);
+
+    return (
+        <SettingsCard className="md:col-span-2">
+            <CardHeader>
+                <CardTitle className="flex items-center gap-2"><CreditCard /> Payment History</CardTitle>
+                <CardDescription>View your past credit purchases and their status.</CardDescription>
+            </CardHeader>
+            <CardContent>
+                {isLoading ? (
+                    <div className="flex items-center justify-center h-24">
+                        <Loader2 className="animate-spin text-primary" />
+                    </div>
+                ) : payments.length === 0 ? (
+                    <p className="text-muted-foreground text-center">No payment history found.</p>
+                ) : (
+                    <Table>
+                        <TableHeader>
+                            <TableRow>
+                                <TableHead>Date</TableHead>
+                                <TableHead>Plan</TableHead>
+                                <TableHead>Reference</TableHead>
+                                <TableHead>Status</TableHead>
+                            </TableRow>
+                        </TableHeader>
+                        <TableBody>
+                            {payments.map((p) => (
+                                <TableRow key={p.id}>
+                                    <TableCell>{format(parseISO(p.createdAt), 'PPP')}</TableCell>
+                                    <TableCell>{p.plan.name} ({p.plan.price})</TableCell>
+                                    <TableCell className="font-mono">{p.referenceId || 'N/A'}</TableCell>
+                                    <TableCell>
+                                        <Badge variant={p.approved ? 'secondary' : 'outline'}>
+                                            {p.approved ? <CheckCircle className="mr-1 h-3 w-3 text-green-500" /> : null}
+                                            {p.approved ? 'Approved' : 'Pending'}
+                                        </Badge>
+                                    </TableCell>
+                                </TableRow>
+                            ))}
+                        </TableBody>
+                    </Table>
+                )}
+            </CardContent>
+        </SettingsCard>
+    );
+};
 
 
 export default function SettingsPage() {
@@ -144,51 +213,7 @@ export default function SettingsPage() {
                 </CardContent>
             </SettingsCard>
 
-            <SettingsCard>
-                <CardHeader>
-                    <CardTitle className="flex items-center gap-2"><CreditCard /> Payment & Billing</CardTitle>
-                    <CardDescription>Manage your payment methods and view your billing history. This is a visual placeholder and is not functional.</CardDescription>
-                </CardHeader>
-                <CardContent>
-                    <Accordion type="single" collapsible className="w-full">
-                        <AccordionItem value="item-1">
-                            <AccordionTrigger>Add Payment Method</AccordionTrigger>
-                            <AccordionContent className="space-y-6 pt-4">
-                                <Button variant="outline" className="w-full justify-start text-lg p-6">
-                                    <GooglePayIcon /> Link Google Pay
-                                </Button>
-                                <div className="relative">
-                                    <div className="absolute inset-0 flex items-center">
-                                        <span className="w-full border-t" />
-                                    </div>
-                                    <div className="relative flex justify-center text-xs uppercase">
-                                        <span className="bg-card px-2 text-muted-foreground">
-                                        Or add a card
-                                        </span>
-                                    </div>
-                                </div>
-                                <div className="space-y-4">
-                                    <div className="space-y-2">
-                                        <Label htmlFor="card-number">Card Number</Label>
-                                        <Input id="card-number" placeholder="•••• •••• •••• ••••" disabled />
-                                    </div>
-                                    <div className="grid grid-cols-2 gap-4">
-                                        <div className="space-y-2">
-                                            <Label htmlFor="expiry">Expires</Label>
-                                            <Input id="expiry" placeholder="MM / YY" disabled />
-                                        </div>
-                                        <div className="space-y-2">
-                                            <Label htmlFor="cvc">CVC</Label>
-                                            <Input id="cvc" placeholder="•••" disabled />
-                                        </div>
-                                    </div>
-                                    <Button className="w-full" disabled>Save Card</Button>
-                                </div>
-                            </AccordionContent>
-                        </AccordionItem>
-                    </Accordion>
-                </CardContent>
-            </SettingsCard>
+            <PaymentHistory userId={user.uid} />
         </div>
       </div>
     </>

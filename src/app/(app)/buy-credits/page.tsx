@@ -55,6 +55,7 @@ export default function BuyCreditsPage() {
   const [paymentMethod, setPaymentMethod] = useState<string>('payhere');
   const [paymentSlip, setPaymentSlip] = useState<File | null>(null);
   const [isSubmitted, setIsSubmitted] = useState(false);
+  const [referenceId, setReferenceId] = useState('');
   const router = useRouter();
   const { user } = useAuth();
   const { toast } = useToast();
@@ -86,6 +87,7 @@ export default function BuyCreditsPage() {
       // Simulate API call and success
       setTimeout(() => {
         setIsSubmitting(false);
+        setReferenceId(`PH-${Date.now().toString().slice(-8)}`);
         setIsSubmitted(true);
       }, 2000);
       return;
@@ -100,13 +102,17 @@ export default function BuyCreditsPage() {
 
         const slipUrl = await uploadPaymentSlip(base64Data, fileName, paymentSlip.type);
         
+        const newReferenceId = `BT-${Date.now().toString().slice(-8)}`;
+        
         await submitPaymentForReview({
             userId: user.uid,
             userEmail: user.email,
             userDisplayName: user.displayName,
             plan: selectedPlan,
             paymentSlipUrl: slipUrl,
+            referenceId: newReferenceId,
         });
+        setReferenceId(newReferenceId);
         setIsSubmitted(true);
       }
     } catch(error) {
@@ -134,10 +140,14 @@ export default function BuyCreditsPage() {
                     <CardTitle className="text-3xl">Payment Submitted!</CardTitle>
                 </CardHeader>
                 <CardContent>
-                    <p className="text-muted-foreground mb-6">
+                    <p className="text-muted-foreground mb-4">
                         Thank you for your purchase. Your payment is currently under review. You will receive an email confirmation once your credits have been added to your account. This usually takes 1-2 business days.
                     </p>
-                    <Button onClick={() => router.push('/dashboard')}>Go to Dashboard</Button>
+                    <Alert className="text-left">
+                        <AlertTitle>Your Payment Reference</AlertTitle>
+                        <AlertDescription className="font-mono text-lg font-bold tracking-widest">{referenceId}</AlertDescription>
+                    </Alert>
+                    <Button onClick={() => router.push('/dashboard')} className="mt-6">Go to Dashboard</Button>
                 </CardContent>
             </Card>
         </div>

@@ -23,6 +23,7 @@ interface PaymentSubmission {
     id: string;
     userId: string;
     userDisplayName: string;
+    referenceId?: string;
     plan: {
         name: string;
         price: string;
@@ -89,6 +90,7 @@ export default function AdminPaymentsPage() {
           <TableHeader>
             <TableRow>
               <TableHead>User</TableHead>
+              <TableHead>Reference ID</TableHead>
               <TableHead>Plan</TableHead>
               <TableHead className="text-center">Credits</TableHead>
               <TableHead>Date</TableHead>
@@ -101,6 +103,7 @@ export default function AdminPaymentsPage() {
             {payments.map((payment) => (
               <TableRow key={payment.id}>
                 <TableCell className="font-medium">{payment.userDisplayName}</TableCell>
+                <TableCell className="font-mono">{payment.referenceId || 'N/A'}</TableCell>
                 <TableCell>{payment.plan.name} ({payment.plan.price})</TableCell>
                 <TableCell className="text-center">
                     <span className="flex items-center justify-center gap-1 font-semibold">

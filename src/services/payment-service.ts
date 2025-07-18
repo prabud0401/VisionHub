@@ -24,6 +24,15 @@ interface PaymentSubmissionData {
     userDisplayName: string | null;
     plan: PlanDetails;
     paymentSlipUrl: string;
+    referenceId: string;
+}
+
+export interface UserPayment {
+    id: string;
+    createdAt: string;
+    plan: PlanDetails;
+    approved: boolean;
+    referenceId?: string;
 }
 
 export async function submitPaymentForReview(data: PaymentSubmissionData): Promise<string> {
@@ -64,6 +73,12 @@ export async function getPaymentSubmissions() {
     if (!firestore) throw new Error('Firestore is not initialized.');
     const snapshot = await firestore.collection('payments').orderBy('createdAt', 'desc').get();
     return snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+}
+
+export async function getPaymentHistoryForUser(userId: string): Promise<UserPayment[]> {
+    if (!firestore) throw new Error('Firestore is not initialized.');
+    const snapshot = await firestore.collection('payments').where('userId', '==', userId).orderBy('createdAt', 'desc').get();
+    return snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() } as UserPayment));
 }
 
 export async function approvePaymentAndAddCredits(paymentId: string, userId: string, creditsToAdd: number) {
