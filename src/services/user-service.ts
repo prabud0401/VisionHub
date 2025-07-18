@@ -66,6 +66,22 @@ export async function getUserByUid(uid: string): Promise<UserProfile | null> {
     }
 }
 
+export async function getUserByUsername(username: string): Promise<UserProfile | null> {
+    if (!firestore) {
+        console.error('Firestore not initialized');
+        return null;
+    }
+    try {
+        const snapshot = await firestore.collection('users').where('username', '==', username).limit(1).get();
+        if (snapshot.empty) return null;
+        const doc = snapshot.docs[0];
+        return { uid: doc.id, ...doc.data() } as UserProfile;
+    } catch (error) {
+        console.error("Error getting user by username:", error);
+        return null;
+    }
+}
+
 
 export async function deductUserCredit(userId: string, amount: number = 1): Promise<void> {
     if (!firestore) throw new Error('Firestore not initialized');

@@ -16,7 +16,7 @@ import {
   sendEmailVerification,
 } from 'firebase/auth';
 import { getFirebaseApp } from '@/lib/firebase-config';
-import { createUserProfile, getUserByUid } from '@/services/user-service';
+import { createUserProfile, getUserByUid, getUserByUsername } from '@/services/user-service';
 import { ChooseUsernameModal } from '@/components/choose-username-modal';
 
 interface AppUser extends User {
@@ -131,7 +131,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   }
 
   const signInWithUsername = async (username: string, pass: string) => {
-    const userProfile = await getUserByUid(username); // getUserByUsername is not a function
+    const userProfile = await getUserByUsername(username);
     if (!userProfile?.email) {
       throw new Error("User not found.");
     }

@@ -18,7 +18,7 @@ import {
 } from '@/services/image-service';
 import type { GeneratedImage } from '@/lib/types';
 import { CreditError } from '@/lib/types';
-import { deductUserCredit, getUserByUsername } from '@/services/user-service';
+import { deductUserCredit, getUserByUid } from '@/services/user-service';
 
 const GenerateImagesInputSchema = z.object({
   prompt: z.string().describe('The text prompt to generate an image from.'),
@@ -58,7 +58,7 @@ const generateImagesFlow = ai.defineFlow(
   },
   async input => {
     // Check user credits and gallery limit before proceeding
-    const userProfile = await getUserByUsername(input.userId, true);
+    const userProfile = await getUserByUid(input.userId);
     const creditsToDeduct = input.models.length;
 
     if (!userProfile) {
