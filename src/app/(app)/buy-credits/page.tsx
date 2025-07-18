@@ -217,10 +217,13 @@ export default function BuyCreditsPage() {
                             <AlertTitle>Bank Transfer Instructions</AlertTitle>
                             <AlertDescription className="space-y-2 mt-2">
                                 <p>Please transfer the total amount to the following bank account:</p>
-                                <ul className="text-xs list-disc list-inside">
-                                    <li><strong>Bank Name:</strong> Visionary Bank Inc.</li>
-                                    <li><strong>Account Number:</strong> 1234 5678 9012</li>
-                                    <li><strong>Account Holder:</strong> VisionHub AI</li>
+                                <ul className="text-xs list-disc list-inside space-y-1">
+                                    <li><strong>Bank Name:</strong> First Century Bank</li>
+                                    <li><strong>Bank Address:</strong> 1731 N Elm St Commerce, GA 30529 USA</li>
+                                    <li><strong>Routing (ABA):</strong> 061120084</li>
+                                    <li><strong>Account Number:</strong> 4024939311976</li>
+                                    <li><strong>Account Type:</strong> CHECKING</li>
+                                    <li><strong>Beneficiary Name:</strong> Udayasooriyan Prabudeva</li>
                                     <li><strong>Reference:</strong> Your Username ({user?.username})</li>
                                 </ul>
                             </AlertDescription>
