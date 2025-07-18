@@ -22,6 +22,7 @@ interface AppUser extends User {
   username?: string;
   credits?: number;
   showAds?: boolean;
+  storageLimit?: number;
 }
 
 interface AuthContextType {

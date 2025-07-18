@@ -11,6 +11,13 @@ if (!firestore || !storage) {
   );
 }
 
+export async function getImageCountForUser(userId: string): Promise<number> {
+  if (!firestore) throw new Error('Firestore is not initialized.');
+  const imagesRef = firestore.collection('images');
+  const snapshot = await imagesRef.where('userId', '==', userId).count().get();
+  return snapshot.data().count;
+}
+
 export async function saveImageMetadata(
   imageData: Omit<GeneratedImage, 'id'>
 ): Promise<GeneratedImage> {

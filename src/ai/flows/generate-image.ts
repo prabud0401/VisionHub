@@ -12,6 +12,7 @@
 import {ai} from '@/ai/genkit';
 import {z} from 'genkit';
 import {
+  getImageCountForUser,
   saveImageMetadata,
   uploadImageFromDataUri,
 } from '@/services/image-service';
@@ -53,13 +54,24 @@ const generateImagesFlow = ai.defineFlow(
     outputSchema: z.custom<GenerateImagesOutput>(),
   },
   async input => {
-    // Check user credits before proceeding
+    // Check user credits and gallery limit before proceeding
     const userProfile = await getUserByUsername(input.userId, true);
     const creditsToDeduct = input.models.length;
 
-    if (!userProfile || (userProfile.credits ?? 0) < creditsToDeduct) {
-        // Throw a specific error for credits
+    if (!userProfile) {
+        throw new CreditError("User profile not found.");
+    }
+
+    if ((userProfile.credits ?? 0) < creditsToDeduct) {
         throw new CreditError("You don't have enough credits to generate these images.");
+    }
+
+    // Check gallery storage limit
+    const currentImageCount = await getImageCountForUser(input.userId);
+    const storageLimit = userProfile.storageLimit || 50; // Default to 50 if not set
+
+    if (storageLimit !== -1 && currentImageCount >= storageLimit) {
+        throw new CreditError(`You have reached your gallery limit of ${storageLimit} images. Please upgrade your plan for more space or delete some images.`);
     }
 
     // Prepend the use case to the prompt if it exists

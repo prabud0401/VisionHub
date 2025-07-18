@@ -8,8 +8,8 @@ import type { GeneratedImage, GeneratedVideo } from '@/lib/types';
 import { PromptGroupCard } from './prompt-group-card';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from '@/components/ui/dialog';
 import { Button } from './ui/button';
-import { Download, Loader2, Trash2, Wand2, ArrowLeft, ArrowRight, Grid, Grid3x3, Square, Eye, Share2, CheckCircle } from 'lucide-react';
-import { getFirestore, collection, query, where, writeBatch, doc, onSnapshot, Unsubscribe, getDocs, limit } from 'firebase/firestore';
+import { Download, Loader2, Trash2, Wand2, ArrowLeft, ArrowRight, Grid, Grid3x3, Square, Eye, Share2, CheckCircle, Info, PlusCircle } from 'lucide-react';
+import { getFirestore, collection, query, where, writeBatch, doc, onSnapshot, Unsubscribe, getDocs, limit, getCountFromServer } from 'firebase/firestore';
 import { getFirebaseApp } from '@/lib/firebase-config';
 import {
   AlertDialog,
@@ -29,6 +29,8 @@ import { cn } from '@/lib/utils';
 import Image from 'next/image';
 import { shareImageToCommunity } from '@/services/image-service';
 import { useToast } from '@/hooks/use-toast';
+import { Alert, AlertTitle } from './ui/alert';
+import Link from 'next/link';
 
 interface MediaItem extends GeneratedImage {
     type: 'image';
@@ -61,6 +63,7 @@ export function GalleryClient() {
   const [sortOrder, setSortOrder] = useState<'newest' | 'oldest'>('newest');
   const [viewMode, setViewMode] = useState<'medium' | 'small' | 'large'>('medium');
   const [currentPage, setCurrentPage] = useState(1);
+  const [imageCount, setImageCount] = useState(0);
 
   const { user } = useAuth();
   const router = useRouter();
@@ -90,6 +93,12 @@ export function GalleryClient() {
       let allImages: GeneratedImage[] = [];
       let allVideos: GeneratedVideo[] = [];
       let sharedImageIds = new Set<string>();
+      
+      const imageColl = collection(db, 'images');
+      const imageQuery = query(imageColl, where('userId', '==', user.uid));
+      const countSnapshot = await getCountFromServer(imageQuery);
+      setImageCount(countSnapshot.data().count);
+
 
       const processAndSetGroups = () => {
         const imageItems: MediaItem[] = allImages.map(img => ({...img, type: 'image', isShared: sharedImageIds.has(img.id)}));
@@ -130,11 +139,12 @@ export function GalleryClient() {
         sharedImageIds = new Set(sharedSnapshot.docs.map(doc => doc.data().originalImageId));
 
         // Then setup listeners for images and videos
-        const imageQuery = query(collection(db, 'images'), where('userId', '==', user.uid));
+        
         const videoQuery = query(collection(db, 'videos'), where('userId', '==', user.uid));
 
         imageUnsubscribe = onSnapshot(imageQuery, (snapshot) => {
             allImages = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() } as GeneratedImage));
+            setImageCount(snapshot.size); // Update count on change
             processAndSetGroups();
         }, (error) => console.error("Error with image snapshot listener: ", error));
 
@@ -240,6 +250,9 @@ export function GalleryClient() {
       setGroupToDelete(null);
     }
   };
+  
+  const storageLimit = user?.storageLimit ?? 50;
+  const isLimitReached = storageLimit !== -1 && imageCount >= storageLimit;
 
 
   if (isLoading) {
@@ -267,7 +280,7 @@ export function GalleryClient() {
 
   return (
     <>
-      <div className="flex flex-col sm:flex-row justify-between items-center gap-4 mb-8 p-4 bg-card rounded-lg border">
+      <div className="mb-8 p-4 bg-card rounded-lg border flex flex-col sm:flex-row justify-between items-center gap-4">
         <div className="flex items-center gap-2">
             <span className="text-sm font-medium">Sort by:</span>
              <Select value={sortOrder} onValueChange={(v) => setSortOrder(v as 'newest' | 'oldest')}>
@@ -280,6 +293,9 @@ export function GalleryClient() {
                 </SelectContent>
             </Select>
         </div>
+        <div className="text-sm font-medium">
+            Gallery Usage: {imageCount} / {storageLimit === -1 ? 'Unlimited' : storageLimit} images
+        </div>
         <div className="flex items-center gap-2">
            <span className="text-sm font-medium">View:</span>
             <ToggleGroup type="single" value={viewMode} onValueChange={(v) => v && setViewMode(v as 'small' | 'medium' | 'large')} variant="outline">
@@ -289,6 +305,22 @@ export function GalleryClient() {
             </ToggleGroup>
         </div>
       </div>
+      
+       {isLimitReached && (
+        <Alert variant="destructive" className="mb-8">
+            <Info className="h-4 w-4" />
+            <AlertTitle className="font-semibold">Gallery Limit Reached</AlertTitle>
+            <div className="flex justify-between items-center">
+              <p>You have reached your gallery storage limit. To save new images, you must either delete old ones or upgrade your plan for unlimited storage.</p>
+              <Button asChild>
+                <Link href="/pricing">
+                  <PlusCircle className="mr-2 h-4 w-4" /> Upgrade Plan
+                </Link>
+              </Button>
+            </div>
+        </Alert>
+      )}
+
 
       <div className={cn("grid gap-4", gridClasses[viewMode])}>
         {paginatedGroups.map((group) => (

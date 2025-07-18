@@ -8,9 +8,11 @@ import { cn } from '@/lib/utils';
 
 const features = [
   { feature: 'Image Generation Credits', basic: '500 / mo', standard: '1,500 / mo', premium: '4,000 / mo' },
+  { feature: 'Gallery Storage Limit', basic: '50 Images', standard: 'Unlimited', premium: 'Unlimited' },
   { feature: 'Available AI Models', basic: 'Limited', standard: 'All Models', premium: 'All Models + Beta' },
   { feature: 'Image Quality', basic: 'Standard', standard: 'High Quality', premium: 'Up to 4K+' },
   { feature: 'Image Upgrade Suite', basic: false, standard: true, premium: true },
+  { feature: 'Ad-Free Experience', basic: false, standard: true, premium: true },
   { feature: 'Prompt Enhancer', basic: true, standard: true, premium: true },
   { feature: 'API Access', basic: false, standard: false, premium: true },
   { feature: 'Priority Support', basic: false, standard: true, premium: 'Dedicated Support' },
