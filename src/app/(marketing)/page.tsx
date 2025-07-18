@@ -15,6 +15,7 @@ import ToolsSuite from '@/components/landing/tools-suite';
 import SocialCta from '@/components/landing/social-cta';
 import FeatureHighlight from '@/components/landing/feature-highlight';
 import Image from 'next/image';
+import { UseCaseShowcase } from '@/components/landing/use-case-showcase';
 
 const CtaSection = () => (
     <section className="py-20 lg:py-24 bg-card/50">
@@ -50,6 +51,7 @@ function LandingPage() {
         <>
             <HeroSection />
             <Partners />
+            <UseCaseShowcase />
             <ToolsSuite />
             <FeatureHighlight
                 title="Image-to-Image Transformation"
