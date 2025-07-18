@@ -188,7 +188,6 @@ export default function BuyCreditsPage() {
                         <SelectItem value="payhere">
                             <span className="flex items-center">
                                 <Image src="https://www.payhere.lk/downloads/images/payhere_long_logo.png" alt="PayHere" width={80} height={20} className="mr-2" />
-                                PayHere
                             </span>
                         </SelectItem>
                         <SelectItem value="bank-transfer">
