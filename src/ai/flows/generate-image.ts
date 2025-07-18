@@ -28,6 +28,9 @@ const GenerateImagesInputSchema = z.object({
   promptId: z.string().describe('A unique ID for the prompt session.'),
   useCase: z.string().optional().describe('The intended use case for the image.'),
   tones: z.array(z.string()).optional().describe('The stylistic tones applied to the prompt.'),
+  inputImageDataUri: z.string().optional().describe(
+    "An optional input image as a data URI for image-to-image generation. Format: 'data:<mimetype>;base64,<encoded_data>'."
+  ),
 });
 
 export type GenerateImagesInput = z.infer<typeof GenerateImagesInputSchema>;
@@ -75,15 +78,23 @@ const generateImagesFlow = ai.defineFlow(
     }
 
     // Prepend the use case to the prompt if it exists
-    const finalPrompt = input.useCase && input.useCase !== 'none'
+    let finalPrompt = input.useCase && input.useCase !== 'none'
       ? `Generate an image for a '${input.useCase}': ${input.prompt}`
       : input.prompt;
+      
+    finalPrompt += ` --ar ${input.aspectRatio}`;
+
+    // Construct the prompt for the AI model
+    const aiPrompt: (string | { media: { url: string } })[] = [{ text: finalPrompt }];
+    if (input.inputImageDataUri) {
+      aiPrompt.unshift({ media: { url: input.inputImageDataUri } });
+    }
 
 
     const generationTasks = input.models.map(async (modelName) => {
       const {media} = await ai.generate({
         model: 'googleai/gemini-2.0-flash-preview-image-generation',
-        prompt: `${finalPrompt} --ar ${input.aspectRatio}`,
+        prompt: aiPrompt,
         config: {
           responseModalities: ['TEXT', 'IMAGE'],
         },

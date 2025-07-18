@@ -1,19 +1,19 @@
 
 'use client';
 
-import { useState, useRef, useEffect } from 'react';
+import { useState, useRef, useEffect, useCallback } from 'react';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useForm } from 'react-hook-form';
 import { z } from 'zod';
 import Image from 'next/image';
 import { useSearchParams } from 'next/navigation';
-import { Bot, Download, ImageIcon, Loader2, Sparkles, WandSparkles, UploadCloud, BrainCircuit, Gem, Briefcase } from 'lucide-react';
+import { Bot, Download, ImageIcon, Loader2, Sparkles, WandSparkles, UploadCloud, BrainCircuit, Gem, Briefcase, RefreshCw, X } from 'lucide-react';
 
 import { generateImages } from '@/ai/flows/generate-image';
 import { enhancePrompt } from '@/ai/flows/enhance-prompt';
 import { imageToPrompt } from '@/ai/flows/image-to-prompt';
 import { Button } from '@/components/ui/button';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Card, CardContent, CardHeader, CardTitle, CardFooter } from '@/components/ui/card';
 import { Form, FormControl, FormDescription, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form';
 import { Textarea } from '@/components/ui/textarea';
 import { useToast } from '@/hooks/use-toast';
@@ -26,7 +26,6 @@ import { useAuth } from '@/context/auth-context';
 import { cn } from '@/lib/utils';
 import { ToggleGroup, ToggleGroupItem } from './ui/toggle-group';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from './ui/select';
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { VerifyEmailCard } from './verify-email-card';
 import Link from 'next/link';
 import { AdSlot } from '@/lib/ads-config';
@@ -65,6 +64,7 @@ const formSchema = z.object({
   tones: z.array(z.string()).optional(),
   aspectRatio: z.string().default('1:1'),
   useCase: z.string().optional().default('none'),
+  inputImageDataUri: z.string().optional(),
 });
 
 type FormValues = z.infer<typeof formSchema>;
@@ -80,7 +80,6 @@ export function DashboardClient() {
   const [error, setError] = useState<string | null>(null);
   const [progressState, setProgressState] = useState<'idle' | 'generating' | 'saving' | 'done'>('idle');
   const [enhancerState, setEnhancerState] = useState({ isOpen: false, original: '', enhanced: '' });
-  const [uploadedImage, setUploadedImage] = useState<string | null>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
   
   const { toast } = useToast();
@@ -95,18 +94,21 @@ export function DashboardClient() {
       tones: [],
       aspectRatio: '1:1',
       useCase: 'none',
+      inputImageDataUri: undefined,
     },
   });
+
+  const setInputImage = useCallback((dataUri: string) => {
+    form.setValue('inputImageDataUri', dataUri);
+  }, [form]);
+
 
   useEffect(() => {
     // This effect ensures the form field updates if the user navigates
     // back and forth with a new prompt in the URL.
     form.reset({
-      prompt: initialPrompt,
-      models: form.getValues('models'),
-      tones: form.getValues('tones'),
-      aspectRatio: form.getValues('aspectRatio'),
-      useCase: form.getValues('useCase'),
+        ...form.getValues(),
+        prompt: initialPrompt,
     });
   }, [initialPrompt, form]);
 
@@ -140,20 +142,21 @@ export function DashboardClient() {
     if (file) {
       const reader = new FileReader();
       reader.onloadend = () => {
-        setUploadedImage(reader.result as string);
+        setInputImage(reader.result as string);
       };
       reader.readAsDataURL(file);
     }
   };
 
   const handleImageToPrompt = async () => {
-    if (!uploadedImage) {
+    const inputImage = form.getValues('inputImageDataUri');
+    if (!inputImage) {
       toast({ variant: 'destructive', title: 'No Image', description: 'Please upload an image first.' });
       return;
     }
     setIsAnalyzing(true);
     try {
-      const result = await imageToPrompt({ photoDataUri: uploadedImage });
+      const result = await imageToPrompt({ photoDataUri: inputImage });
       form.setValue('prompt', result.prompt, { shouldValidate: true });
       toast({ title: 'Prompt Generated!', description: 'The prompt has been populated in the text area.' });
     } catch (e) {
@@ -162,6 +165,19 @@ export function DashboardClient() {
     } finally {
       setIsAnalyzing(false);
     }
+  };
+
+  const handleUseResultAsInput = (imageUrl: string) => {
+    fetch(imageUrl)
+      .then(res => res.blob())
+      .then(blob => {
+        const reader = new FileReader();
+        reader.onloadend = () => {
+            setInputImage(reader.result as string);
+             toast({ title: 'Image Ready!', description: 'Result image has been set as the new input.' });
+        };
+        reader.readAsDataURL(blob);
+      });
   };
 
 
@@ -198,6 +214,7 @@ export function DashboardClient() {
         promptId: promptId,
         useCase: values.useCase,
         tones: values.tones,
+        inputImageDataUri: values.inputImageDataUri,
       });
 
       setProgressState('saving');
@@ -237,6 +254,8 @@ export function DashboardClient() {
     }
   }
 
+  const inputImage = form.watch('inputImageDataUri');
+
   if (user && !user.emailVerified) {
     return <VerifyEmailCard userEmail={user.email} onResend={sendVerificationEmail} />;
   }
@@ -262,83 +281,81 @@ export function DashboardClient() {
                        1. Craft Your Vision
                     </CardTitle>
                   </CardHeader>
-                   <CardContent>
-                    <Tabs defaultValue="text">
-                        <TabsList className="grid w-full grid-cols-2">
-                            <TabsTrigger value="text">Text Prompt</TabsTrigger>
-                            <TabsTrigger value="image">Image to Prompt</TabsTrigger>
-                        </TabsList>
-                        <TabsContent value="text" className="pt-4">
-                            <FormField
-                            control={form.control}
-                            name="prompt"
-                            render={({ field }) => (
-                                <FormItem>
-                                <FormLabel className="sr-only">Prompt</FormLabel>
-                                <FormControl>
-                                    <Textarea
-                                    placeholder="e.g., A majestic lion with a crown of stars, digital painting"
-                                    className="resize-none"
-                                    rows={5}
-                                    {...field}
-                                    />
-                                </FormControl>
-                                <FormMessage />
-                                </FormItem>
-                            )}
-                            />
-                             <Button type="button" variant="outline" size="sm" onClick={handleEnhancePrompt} disabled={isEnhancing} className="mt-2 float-right">
-                                {isEnhancing ? (
-                                <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                                ) : (
+                   <CardContent className="space-y-4">
+
+                    <FormField
+                      name="inputImageDataUri"
+                      control={form.control}
+                      render={({ field }) => (
+                        <FormItem>
+                          <FormLabel>Image Input (Optional)</FormLabel>
+                          <FormControl>
+                            <>
+                              <input
+                                type="file"
+                                ref={fileInputRef}
+                                onChange={handleFileChange}
+                                className="hidden"
+                                accept="image/png, image/jpeg, image/webp"
+                              />
+                               {!field.value ? (
+                                  <div
+                                    className="flex flex-col items-center justify-center p-8 border-2 border-dashed rounded-lg cursor-pointer hover:bg-accent hover:border-accent-foreground/50 transition-colors"
+                                    onClick={() => fileInputRef.current?.click()}
+                                  >
+                                    <UploadCloud className="h-12 w-12 text-muted-foreground mb-4" />
+                                    <p className="text-md font-semibold">Upload Image</p>
+                                    <p className="text-sm text-muted-foreground">For image-to-image or image-to-prompt</p>
+                                  </div>
+                               ) : (
+                                  <div className="relative aspect-video w-full rounded-lg overflow-hidden border">
+                                    <Image src={field.value} alt="Input for generation" fill className="object-contain" />
+                                    <Button type="button" variant="destructive" size="icon" className="absolute top-2 right-2 h-8 w-8" onClick={() => field.onChange(undefined)}>
+                                      <X className="h-4 w-4" />
+                                    </Button>
+                                  </div>
+                               )}
+                            </>
+                          </FormControl>
+                        </FormItem>
+                      )}
+                    />
+
+                    <div>
+                        <FormField
+                        control={form.control}
+                        name="prompt"
+                        render={({ field }) => (
+                            <FormItem>
+                            <FormLabel>Text Prompt</FormLabel>
+                            <FormControl>
+                                <Textarea
+                                placeholder="e.g., A majestic lion with a crown of stars, digital painting. Describe what you want to create or modify."
+                                className="resize-none"
+                                rows={5}
+                                {...field}
+                                />
+                            </FormControl>
+                            <FormMessage />
+                            </FormItem>
+                        )}
+                        />
+                         <div className="flex justify-end gap-2 mt-2">
+                            <Button type="button" variant="outline" size="sm" onClick={handleImageToPrompt} disabled={isAnalyzing || !inputImage}>
+                                <BrainCircuit className="mr-2 h-4 w-4" />
+                                Image to Prompt
+                            </Button>
+                             <Button type="button" variant="outline" size="sm" onClick={handleEnhancePrompt} disabled={isEnhancing}>
                                 <WandSparkles className="mr-2 h-4 w-4" />
-                                )}
                                 Enhance Prompt
                             </Button>
-                        </TabsContent>
-                        <TabsContent value="image" className="pt-4">
-                          <div className="space-y-4">
-                            { !uploadedImage && (
-                              <div
-                                className="flex flex-col items-center justify-center p-8 border-2 border-dashed rounded-lg cursor-pointer hover:bg-accent hover:border-accent-foreground/50 transition-colors"
-                                onClick={() => fileInputRef.current?.click()}
-                              >
-                                <UploadCloud className="h-12 w-12 text-muted-foreground mb-4" />
-                                <p className="text-md font-semibold">Click to upload an image</p>
-                                <p className="text-sm text-muted-foreground">The AI will generate a prompt from it.</p>
-                                <input
-                                  type="file"
-                                  ref={fileInputRef}
-                                  onChange={handleFileChange}
-                                  className="hidden"
-                                  accept="image/png, image/jpeg, image/webp"
-                                />
-                              </div>
-                            )}
-                            { uploadedImage && (
-                              <div className="space-y-4">
-                                <div className="relative aspect-video w-full rounded-lg overflow-hidden border">
-                                  <Image src={uploadedImage} alt="Uploaded for analysis" fill className="object-contain" />
-                                </div>
-                                <Button type="button" onClick={handleImageToPrompt} disabled={isAnalyzing}>
-                                  {isAnalyzing ? (
-                                    <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                                  ) : (
-                                    <BrainCircuit className="mr-2 h-4 w-4" />
-                                  )}
-                                  Analyze and Generate Prompt
-                                </Button>
-                              </div>
-                            )}
-                          </div>
-                        </TabsContent>
-                    </Tabs>
-
+                        </div>
+                    </div>
                        <FormField
                         control={form.control}
                         name="tones"
                         render={({ field }) => (
-                          <FormItem className="mt-6 border-t pt-6">
+                          <FormItem className="pt-2">
                             <FormLabel className="font-semibold text-base">Stylistic Tones (optional)</FormLabel>
                              <ToggleGroup
                               type="multiple"
@@ -462,15 +479,15 @@ export function DashboardClient() {
         </div>
 
         <div className="lg:col-span-2">
-            <Card className="h-full">
+            <Card className="h-full sticky top-24">
               <CardHeader>
                 <CardTitle className="font-headline">Result</CardTitle>
               </CardHeader>
               <CardContent className="flex flex-col items-center justify-center h-full min-h-[400px]">
                 {isGenerating && !generatedImages && (
                   <div className="flex flex-col items-center gap-4 text-muted-foreground">
-                    <Loader2 className="h-16 w-16 animate-spin text-primary" />
-                    <p>Hold on, magic is happening...</p>
+                    <div className="ai-loader"><span className="ai-loader-dot"/></div>
+                    <p className="font-semibold text-lg">Hold on, magic is happening...</p>
                   </div>
                 )}
                 {error && (
@@ -486,27 +503,35 @@ export function DashboardClient() {
                        generatedImages.length > 1 ? "grid-cols-2" : "grid-cols-1"
                       )}>
                       {generatedImages.map((image) => (
-                        <div key={image.id} className="relative aspect-square">
-                          <Image
-                            src={image.url}
-                            alt={image.prompt}
-                            fill
-                            className="rounded-lg object-contain border"
-                          />
-                          <div className="absolute bottom-1 right-1 bg-background/70 text-foreground text-xs px-1.5 py-0.5 rounded">
-                            {image.model}
-                          </div>
-                        </div>
+                        <Card key={image.id} className="overflow-hidden group">
+                           <CardContent className="p-0">
+                                <div className="relative aspect-square">
+                                <Image
+                                    src={image.url}
+                                    alt={image.prompt}
+                                    fill
+                                    className="object-contain"
+                                />
+                                <div className="absolute bottom-1 right-1 bg-background/70 text-foreground text-xs px-1.5 py-0.5 rounded">
+                                    {image.model}
+                                </div>
+                                </div>
+                           </CardContent>
+                           <CardFooter className="p-2 grid grid-cols-2 gap-2">
+                             <Button size="sm" asChild variant="secondary">
+                                <a href={image.url} download={`visionhub-ai-${image.id}.png`}>
+                                    <Download className="mr-2 h-4 w-4" />
+                                    Download
+                                </a>
+                            </Button>
+                             <Button size="sm" variant="outline" onClick={() => handleUseResultAsInput(image.url)}>
+                                <RefreshCw className="mr-2 h-4 w-4" />
+                                Upgrade
+                            </Button>
+                           </CardFooter>
+                        </Card>
                       ))}
                     </div>
-                    {generatedImages.length > 0 && (
-                        <Button asChild variant="outline" className="mt-4">
-                          <a href={generatedImages[0].url} download={`visionhub-ai-${generatedImages[0].id}.png`}>
-                            <Download className="mr-2 h-4 w-4" />
-                            Download First Image
-                          </a>
-                        </Button>
-                    )}
                   </div>
                 )}
                 {!isGenerating && !error && !generatedImages && (
