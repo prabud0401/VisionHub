@@ -494,8 +494,7 @@ export function GalleryClient() {
           <AlertDialogHeader>
             <AlertDialogTitle>Are you absolutely sure?</AlertDialogTitle>
             <AlertDialogDescription>
-              This action cannot be undone. This will permanently delete all {groupToDelete?.items.length} items
-              associated with this prompt.
+              This action cannot be undone. This will permanently delete all {groupToDelete?.items.length} items associated with this prompt.
             </AlertDialogDescription>
           </AlertDialogHeader>
           <AlertDialogFooter>
