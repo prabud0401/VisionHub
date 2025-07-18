@@ -7,7 +7,7 @@ import { useForm } from 'react-hook-form';
 import { z } from 'zod';
 import Image from 'next/image';
 import { useSearchParams } from 'next/navigation';
-import { Bot, Download, ImageIcon, Loader2, Sparkles, WandSparkles, UploadCloud, BrainCircuit, Gem } from 'lucide-react';
+import { Bot, Download, ImageIcon, Loader2, Sparkles, WandSparkles, UploadCloud, BrainCircuit, Gem, Briefcase } from 'lucide-react';
 
 import { generateImages } from '@/ai/flows/generate-image';
 import { enhancePrompt } from '@/ai/flows/enhance-prompt';
@@ -42,6 +42,17 @@ const tones = [
   "Vintage", "Minimalist", "Vibrant", "Surreal", "Impressionistic"
 ];
 
+const useCases = [
+    { value: "none", label: "General / None" },
+    { value: "social-media-post", label: "Social Media Post" },
+    { value: "blog-illustration", label: "Blog / Website Illustration" },
+    { value: "concept-art", label: "Concept Art (Games/Film)" },
+    { value: "youtube-thumbnail", label: "YouTube Thumbnail" },
+    { value: "advertisement-creative", label: "Advertisement Creative" },
+    { value: "presentation-graphic", label: "Presentation Graphic" },
+    { value: "personal-avatar", label: "Profile Picture / Avatar" },
+];
+
 
 const formSchema = z.object({
   prompt: z.string().min(10, {
@@ -52,6 +63,7 @@ const formSchema = z.object({
   }),
   tones: z.array(z.string()).optional(),
   aspectRatio: z.string().default('1:1'),
+  useCase: z.string().optional().default('none'),
 });
 
 type FormValues = z.infer<typeof formSchema>;
@@ -81,6 +93,7 @@ export function DashboardClient() {
       models: ["Gemini AI"],
       tones: [],
       aspectRatio: '1:1',
+      useCase: 'none',
     },
   });
 
@@ -92,6 +105,7 @@ export function DashboardClient() {
       models: form.getValues('models'),
       tones: form.getValues('tones'),
       aspectRatio: form.getValues('aspectRatio'),
+      useCase: form.getValues('useCase'),
     });
   }, [initialPrompt, form]);
 
@@ -181,6 +195,7 @@ export function DashboardClient() {
         userId: user.uid,
         models: values.models,
         promptId: promptId,
+        useCase: values.useCase,
       });
 
       setProgressState('saving');
@@ -398,6 +413,31 @@ export function DashboardClient() {
                               <FormMessage />
                             </FormItem>
                           )}
+                        />
+                        <FormField
+                            control={form.control}
+                            name="useCase"
+                            render={({ field }) => (
+                                <FormItem className="sm:col-span-2">
+                                <FormLabel className="flex items-center gap-2"><Briefcase />Use Case (Optional)</FormLabel>
+                                <Select onValueChange={field.onChange} value={field.value}>
+                                    <FormControl>
+                                    <SelectTrigger>
+                                        <SelectValue placeholder="Select the image's purpose" />
+                                    </SelectTrigger>
+                                    </FormControl>
+                                    <SelectContent>
+                                        {useCases.map(uc => (
+                                            <SelectItem key={uc.value} value={uc.value}>{uc.label}</SelectItem>
+                                        ))}
+                                    </SelectContent>
+                                </Select>
+                                <FormDescription>
+                                    Telling the AI the purpose of the image can improve results.
+                                </FormDescription>
+                                <FormMessage />
+                                </FormItem>
+                            )}
                         />
                     </CardContent>
                  </Card>

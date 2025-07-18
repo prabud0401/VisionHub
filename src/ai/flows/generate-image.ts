@@ -25,6 +25,7 @@ const GenerateImagesInputSchema = z.object({
   userId: z.string().describe('The ID of the user generating the image.'),
   models: z.array(z.string()).describe('The AI models used for generation.'),
   promptId: z.string().describe('A unique ID for the prompt session.'),
+  useCase: z.string().optional().describe('The intended use case for the image.'),
 });
 
 export type GenerateImagesInput = z.infer<typeof GenerateImagesInputSchema>;
@@ -60,10 +61,16 @@ const generateImagesFlow = ai.defineFlow(
         throw new CreditError("You don't have enough credits to generate these images.");
     }
 
+    // Prepend the use case to the prompt if it exists
+    const finalPrompt = input.useCase && input.useCase !== 'none'
+      ? `Generate an image for a '${input.useCase}': ${input.prompt}`
+      : input.prompt;
+
+
     const generationTasks = input.models.map(async (modelName) => {
       const {media} = await ai.generate({
         model: 'googleai/gemini-2.0-flash-preview-image-generation',
-        prompt: `${input.prompt} --ar ${input.aspectRatio}`,
+        prompt: `${finalPrompt} --ar ${input.aspectRatio}`,
         config: {
           responseModalities: ['TEXT', 'IMAGE'],
         },
@@ -86,7 +93,7 @@ const generateImagesFlow = ai.defineFlow(
       const newImageMetadata = {
         userId: input.userId,
         url: publicUrl,
-        prompt: input.prompt,
+        prompt: input.prompt, // Save the original user prompt
         model: modelName,
         promptId: input.promptId,
         createdAt: new Date().toISOString(),
