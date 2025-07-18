@@ -290,7 +290,7 @@ export function DashboardClient() {
                         <FormItem>
                           <FormLabel>Image Input (Optional)</FormLabel>
                           <FormControl>
-                            <>
+                            <div>
                               <input
                                 type="file"
                                 ref={fileInputRef}
@@ -315,7 +315,7 @@ export function DashboardClient() {
                                     </Button>
                                   </div>
                                )}
-                            </>
+                            </div>
                           </FormControl>
                         </FormItem>
                       )}
