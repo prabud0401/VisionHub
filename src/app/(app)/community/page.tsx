@@ -3,7 +3,7 @@
 
 import { useEffect, useState, useMemo } from 'react';
 import Image from 'next/image';
-import { Loader2, X, Maximize, Bot, Tags, Briefcase, Crop, Check, CheckCircle, LayoutGrid, Rows, Columns } from 'lucide-react';
+import { Loader2, X, Maximize, Bot, Tags, Briefcase, Crop, Check, CheckCircle, LayoutGrid, Rows, Columns, ArrowLeft, ArrowRight, Download, Share2, Link as LinkIcon, Twitter, Facebook, Mail } from 'lucide-react';
 import { Card, CardContent, CardFooter } from '@/components/ui/card';
 import { getCommunityImages } from '@/services/image-service';
 import type { GeneratedImage } from '@/lib/types';
@@ -16,6 +16,9 @@ import { cn } from '@/lib/utils';
 import { Badge } from '@/components/ui/badge';
 import { AdSlot } from '@/lib/ads-config';
 import { useAuth } from '@/context/auth-context';
+import { useToast } from '@/hooks/use-toast';
+import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
+
 
 interface CommunityImage extends GeneratedImage {
   user?: {
@@ -35,12 +38,44 @@ const allTones = [
 ];
 const allAspectRatios = ["1:1", "16:9", "9:16", "4:3", "3:2"];
 
+const SocialSharePopover = ({ item }: { item: CommunityImage }) => {
+    const { toast } = useToast();
+    const promptText = `Check out this AI creation from VisionHub: "${item.prompt}"`;
+
+    const copyLink = () => {
+        navigator.clipboard.writeText(item.url);
+        toast({ title: 'Link Copied!', description: 'The image URL is now in your clipboard.' });
+    };
+
+    return (
+        <Popover>
+            <PopoverTrigger asChild>
+                <Button variant="outline" size="sm"><Share2 className="mr-2 h-4 w-4" /> Share</Button>
+            </PopoverTrigger>
+            <PopoverContent className="w-auto p-2">
+                <div className="flex gap-2">
+                    <Button variant="ghost" size="icon" onClick={copyLink}><LinkIcon /></Button>
+                    <Button asChild variant="ghost" size="icon">
+                        <a href={`https://twitter.com/intent/tweet?text=${encodeURIComponent(promptText)}&url=${encodeURIComponent(item.url)}`} target="_blank" rel="noopener noreferrer"><Twitter /></a>
+                    </Button>
+                     <Button asChild variant="ghost" size="icon">
+                        <a href={`https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(item.url)}`} target="_blank" rel="noopener noreferrer"><Facebook /></a>
+                    </Button>
+                    <Button asChild variant="ghost" size="icon">
+                        <a href={`mailto:?subject=AI Art from VisionHub&body=${encodeURIComponent(promptText)}%0A%0A${encodeURIComponent(item.url)}`}><Mail /></a>
+                    </Button>
+                </div>
+            </PopoverContent>
+        </Popover>
+    );
+};
 
 export default function CommunityPage() {
   const [images, setImages] = useState<CommunityImage[]>([]);
   const [isLoading, setIsLoading] = useState(true);
-  const [selectedImage, setSelectedImage] = useState<CommunityImage | null>(null);
+  const [selectedImageIndex, setSelectedImageIndex] = useState<number | null>(null);
   const { user } = useAuth();
+  const { toast } = useToast();
   
   // Filtering and Sorting State
   const [sortOrder, setSortOrder] = useState<'newest' | 'oldest'>('newest');
@@ -109,6 +144,35 @@ export default function CommunityPage() {
   const handleClearFilters = () => {
     setFilters({ aspectRatio: 'all', useCase: 'all', tone: 'all' });
   };
+  
+  const handleDownload = async (imageUrl: string, imageName: string) => {
+    try {
+      const response = await fetch(imageUrl);
+      const blob = await response.blob();
+      const url = window.URL.createObjectURL(blob);
+      const link = document.createElement('a');
+      link.href = url;
+      link.download = `${imageName}.png`;
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+      window.URL.revokeObjectURL(url);
+    } catch (error) {
+       toast({ variant: 'destructive', title: 'Download Failed', description: 'Could not download the image.' });
+    }
+  }
+  
+  const handleNextImage = () => {
+      if (selectedImageIndex === null) return;
+      setSelectedImageIndex((prevIndex) => (prevIndex! + 1) % filteredAndSortedImages.length);
+  }
+  
+  const handlePrevImage = () => {
+       if (selectedImageIndex === null) return;
+      setSelectedImageIndex((prevIndex) => (prevIndex! - 1 + filteredAndSortedImages.length) % filteredAndSortedImages.length);
+  }
+
+  const selectedImage = selectedImageIndex !== null ? filteredAndSortedImages[selectedImageIndex] : null;
 
 
   return (
@@ -189,7 +253,7 @@ export default function CommunityPage() {
         </div>
       ) : (
         <div className={cn("gap-4 space-y-4", gridClasses[viewMode])}>
-          {filteredAndSortedImages.map(image =>
+          {filteredAndSortedImages.map((image, index) =>
             image.type === 'ad' ? (
                 <div key={image.id} className="break-inside-avoid">
                     <AdSlot slotId="community-gallery-ad" showAds={!!user?.showAds} />
@@ -198,7 +262,7 @@ export default function CommunityPage() {
                 <Card 
                   key={image.id} 
                   className="overflow-hidden break-inside-avoid cursor-pointer group relative"
-                  onClick={() => setSelectedImage(image)}
+                  onClick={() => setSelectedImageIndex(index)}
                 >
                   <CardContent className="p-0">
                     <div className="aspect-auto">
@@ -233,43 +297,37 @@ export default function CommunityPage() {
       )}
     </div>
 
-    <Dialog open={!!selectedImage} onOpenChange={() => setSelectedImage(null)}>
-        <DialogContent className="max-w-4xl max-h-[90vh] flex flex-col">
+    <Dialog open={!!selectedImage} onOpenChange={() => setSelectedImageIndex(null)}>
+        <DialogContent className="max-w-5xl h-[90vh] flex flex-col p-2">
             {selectedImage && (
                 <>
-                <DialogHeader>
-                    <DialogTitle className="truncate">"{selectedImage.prompt}"</DialogTitle>
-                    <DialogDescription>
-                        Created by @{selectedImage.user?.username || 'anonymous'} on {new Date(selectedImage.createdAt).toLocaleDateString()}
-                    </DialogDescription>
-                </DialogHeader>
-                <div className="grid md:grid-cols-3 gap-6 overflow-hidden">
-                    <div className="md:col-span-2 relative min-h-[400px]">
-                        <Image src={selectedImage.url} alt={selectedImage.prompt} fill className="object-contain rounded-md border"/>
-                    </div>
-                    <div className="space-y-4 overflow-y-auto pr-2">
-                        <div>
-                            <h3 className="font-semibold flex items-center gap-2 mb-2"><Bot /> AI Model</h3>
-                            <Badge variant="secondary">{selectedImage.model}</Badge>
-                        </div>
-                         <div>
-                            <h3 className="font-semibold flex items-center gap-2 mb-2"><Crop /> Aspect Ratio</h3>
-                            <Badge variant="outline">{selectedImage.aspectRatio}</Badge>
-                        </div>
-                        {selectedImage.useCase && selectedImage.useCase !== 'none' && (
-                           <div>
-                                <h3 className="font-semibold flex items-center gap-2 mb-2"><Briefcase /> Use Case</h3>
-                                <Badge variant="outline">{selectedImage.useCase.replace(/-/g, ' ').replace(/\b\w/g, l => l.toUpperCase())}</Badge>
+                <div className="flex-grow relative">
+                    <Image src={selectedImage.url} alt={selectedImage.prompt} fill className="object-contain rounded-md"/>
+                </div>
+                 <div className="absolute top-1/2 left-2 -translate-y-1/2 z-10">
+                    <Button variant="outline" size="icon" onClick={handlePrevImage}><ArrowLeft className="h-4 w-4" /></Button>
+                 </div>
+                  <div className="absolute top-1/2 right-2 -translate-y-1/2 z-10">
+                    <Button variant="outline" size="icon" onClick={handleNextImage}><ArrowRight className="h-4 w-4" /></Button>
+                 </div>
+                 <div className="flex-shrink-0 bg-background/80 backdrop-blur-sm p-4 rounded-b-md">
+                    <div className="flex justify-between items-center">
+                        <div className="flex items-center gap-2">
+                             <Avatar className="h-8 w-8">
+                                <AvatarImage src={selectedImage.user?.photoURL} />
+                                <AvatarFallback className="text-xs">{selectedImage.user?.displayName?.[0]}</AvatarFallback>
+                            </Avatar>
+                            <div>
+                               <p className="text-sm font-medium leading-tight">{selectedImage.user?.displayName}</p>
+                               <p className="text-xs text-muted-foreground leading-tight">@{selectedImage.user?.username}</p>
                             </div>
-                        )}
-                         {selectedImage.tones && selectedImage.tones.length > 0 && (
-                           <div>
-                                <h3 className="font-semibold flex items-center gap-2 mb-2"><Tags /> Tones</h3>
-                                <div className="flex flex-wrap gap-2">
-                                    {selectedImage.tones.map(tone => <Badge key={tone} variant="outline">{tone}</Badge>)}
-                                </div>
-                            </div>
-                        )}
+                        </div>
+                        <div className="flex items-center gap-2">
+                            <SocialSharePopover item={selectedImage} />
+                            <Button variant="secondary" size="sm" onClick={() => handleDownload(selectedImage.url, `visionhub_art_${selectedImage.id}`)}>
+                                <Download className="mr-2 h-4 w-4" /> Download
+                            </Button>
+                        </div>
                     </div>
                 </div>
                 </>

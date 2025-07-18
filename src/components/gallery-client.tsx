@@ -8,9 +8,9 @@ import type { GeneratedImage, GeneratedVideo } from '@/lib/types';
 import { PromptGroupCard } from './prompt-group-card';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from '@/components/ui/dialog';
 import { Button } from './ui/button';
-import { Download, Loader2, Trash2, Wand2, ArrowLeft, ArrowRight, Grid, Grid3x3, Square, Eye, Share2, CheckCircle, Info, PlusCircle, Link as LinkIcon, Twitter, Facebook, Mail } from 'lucide-react';
+import { Download, Loader2, Trash2, Wand2, ArrowLeft, ArrowRight, Grid, Grid3x3, Square, Eye, Share2, CheckCircle, Info, PlusCircle, Link as LinkIcon, Twitter, Facebook, Mail, Users } from 'lucide-react';
 import { getFirestore, collection, query, where, writeBatch, doc, onSnapshot, Unsubscribe, getDocs, limit, getCountFromServer } from 'firebase/firestore';
-import { getFirebaseApp } from '@/lib/firebase-config';
+import { firebaseApp } from '@/lib/firebase-config';
 import {
   AlertDialog,
   AlertDialogAction,
@@ -33,7 +33,6 @@ import { Alert, AlertTitle } from './ui/alert';
 import Link from 'next/link';
 import { AdSlot, adSlots } from '@/lib/ads-config';
 import { Popover, PopoverContent, PopoverTrigger } from './ui/popover';
-import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from './ui/dropdown-menu';
 
 
 interface MediaItem extends GeneratedImage {
@@ -94,7 +93,7 @@ const SocialSharePopover = ({ item }: { item: GalleryItem }) => {
 export function GalleryClient() {
   const [allPromptGroups, setAllPromptGroups] = useState<PromptGroup[]>([]);
   const [selectedGroup, setSelectedGroup] = useState<PromptGroup | null>(null);
-  const [selectedMedia, setSelectedMedia] = useState<GalleryItem | null>(null);
+  const [selectedMediaIndex, setSelectedMediaIndex] = useState<number | null>(null);
   const [groupToDelete, setGroupToDelete] = useState<PromptGroup | null>(null);
   const [isLoading, setIsLoading] = useState(true);
   const [sortOrder, setSortOrder] = useState<'newest' | 'oldest'>('newest');
@@ -109,7 +108,7 @@ export function GalleryClient() {
 
 
   useEffect(() => {
-    if (!user) {
+    if (!user || !firebaseApp) {
         setIsLoading(false);
         return;
     }
@@ -118,12 +117,6 @@ export function GalleryClient() {
     let videoUnsubscribe: Unsubscribe = () => {};
 
     const setupListeners = async () => {
-      const firebaseApp = await getFirebaseApp();
-      if (!firebaseApp) {
-        setIsLoading(false);
-        return;
-      }
-      
       setIsLoading(true);
 
       const db = getFirestore(firebaseApp);
@@ -254,6 +247,7 @@ export function GalleryClient() {
 
   const handleSelectGroup = (group: PromptGroup) => {
     setSelectedGroup(group);
+    setSelectedMediaIndex(0); // Start at the first item
   };
 
   const confirmDeleteGroup = (group: PromptGroup) => {
@@ -268,8 +262,7 @@ export function GalleryClient() {
             title: "Image Shared!",
             description: "Your creation is now live in the Community Showcase.",
         });
-        // Close the dialog and let the snapshot listener handle the state update
-        setSelectedGroup(null);
+        // This will automatically update via the snapshot listener
     } catch (error) {
         toast({
             variant: "destructive",
@@ -280,8 +273,26 @@ export function GalleryClient() {
     }
   };
 
+  const handleDownload = async (item: GalleryItem) => {
+    try {
+      const response = await fetch(item.url);
+      const blob = await response.blob();
+      const url = window.URL.createObjectURL(blob);
+      const link = document.createElement('a');
+      link.href = url;
+      const extension = item.type === 'image' ? 'png' : 'mp4';
+      link.download = `visionhub-ai-${item.id}.${extension}`;
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+      window.URL.revokeObjectURL(url);
+    } catch (error) {
+       toast({ variant: 'destructive', title: 'Download Failed', description: 'Could not download the file.' });
+    }
+  };
+
+
   const handleDeleteGroup = async () => {
-    const firebaseApp = await getFirebaseApp();
     if (!groupToDelete || !firebaseApp) return;
     
     try {
@@ -305,6 +316,20 @@ export function GalleryClient() {
   
   const storageLimit = user?.storageLimit ?? 50;
   const isLimitReached = storageLimit !== -1 && imageCount >= storageLimit;
+  
+  const selectedMedia = selectedGroup && selectedMediaIndex !== null ? selectedGroup.items[selectedMediaIndex] : null;
+  
+  const handleNextMedia = () => {
+      if (selectedGroup && selectedMediaIndex !== null) {
+          setSelectedMediaIndex((prevIndex) => (prevIndex! + 1) % selectedGroup.items.length);
+      }
+  }
+
+  const handlePrevMedia = () => {
+      if (selectedGroup && selectedMediaIndex !== null) {
+          setSelectedMediaIndex((prevIndex) => (prevIndex! - 1 + selectedGroup.items.length) % selectedGroup.items.length);
+      }
+  }
 
 
   if (isLoading) {
@@ -406,70 +431,48 @@ export function GalleryClient() {
         </div>
       )}
 
-      <Dialog open={!!selectedMedia} onOpenChange={(isOpen) => !isOpen && setSelectedMedia(null)}>
-        <DialogContent className="max-w-4xl max-h-[90vh] p-2">
-            {selectedMedia?.type === 'image' && (
-                <Image src={selectedMedia.url} alt="Selected image" width={1024} height={1024} className="object-contain w-full h-full" />
-            )}
-        </DialogContent>
-      </Dialog>
-
       <Dialog open={!!selectedGroup} onOpenChange={(isOpen) => !isOpen && setSelectedGroup(null)}>
-        <DialogContent className="max-w-5xl">
-          {selectedGroup && (
+        <DialogContent className="max-w-5xl h-[90vh] flex flex-col p-2">
+          {selectedGroup && selectedMedia && (
             <>
-              <DialogHeader>
-                <DialogTitle>"{selectedGroup.prompt}"</DialogTitle>
-                <DialogDescription>
-                  {selectedGroup.items.length} {selectedGroup.type}(s) generated on {format(new Date(selectedGroup.createdAt), 'PPP')}
-                </DialogDescription>
-              </DialogHeader>
-              <div className="mt-4 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 max-h-[70vh] overflow-y-auto pr-2">
-                {selectedGroup.items.map(item => (
-                    <div key={item.id} className="flex flex-col gap-2">
-                        <div className="relative aspect-square cursor-pointer" onClick={() => item.type === 'image' && setSelectedMedia(item)}>
-                           {item.type === 'image' ? (
-                                <Image
-                                    src={item.url}
-                                    alt={item.prompt}
-                                    fill
-                                    className="rounded-lg object-cover border"
-                                />
-                           ) : (
-                                <video
-                                    src={item.url}
-                                    controls
-                                    className="rounded-lg object-cover border w-full h-full"
-                                />
-                           )}
-                             <div className="absolute bottom-1 right-1 bg-background/70 text-foreground text-xs px-1.5 py-0.5 rounded">
-                                {item.model}
-                            </div>
-                        </div>
-                         <div className="grid grid-cols-2 gap-2">
-                            <Button asChild variant="secondary" size="sm">
-                                <a href={item.url} download={`visionhub-ai-${item.id}.${item.type === 'image' ? 'png' : 'mp4'}`}>
-                                    <Download className="mr-2 h-4 w-4" />
-                                    Download
-                                </a>
-                            </Button>
-                            <SocialSharePopover item={item} />
-                        </div>
-                        {item.type === 'image' && (
-                            item.isShared ? (
+              <div className="flex-grow relative">
+                {selectedMedia.type === 'image' ? (
+                  <Image src={selectedMedia.url} alt="Selected image" fill className="object-contain rounded-md" />
+                ) : (
+                  <video src={selectedMedia.url} controls autoPlay className="w-full h-full object-contain rounded-md bg-black" />
+                )}
+              </div>
+              <div className="absolute top-1/2 left-2 -translate-y-1/2 z-10">
+                <Button variant="outline" size="icon" onClick={handlePrevMedia}><ArrowLeft className="h-4 w-4" /></Button>
+              </div>
+              <div className="absolute top-1/2 right-2 -translate-y-1/2 z-10">
+                <Button variant="outline" size="icon" onClick={handleNextMedia}><ArrowRight className="h-4 w-4" /></Button>
+              </div>
+              <div className="flex-shrink-0 bg-background/80 backdrop-blur-sm p-4 rounded-b-md">
+                 <div className="flex justify-between items-center">
+                    <div>
+                        <p className="text-sm text-muted-foreground truncate">{selectedMedia.prompt}</p>
+                    </div>
+                    <div className="flex items-center gap-2">
+                        <SocialSharePopover item={selectedMedia} />
+                        <Button variant="secondary" size="sm" onClick={() => handleDownload(selectedMedia)}>
+                            <Download className="mr-2 h-4 w-4" /> Download
+                        </Button>
+                        {selectedMedia.type === 'image' && (
+                            selectedMedia.isShared ? (
                                 <Button variant="outline" size="sm" disabled>
                                     <CheckCircle className="mr-2 h-4 w-4 text-green-500" />
-                                    Shared to Community
+                                    Shared
                                 </Button>
                             ) : (
-                                <Button variant="outline" size="sm" onClick={() => handleShareImage(item as MediaItem)}>
+                                <Button variant="outline" size="sm" onClick={() => handleShareImage(selectedMedia as MediaItem)}>
                                     <Users className="mr-2 h-4 w-4" />
                                     Share to Community
                                 </Button>
                             )
                         )}
                     </div>
-                ))}
+                </div>
               </div>
             </>
           )}
