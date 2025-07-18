@@ -4,6 +4,34 @@ import { Toaster } from '@/components/ui/toaster';
 import { AuthProvider } from '@/context/auth-context';
 import { AuthModal } from '@/components/auth-modal';
 import { CookieConsentBanner } from '@/components/cookie-consent-banner';
+import type { Metadata } from 'next'
+
+export const metadata: Metadata = {
+  title: 'VisionHub | AI Image & Video Generation',
+  description: 'The ultimate AI toolkit for creators. Generate stunning images, videos, and more from text prompts with our suite of advanced generative AI models.',
+  openGraph: {
+    title: 'VisionHub | AI Image & Video Generation',
+    description: 'Turn your imagination into reality. Create, edit, and upscale with the power of AI.',
+    url: 'https://www.visionhub.ai', // Replace with your domain
+    siteName: 'VisionHub',
+    images: [
+      {
+        url: 'https://firebasestorage.googleapis.com/v0/b/visionhub-ai-s813r.firebasestorage.app/o/generated-images%2Fbc9bc6be-11b4-4125-bb38-668b9539b00c.png?alt=media', // Replace with a good OG image URL
+        width: 1200,
+        height: 630,
+        alt: 'AI generated artwork of a woman\'s portrait',
+      },
+    ],
+    locale: 'en_US',
+    type: 'website',
+  },
+  twitter: {
+    card: 'summary_large_image',
+    title: 'VisionHub | AI Image & Video Generation',
+    description: 'The ultimate AI toolkit for creators. Generate stunning images, videos, and more from text prompts.',
+    images: ['https://firebasestorage.googleapis.com/v0/b/visionhub-ai-s813r.firebasestorage.app/o/generated-images%2Fbc9bc6be-11b4-4125-bb38-668b9539b00c.png?alt=media'], // Replace with a good OG image URL
+  },
+}
 
 export default function RootLayout({
   children,
@@ -13,8 +41,6 @@ export default function RootLayout({
   return (
     <html lang="en" className="dark">
       <head>
-        <title>VisionHub</title>
-        <meta name="description" content="Generate stunning visuals with the power of AI" />
         <meta name="google-adsense-account" content="ca-pub-4363233136452065" />
         <link rel="preconnect" href="https://fonts.googleapis.com" />
         <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
