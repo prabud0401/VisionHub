@@ -496,7 +496,6 @@ export function GalleryClient() {
             <AlertDialogDescription>
               This action cannot be undone. This will permanently delete all {groupToDelete?.items.length} items
               associated with this prompt.
-            </CRLF>
             </AlertDialogDescription>
           </AlertDialogHeader>
           <AlertDialogFooter>
@@ -511,3 +510,5 @@ export function GalleryClient() {
     </>
   );
 }
+
+    
