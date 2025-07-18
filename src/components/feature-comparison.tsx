@@ -53,7 +53,7 @@ export function FeatureComparison() {
                         <TableRow className="hover:bg-transparent border-b-border/50">
                             <TableHead className="text-lg w-[40%]">Features</TableHead>
                             <TableHead className="text-center text-lg">Basic</TableHead>
-                            <TableHead className="text-center text-lg text-accent">Standard</TableHead>
+                            <TableHead className="text-center text-lg text-primary">Standard</TableHead>
                             <TableHead className="text-center text-lg">Premium</TableHead>
                         </TableRow>
                     </TableHeader>

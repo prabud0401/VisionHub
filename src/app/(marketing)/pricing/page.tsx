@@ -1,12 +1,20 @@
 
+'use client';
+
 import { Metadata } from 'next';
 import { PricingClient } from '@/components/pricing-client';
 import { FeatureComparison } from '@/components/feature-comparison';
+import React, { Suspense } from 'react';
+import { Loader2 } from 'lucide-react';
 
-export const metadata: Metadata = {
-  title: 'Pricing | VisionHub AI',
-  description: 'Choose a plan that fits your creative needs and compare features.',
-};
+const LazyFeatureComparison = React.lazy(() => 
+  import('@/components/feature-comparison').then(module => ({ default: module.FeatureComparison }))
+);
+
+// export const metadata: Metadata = { // metadata export is not allowed in client components
+//   title: 'Pricing | VisionHub AI',
+//   description: 'Choose a plan that fits your creative needs and compare features.',
+// };
 
 export default function PricingPage() {
   return (
@@ -20,7 +28,13 @@ export default function PricingPage() {
         </p>
       </div>
       <PricingClient />
-      <FeatureComparison />
+      <Suspense fallback={
+        <div className="flex justify-center items-center h-64">
+          <Loader2 className="h-12 w-12 animate-spin text-primary" />
+        </div>
+      }>
+        <LazyFeatureComparison />
+      </Suspense>
     </div>
   );
 }
