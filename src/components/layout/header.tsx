@@ -115,6 +115,7 @@ export default function Header() {
                       {accountLinks.map(link => (
                         <DropdownMenuItem key={link.href} onClick={() => router.push(link.href)}><User className="mr-2 h-4 w-4"/>{link.label}</DropdownMenuItem>
                       ))}
+                      <DropdownMenuItem key={'/community'} onClick={() => router.push('/community')}><Users className="mr-2 h-4 w-4"/>Community</DropdownMenuItem>
                     </DropdownMenuGroup>
                     <DropdownMenuSeparator />
                     <DropdownMenuSub>

@@ -8,7 +8,7 @@ import type { GeneratedImage, GeneratedVideo } from '@/lib/types';
 import { PromptGroupCard } from './prompt-group-card';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from '@/components/ui/dialog';
 import { Button } from './ui/button';
-import { Download, Loader2, Trash2, Wand2, ArrowLeft, ArrowRight, Grid, Grid3x3, Square, Eye, Share2, CheckCircle, Info, PlusCircle } from 'lucide-react';
+import { Download, Loader2, Trash2, Wand2, ArrowLeft, ArrowRight, Grid, Grid3x3, Square, Eye, Share2, CheckCircle, Info, PlusCircle, Link as LinkIcon, Twitter, Facebook, Mail } from 'lucide-react';
 import { getFirestore, collection, query, where, writeBatch, doc, onSnapshot, Unsubscribe, getDocs, limit, getCountFromServer } from 'firebase/firestore';
 import { getFirebaseApp } from '@/lib/firebase-config';
 import {
@@ -32,6 +32,9 @@ import { useToast } from '@/hooks/use-toast';
 import { Alert, AlertTitle } from './ui/alert';
 import Link from 'next/link';
 import { AdSlot, adSlots } from '@/lib/ads-config';
+import { Popover, PopoverContent, PopoverTrigger } from './ui/popover';
+import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from './ui/dropdown-menu';
+
 
 interface MediaItem extends GeneratedImage {
     type: 'image';
@@ -55,6 +58,38 @@ interface PromptGroup {
 }
 
 const ITEMS_PER_PAGE = 12;
+
+const SocialSharePopover = ({ item }: { item: GalleryItem }) => {
+    const { toast } = useToast();
+    const promptText = `Check out this AI creation from VisionHub: "${item.prompt}"`;
+
+    const copyLink = () => {
+        navigator.clipboard.writeText(item.url);
+        toast({ title: 'Link Copied!', description: 'The image URL is now in your clipboard.' });
+    };
+
+    return (
+        <Popover>
+            <PopoverTrigger asChild>
+                <Button variant="outline" size="sm"><Share2 className="mr-2 h-4 w-4" /> Share</Button>
+            </PopoverTrigger>
+            <PopoverContent className="w-auto p-2">
+                <div className="flex gap-2">
+                    <Button variant="ghost" size="icon" onClick={copyLink}><LinkIcon /></Button>
+                    <Button asChild variant="ghost" size="icon">
+                        <a href={`https://twitter.com/intent/tweet?text=${encodeURIComponent(promptText)}&url=${encodeURIComponent(item.url)}`} target="_blank" rel="noopener noreferrer"><Twitter /></a>
+                    </Button>
+                     <Button asChild variant="ghost" size="icon">
+                        <a href={`https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(item.url)}`} target="_blank" rel="noopener noreferrer"><Facebook /></a>
+                    </Button>
+                    <Button asChild variant="ghost" size="icon">
+                        <a href={`mailto:?subject=AI Art from VisionHub&body=${encodeURIComponent(promptText)}%0A%0A${encodeURIComponent(item.url)}`}><Mail /></a>
+                    </Button>
+                </div>
+            </PopoverContent>
+        </Popover>
+    );
+};
 
 export function GalleryClient() {
   const [allPromptGroups, setAllPromptGroups] = useState<PromptGroup[]>([]);
@@ -412,26 +447,27 @@ export function GalleryClient() {
                             </div>
                         </div>
                          <div className="grid grid-cols-2 gap-2">
-                           <Button asChild variant="secondary" size="sm">
-                              <a href={item.url} download={`visionhub-ai-${item.id}.${item.type === 'image' ? 'png' : 'mp4'}`}>
-                                  <Download className="mr-2 h-4 w-4" />
-                                  Download
-                              </a>
-                           </Button>
-                           {item.type === 'image' && (
-                                item.isShared ? (
-                                    <Button variant="outline" size="sm" disabled>
-                                        <CheckCircle className="mr-2 h-4 w-4 text-green-500" />
-                                        Shared
-                                    </Button>
-                                ) : (
-                                    <Button variant="outline" size="sm" onClick={() => handleShareImage(item as MediaItem)}>
-                                        <Share2 className="mr-2 h-4 w-4" />
-                                        Share
-                                    </Button>
-                                )
-                           )}
+                            <Button asChild variant="secondary" size="sm">
+                                <a href={item.url} download={`visionhub-ai-${item.id}.${item.type === 'image' ? 'png' : 'mp4'}`}>
+                                    <Download className="mr-2 h-4 w-4" />
+                                    Download
+                                </a>
+                            </Button>
+                            <SocialSharePopover item={item} />
                         </div>
+                        {item.type === 'image' && (
+                            item.isShared ? (
+                                <Button variant="outline" size="sm" disabled>
+                                    <CheckCircle className="mr-2 h-4 w-4 text-green-500" />
+                                    Shared to Community
+                                </Button>
+                            ) : (
+                                <Button variant="outline" size="sm" onClick={() => handleShareImage(item as MediaItem)}>
+                                    <Users className="mr-2 h-4 w-4" />
+                                    Share to Community
+                                </Button>
+                            )
+                        )}
                     </div>
                 ))}
               </div>
