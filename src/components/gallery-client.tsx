@@ -59,6 +59,7 @@ const ITEMS_PER_PAGE = 12;
 export function GalleryClient() {
   const [allPromptGroups, setAllPromptGroups] = useState<PromptGroup[]>([]);
   const [selectedGroup, setSelectedGroup] = useState<PromptGroup | null>(null);
+  const [selectedMedia, setSelectedMedia] = useState<GalleryItem | null>(null);
   const [groupToDelete, setGroupToDelete] = useState<PromptGroup | null>(null);
   const [isLoading, setIsLoading] = useState(true);
   const [sortOrder, setSortOrder] = useState<'newest' | 'oldest'>('newest');
@@ -232,8 +233,7 @@ export function GalleryClient() {
             title: "Image Shared!",
             description: "Your creation is now live in the Community Showcase.",
         });
-        // We need a way to optimistically update the UI or refetch
-        // For now, let's close the dialog and let the snapshot listener handle it
+        // Close the dialog and let the snapshot listener handle the state update
         setSelectedGroup(null);
     } catch (error) {
         toast({
@@ -371,6 +371,13 @@ export function GalleryClient() {
         </div>
       )}
 
+      <Dialog open={!!selectedMedia} onOpenChange={(isOpen) => !isOpen && setSelectedMedia(null)}>
+        <DialogContent className="max-w-4xl max-h-[90vh] p-2">
+            {selectedMedia?.type === 'image' && (
+                <Image src={selectedMedia.url} alt="Selected image" width={1024} height={1024} className="object-contain w-full h-full" />
+            )}
+        </DialogContent>
+      </Dialog>
 
       <Dialog open={!!selectedGroup} onOpenChange={(isOpen) => !isOpen && setSelectedGroup(null)}>
         <DialogContent className="max-w-5xl">
@@ -385,7 +392,7 @@ export function GalleryClient() {
               <div className="mt-4 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 max-h-[70vh] overflow-y-auto pr-2">
                 {selectedGroup.items.map(item => (
                     <div key={item.id} className="flex flex-col gap-2">
-                        <div className="relative aspect-square">
+                        <div className="relative aspect-square cursor-pointer" onClick={() => item.type === 'image' && setSelectedMedia(item)}>
                            {item.type === 'image' ? (
                                 <Image
                                     src={item.url}

@@ -29,6 +29,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '.
 import { VerifyEmailCard } from './verify-email-card';
 import Link from 'next/link';
 import { AdSlot } from '@/lib/ads-config';
+import { Dialog, DialogContent } from './ui/dialog';
 
 const models = [
   "Gemini AI",
@@ -80,6 +81,7 @@ export function DashboardClient() {
   const [error, setError] = useState<string | null>(null);
   const [progressState, setProgressState] = useState<'idle' | 'generating' | 'saving' | 'done'>('idle');
   const [enhancerState, setEnhancerState] = useState({ isOpen: false, original: '', enhanced: '' });
+  const [selectedImage, setSelectedImage] = useState<string | null>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
   
   const { toast } = useToast();
@@ -179,6 +181,23 @@ export function DashboardClient() {
         reader.readAsDataURL(blob);
       });
   };
+  
+  const handleDownload = async (imageUrl: string, imageName: string) => {
+    try {
+      const response = await fetch(imageUrl);
+      const blob = await response.blob();
+      const url = window.URL.createObjectURL(blob);
+      const link = document.createElement('a');
+      link.href = url;
+      link.download = `${imageName}.png`;
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+      window.URL.revokeObjectURL(url);
+    } catch (error) {
+       toast({ variant: 'destructive', title: 'Download Failed', description: 'Could not download the image.' });
+    }
+  }
 
 
   async function onSubmit(values: FormValues) {
@@ -270,6 +289,11 @@ export function DashboardClient() {
         enhancedPrompt={enhancerState.enhanced}
         onAccept={handleAcceptEnhancedPrompt}
       />
+      <Dialog open={!!selectedImage} onOpenChange={setSelectedImage}>
+        <DialogContent className="max-w-4xl max-h-[90vh] p-2">
+            {selectedImage && <Image src={selectedImage} alt="Selected image" width={1024} height={1024} className="object-contain w-full h-full" />}
+        </DialogContent>
+      </Dialog>
 
       <div className="grid gap-8 lg:grid-cols-5">
         <div className="lg:col-span-3">
@@ -505,7 +529,7 @@ export function DashboardClient() {
                       {generatedImages.map((image) => (
                         <Card key={image.id} className="overflow-hidden group">
                            <CardContent className="p-0">
-                                <div className="relative aspect-square">
+                                <div className="relative aspect-square cursor-pointer" onClick={() => setSelectedImage(image.url)}>
                                 <Image
                                     src={image.url}
                                     alt={image.prompt}
@@ -518,11 +542,9 @@ export function DashboardClient() {
                                 </div>
                            </CardContent>
                            <CardFooter className="p-2 grid grid-cols-2 gap-2">
-                             <Button size="sm" asChild variant="secondary">
-                                <a href={image.url} download={`visionhub-ai-${image.id}.png`}>
-                                    <Download className="mr-2 h-4 w-4" />
-                                    Download
-                                </a>
+                             <Button size="sm" variant="secondary" onClick={() => handleDownload(image.url, `visionhub-ai-${image.id}`)}>
+                                <Download className="mr-2 h-4 w-4" />
+                                Download
                             </Button>
                              <Button size="sm" variant="outline" onClick={() => handleUseResultAsInput(image.url)}>
                                 <RefreshCw className="mr-2 h-4 w-4" />
