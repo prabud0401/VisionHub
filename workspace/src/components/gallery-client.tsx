@@ -310,7 +310,7 @@ export function GalleryClient() {
 
         await batch.commit();
 
-    } catch (error) => {
+    } catch (error) {
         console.error("Error deleting item group: ", error);
     } finally {
       setGroupToDelete(null);
@@ -494,8 +494,7 @@ export function GalleryClient() {
           <AlertDialogHeader>
             <AlertDialogTitle>Are you absolutely sure?</AlertDialogTitle>
             <AlertDialogDescription>
-              This action cannot be undone. This will permanently delete all {groupToDelete?.items.length} items
-              associated with this prompt.
+              This action cannot be undone. This will permanently delete all {groupToDelete?.items.length} items associated with this prompt.
             </AlertDialogDescription>
           </AlertDialogHeader>
           <AlertDialogFooter>
