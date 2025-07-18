@@ -15,6 +15,7 @@ import { Label } from '@/components/ui/label';
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
 import { useToast } from '@/hooks/use-toast';
 import { submitPaymentForReview, uploadPaymentSlip } from '@/services/payment-service';
+import Image from 'next/image';
 
 interface PlanDetails {
   id: string;
@@ -51,7 +52,7 @@ function bufferToBase64(buffer: ArrayBuffer) {
 export default function BuyCreditsPage() {
   const [selectedPlan, , planLoaded] = useLocalStorage<PlanDetails | null>('selectedPlan', null);
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const [paymentMethod, setPaymentMethod] = useState<string>('bank-transfer');
+  const [paymentMethod, setPaymentMethod] = useState<string>('payhere');
   const [paymentSlip, setPaymentSlip] = useState<File | null>(null);
   const [isSubmitted, setIsSubmitted] = useState(false);
   const router = useRouter();
@@ -68,30 +69,46 @@ export default function BuyCreditsPage() {
   }, [selectedPlan, user, router, planLoaded]);
 
   const handlePayment = async () => {
-    if (!paymentSlip || !user || !selectedPlan) {
-        toast({ variant: "destructive", title: "Error", description: "Payment slip is required." });
+    if (paymentMethod === 'bank-transfer' && !paymentSlip) {
+        toast({ variant: "destructive", title: "Error", description: "Payment slip is required for bank transfers." });
         return;
     }
+    if (!user || !selectedPlan) return;
 
     setIsSubmitting(true);
     
-    try {
-      const fileBuffer = await paymentSlip.arrayBuffer();
-      const base64Data = bufferToBase64(fileBuffer);
-      const fileName = `${user.uid}-${Date.now()}-${paymentSlip.name}`;
-
-      const slipUrl = await uploadPaymentSlip(base64Data, fileName, paymentSlip.type);
-      
-      await submitPaymentForReview({
-          userId: user.uid,
-          userEmail: user.email,
-          userDisplayName: user.displayName,
-          plan: selectedPlan,
-          paymentSlipUrl: slipUrl,
+    // Placeholder for PayHere integration
+    if (paymentMethod === 'payhere') {
+      toast({
+        title: "Redirecting to PayHere...",
+        description: "This is a simulation. In a real app, you would be redirected."
       });
+      // Simulate API call and success
+      setTimeout(() => {
+        setIsSubmitting(false);
+        setIsSubmitted(true);
+      }, 2000);
+      return;
+    }
 
-      setIsSubmitted(true);
+    // Existing Bank Transfer Logic
+    try {
+      if (paymentSlip) {
+        const fileBuffer = await paymentSlip.arrayBuffer();
+        const base64Data = bufferToBase64(fileBuffer);
+        const fileName = `${user.uid}-${Date.now()}-${paymentSlip.name}`;
 
+        const slipUrl = await uploadPaymentSlip(base64Data, fileName, paymentSlip.type);
+        
+        await submitPaymentForReview({
+            userId: user.uid,
+            userEmail: user.email,
+            userDisplayName: user.displayName,
+            plan: selectedPlan,
+            paymentSlipUrl: slipUrl,
+        });
+        setIsSubmitted(true);
+      }
     } catch(error) {
         console.error("Payment submission failed:", error);
         toast({ variant: "destructive", title: "Submission Failed", description: "Could not submit your payment for review. Please try again." });
@@ -168,6 +185,12 @@ export default function BuyCreditsPage() {
                         <SelectValue placeholder="Select a payment method" />
                     </SelectTrigger>
                     <SelectContent>
+                        <SelectItem value="payhere">
+                            <span className="flex items-center">
+                                <Image src="https://www.payhere.lk/downloads/images/payhere_long_logo.png" alt="PayHere" width={80} height={20} className="mr-2" />
+                                PayHere
+                            </span>
+                        </SelectItem>
                         <SelectItem value="bank-transfer">
                             <span className="flex items-center"><Landmark className="mr-2 h-4 w-4" /> Bank Transfer</span>
                         </SelectItem>
@@ -180,6 +203,12 @@ export default function BuyCreditsPage() {
                     </SelectContent>
                 </Select>
 
+                {paymentMethod === 'payhere' && (
+                    <div className="mt-6 text-center">
+                        <p className="text-muted-foreground">You will be redirected to PayHere to complete your payment securely.</p>
+                    </div>
+                )}
+                
                 {paymentMethod === 'bank-transfer' && (
                     <div className="mt-6 space-y-6">
                         <Separator />

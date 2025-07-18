@@ -5,7 +5,7 @@ import { Switch } from '@/components/ui/switch';
 import { Label } from '@/components/ui/label';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
-import { Check } from 'lucide-react';
+import { Check, XCircle } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { useAuth } from '@/context/auth-context';
 import { useRouter } from 'next/navigation';
@@ -13,14 +13,14 @@ import { useLocalStorage } from '@/hooks/use-local-storage';
 
 const plans = {
   monthly: [
-    { id: 'price_basic_monthly', name: 'Basic', price: '$10', credits: 500, features: ['Standard quality', 'Limited access to models'] },
-    { id: 'price_standard_monthly', name: 'Standard', price: '$25', credits: 1500, features: ['High quality outputs', 'Full access to models', 'Priority support'], highlighted: true },
-    { id: 'price_premium_monthly', name: 'Premium', price: '$50', credits: 4000, features: ['4K+ resolution', 'API access', 'Dedicated support'] },
+    { id: 'price_basic_monthly', name: 'Basic', price: '$10', credits: 500, features: ['Supported by ads', 'Standard quality', 'Limited access to models'] },
+    { id: 'price_standard_monthly', name: 'Standard', price: '$25', credits: 1500, features: ['Ad-Free Experience', 'High quality outputs', 'Full access to models', 'Priority support'], highlighted: true },
+    { id: 'price_premium_monthly', name: 'Premium', price: '$50', credits: 4000, features: ['Ad-Free Experience', '4K+ resolution', 'API access', 'Dedicated support'] },
   ],
   annually: [
-    { id: 'price_basic_annual', name: 'Basic', price: '$96', credits: 500, features: ['500 credits/mo', 'Standard quality', 'Limited access to models'] },
-    { id: 'price_standard_annual', name: 'Standard', price: '$240', credits: 1500, features: ['1500 credits/mo', 'High quality outputs', 'Full access to models', 'Priority support'], highlighted: true },
-    { id: 'price_premium_annual', name: 'Premium', price: '$480', credits: 4000, features: ['4000 credits/mo', '4K+ resolution', 'API access', 'Dedicated support'] },
+    { id: 'price_basic_annual', name: 'Basic', price: '$96', credits: 500, features: ['500 credits/mo', 'Supported by ads', 'Standard quality', 'Limited access to models'] },
+    { id: 'price_standard_annual', name: 'Standard', price: '$240', credits: 1500, features: ['1500 credits/mo', 'Ad-Free Experience', 'High quality outputs', 'Full access to models', 'Priority support'], highlighted: true },
+    { id: 'price_premium_annual', name: 'Premium', price: '$480', credits: 4000, features: ['4000 credits/mo', 'Ad-Free Experience', '4K+ resolution', 'API access', 'Dedicated support'] },
   ],
 };
 
@@ -74,7 +74,11 @@ export function PricingClient() {
                   <ul className="space-y-3 mb-8 flex-grow">
                     {plan.features.map((feature) => (
                       <li key={feature} className="flex items-center gap-3">
-                        <Check className="h-5 w-5 text-green-500" />
+                        {feature.toLowerCase().includes('ad-free') ? (
+                            <Check className="h-5 w-5 text-green-500" />
+                        ) : (
+                            <Check className="h-5 w-5 text-muted-foreground" />
+                        )}
                         <span className="text-muted-foreground">{feature}</span>
                       </li>
                     ))}
