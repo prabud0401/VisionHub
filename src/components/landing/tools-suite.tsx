@@ -1,4 +1,3 @@
-
 'use client';
 import Image from 'next/image';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
@@ -15,13 +14,13 @@ const tools = [
   {
     title: 'Image Upgrade Suite',
     description: 'Upscale, outpaint, and remove backgrounds with ease.',
-    image: 'https://placehold.co/600x400.png',
+    image: '/images/Image Upgrade Suite.png',
     link: '/services'
   },
   {
     title: 'Prompt Enhancer',
     description: 'Let our AI perfect your prompts for superior results.',
-    image: 'https://placehold.co/600x400.png',
+    image: '/images/Prompt Enhancer.png',
     link: '/services'
   }
 ];
