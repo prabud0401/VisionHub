@@ -12,7 +12,7 @@ if (!firestore || !storage) {
 }
 
 export async function saveImageMetadata(
-  imageData: Omit<GeneratedImage, 'id'> & { userId: string }
+  imageData: Omit<GeneratedImage, 'id'>
 ): Promise<GeneratedImage> {
   if (!firestore) throw new Error('Firestore is not initialized.');
   

@@ -6,6 +6,9 @@ export interface GeneratedImage {
   model: string;
   createdAt: string;
   userId: string;
+  aspectRatio?: string;
+  useCase?: string;
+  tones?: string[];
 }
 
 export interface GeneratedVideo {

@@ -26,6 +26,7 @@ const GenerateImagesInputSchema = z.object({
   models: z.array(z.string()).describe('The AI models used for generation.'),
   promptId: z.string().describe('A unique ID for the prompt session.'),
   useCase: z.string().optional().describe('The intended use case for the image.'),
+  tones: z.array(z.string()).optional().describe('The stylistic tones applied to the prompt.'),
 });
 
 export type GenerateImagesInput = z.infer<typeof GenerateImagesInputSchema>;
@@ -97,6 +98,9 @@ const generateImagesFlow = ai.defineFlow(
         model: modelName,
         promptId: input.promptId,
         createdAt: new Date().toISOString(),
+        aspectRatio: input.aspectRatio,
+        useCase: input.useCase,
+        tones: input.tones,
       };
 
       return saveImageMetadata(newImageMetadata);

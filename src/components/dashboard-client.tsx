@@ -196,6 +196,7 @@ export function DashboardClient() {
         models: values.models,
         promptId: promptId,
         useCase: values.useCase,
+        tones: values.tones,
       });
 
       setProgressState('saving');
