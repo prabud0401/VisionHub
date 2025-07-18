@@ -13,6 +13,7 @@ interface UserProfile {
     createdAt?: string;
     username?: string;
     credits?: number;
+    showAds?: boolean;
 }
 
 async function generateUniqueUsername(email: string | null): Promise<string> {
@@ -63,7 +64,8 @@ export async function createUserProfile(userData: UserProfile): Promise<void> {
         photoURL: userData.photoURL,
         emailVerified: userData.emailVerified,
         createdAt: new Date().toISOString(),
-        credits: 5, // Start with 5 free credits
+        credits: 500, // Start with 500 free credits for Basic plan
+        showAds: true, // Show ads for new users by default
       });
     } else {
        await userRef.update({

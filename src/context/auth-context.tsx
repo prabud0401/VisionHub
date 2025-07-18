@@ -21,6 +21,7 @@ import { createUserProfile, getUserByUsername } from '@/services/user-service';
 interface AppUser extends User {
   username?: string;
   credits?: number;
+  showAds?: boolean;
 }
 
 interface AuthContextType {
@@ -79,7 +80,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       setLoading(false);
     });
     return () => unsubscribe();
-  }, [auth]);
+  }, [auth, refreshUserData]);
 
   const signInWithGoogle = async () => {
     if (!auth) throw new Error("Firebase is not configured. Cannot sign in.");

@@ -63,7 +63,6 @@ export function PricingClient() {
                   className="absolute inset-0 bg-cover bg-center opacity-5"
                   style={{ backgroundImage: "url('https://firebasestorage.googleapis.com/v0/b/visionhub-ai-s813r.firebasestorage.app/o/generated-images%2Fbc9bc6be-11b4-4125-bb38-668b9539b00c.png?alt=media')" }}
               />
-              <div className="absolute inset-0 bg-background/90" />
               <div className="relative flex flex-col flex-grow">
                 <CardHeader>
                   <CardTitle className="text-2xl">{plan.name}</CardTitle>
@@ -73,12 +72,14 @@ export function PricingClient() {
                   <p className="text-lg font-semibold text-primary mb-4">{plan.credits} credits</p>
                   <ul className="space-y-3 mb-8 flex-grow">
                     {plan.features.map((feature) => (
-                      <li key={feature} className="flex items-center gap-3">
-                        {feature.toLowerCase().includes('ad-free') ? (
-                            <Check className="h-5 w-5 text-green-500" />
-                        ) : (
-                            <Check className="h-5 w-5 text-muted-foreground" />
-                        )}
+                      <li key={feature} className="flex items-start gap-3">
+                         <div className="mt-1">
+                            {feature.toLowerCase().includes('ad-free') || feature.toLowerCase().includes('api access') ? (
+                                <Check className="h-5 w-5 text-green-500" />
+                            ) : (
+                                <Check className="h-5 w-5 text-muted-foreground" />
+                            )}
+                         </div>
                         <span className="text-muted-foreground">{feature}</span>
                       </li>
                     ))}

@@ -1,3 +1,4 @@
+
 'use client';
 
 import { Check, Loader2, Save, Wand2 } from 'lucide-react';
@@ -7,6 +8,8 @@ import {
   DialogHeader,
   DialogTitle,
 } from '@/components/ui/dialog';
+import { useAuth } from '@/context/auth-context';
+import { AdSlot } from '@/lib/ads-config';
 
 type ProgressState = 'idle' | 'generating' | 'saving' | 'done';
 
@@ -33,8 +36,10 @@ const progressInfo = {
 };
 
 export function GenerationProgressModal({ state }: GenerationProgressModalProps) {
+  const { user } = useAuth();
   const isOpen = state !== 'idle';
   const currentProgress = progressInfo[state as keyof typeof progressInfo];
+  const showAd = user?.showAds && state === 'generating';
 
   return (
     <Dialog open={isOpen}>
@@ -53,6 +58,12 @@ export function GenerationProgressModal({ state }: GenerationProgressModalProps)
           <DialogTitle className="text-2xl font-headline">{currentProgress?.title}</DialogTitle>
           <p className="text-muted-foreground">{currentProgress?.description}</p>
         </DialogHeader>
+
+        {showAd && (
+            <div className="mt-4 w-full h-[250px]">
+                <AdSlot slotId="image-generation-modal-ad" />
+            </div>
+        )}
       </DialogContent>
     </Dialog>
   );

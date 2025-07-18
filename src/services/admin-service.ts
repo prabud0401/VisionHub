@@ -14,6 +14,7 @@ export interface AdminUser {
   createdAt: string;
   username: string;
   credits: number;
+  showAds?: boolean;
 }
 
 export interface AdminImage extends GeneratedImage {
@@ -57,6 +58,12 @@ export async function updateUserCredits(uid: string, credits: number): Promise<v
   }
   const userRef = firestore.collection('users').doc(uid);
   await userRef.update({ credits });
+}
+
+export async function updateUserAdStatus(uid: string, showAds: boolean): Promise<void> {
+    if (!firestore) throw new Error('Firestore not initialized');
+    const userRef = firestore.collection('users').doc(uid);
+    await userRef.update({ showAds });
 }
 
 

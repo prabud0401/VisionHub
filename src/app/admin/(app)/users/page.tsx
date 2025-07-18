@@ -13,7 +13,7 @@ import {
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Button } from '@/components/ui/button';
-import { Loader2, Trash2, ShieldCheck, ShieldAlert, Edit, Gem, User, Mail, Save } from 'lucide-react';
+import { Loader2, Trash2, ShieldCheck, ShieldAlert, Edit, Gem, User, Mail, Save, ToggleLeft, ToggleRight } from 'lucide-react';
 import { format, parseISO } from 'date-fns';
 import {
   AlertDialog,
@@ -36,7 +36,9 @@ import {
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { useToast } from '@/hooks/use-toast';
-import { getAllUsers, deleteUser, updateUserCredits, type AdminUser } from '@/services/admin-service';
+import { getAllUsers, deleteUser, updateUserCredits, updateUserAdStatus, type AdminUser } from '@/services/admin-service';
+import { Switch } from '@/components/ui/switch';
+import { Badge } from '@/components/ui/badge';
 
 export default function AdminUsersPage() {
   const [users, setUsers] = useState<AdminUser[]>([]);
@@ -104,6 +106,18 @@ export default function AdminUsersPage() {
     }
   };
 
+  const handleToggleAds = async (user: AdminUser) => {
+    const newShowAds = !user.showAds;
+    try {
+        await updateUserAdStatus(user.uid, newShowAds);
+        toast({ title: 'Ad Status Updated', description: `Ads for ${user.displayName} are now ${newShowAds ? 'ON' : 'OFF'}.` });
+        fetchUsers(); // Refetch to update UI
+    } catch (error) {
+        console.error('Failed to update ad status:', error);
+        toast({ variant: 'destructive', title: 'Error', description: 'Failed to update ad status.' });
+    }
+  };
+
 
   if (isLoading) {
     return (
@@ -127,7 +141,7 @@ export default function AdminUsersPage() {
                 <TableHead>User</TableHead>
                 <TableHead>Username</TableHead>
                 <TableHead className="text-center">Credits</TableHead>
-                <TableHead>Email Verified</TableHead>
+                <TableHead>Ad Status</TableHead>
                 <TableHead>Date Joined</TableHead>
                 <TableHead>Actions</TableHead>
               </TableRow>
@@ -155,15 +169,17 @@ export default function AdminUsersPage() {
                      </span>
                    </TableCell>
                   <TableCell>
-                    {user.emailVerified ? (
-                      <span className="flex items-center gap-1 text-green-500">
-                        <ShieldCheck className="h-4 w-4" /> Yes
-                      </span>
-                    ) : (
-                      <span className="flex items-center gap-1 text-yellow-500">
-                        <ShieldAlert className="h-4 w-4" /> No
-                      </span>
-                    )}
+                    <div className="flex items-center gap-2">
+                        <Switch
+                            id={`ads-for-${user.uid}`}
+                            checked={user.showAds}
+                            onCheckedChange={() => handleToggleAds(user)}
+                            aria-label={`Toggle ads for ${user.displayName}`}
+                        />
+                         <Badge variant={user.showAds ? "destructive" : "secondary"}>
+                            {user.showAds ? 'Ads ON' : 'Ads OFF'}
+                        </Badge>
+                    </div>
                   </TableCell>
                   <TableCell>{format(parseISO(user.createdAt), 'PPP')}</TableCell>
                   <TableCell>
