@@ -51,6 +51,7 @@ export default function FeatureHighlight({
                   alt={title}
                   fill
                   className="object-cover"
+                  data-ai-hint={imageHint}
                 />
               )}
               <div className="hidden lg:block absolute inset-0 bg-gradient-to-t from-background/90 via-background/70 to-transparent" />

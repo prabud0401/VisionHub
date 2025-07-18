@@ -13,20 +13,21 @@ export default function AboutPage() {
     <div className="bg-background text-foreground">
       <div className="container mx-auto py-20 px-4">
         <div className="text-center mb-16">
-          <h1 className="text-4xl md:text-5xl font-bold tracking-tight mb-4">
+          <h1 className="text-4xl font-bold tracking-tight text-transparent sm:text-6xl bg-gradient-to-r from-primary to-purple-400 bg-clip-text">
             Pioneering the Future of Digital Creativity
           </h1>
-          <p className="text-lg md:text-xl max-w-3xl mx-auto text-muted-foreground">
+          <p className="mt-6 text-lg leading-8 text-muted-foreground max-w-3xl mx-auto">
             We believe in empowering creators with the most advanced AI tools, making professional-grade visual content accessible to everyone.
           </p>
         </div>
 
         <div className="relative w-full h-96 rounded-lg overflow-hidden mb-20 shadow-2xl shadow-primary/20">
           <Image
-            src="https://placehold.co/1200x600.png"
+            src="/images/about-hero.png"
             alt="AI generated art showcasing creativity"
             layout="fill"
             objectFit="cover"
+            data-ai-hint="A vibrant, colorful abstract wallpaper representing the explosion of creativity and ideas. Swirls of purple, blue, and orange light. Modern, dynamic, and full of energy."
           />
           <div className="absolute inset-0 bg-gradient-to-t from-background via-transparent to-transparent" />
         </div>
@@ -41,10 +42,11 @@ export default function AboutPage() {
           <div className="flex justify-center">
             <div className="relative w-80 h-80 rounded-lg overflow-hidden shadow-xl">
                  <Image
-                    src="https://placehold.co/400x400.png"
+                    src="/images/about-mission.png"
                     alt="Abstract representation of a target"
                     layout="fill"
                     objectFit="cover"
+                    data-ai-hint="A glowing, abstract representation of a target or goal. Neon blue and purple rings converging on a bright central point, symbolizing focus and mission. Dark background."
                 />
             </div>
           </div>
@@ -54,10 +56,11 @@ export default function AboutPage() {
            <div className="flex justify-center md:order-2">
              <div className="relative w-80 h-80 rounded-lg overflow-hidden shadow-xl">
                  <Image
-                    src="https://placehold.co/400x400.png"
+                    src="/images/about-team.png"
                     alt="Abstract representation of a diverse team"
                     layout="fill"
                     objectFit="cover"
+                    data-ai-hint="An abstract image representing a diverse team working with technology. Silhouettes of people made of glowing digital particles, collaborating around a central data sphere. Teamwork and innovation."
                 />
             </div>
           </div>

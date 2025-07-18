@@ -191,10 +191,10 @@ export default function BuyCreditsPage() {
   return (
     <div className="container mx-auto max-w-2xl py-20 px-4">
       <div className="text-center mb-12">
-        <h1 className="font-headline text-4xl font-bold tracking-tight lg:text-5xl">
+        <h1 className="text-4xl font-bold tracking-tight text-transparent sm:text-6xl bg-gradient-to-r from-primary to-purple-400 bg-clip-text">
           Complete Your Purchase
         </h1>
-        <p className="mt-4 text-lg text-muted-foreground">
+        <p className="mt-6 text-lg leading-8 text-muted-foreground max-w-2xl mx-auto">
           You're about to add more credits to your account.
         </p>
       </div>

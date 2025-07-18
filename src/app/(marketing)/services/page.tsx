@@ -14,25 +14,29 @@ const services = [
     title: "Text-to-Image Generation",
     description: "Bring your most ambitious ideas to life. Describe any scene, character, or concept, and watch as our AI generates stunning, high-resolution images from your text prompts. Perfect for artists, designers, and marketers.",
     features: ["Multiple AI Models (Gemini, DALL-E 3, etc.)", "Custom Aspect Ratios", "Stylistic Tone Control", "Character Consistency"],
-    image: "https://placehold.co/600x400.png",
+    image: "/images/service-text-to-image.png",
+    imageHint: "A futuristic space soldier in detailed armor, standing on a rocky alien planet with two moons in the sky. Cinematic, hyperrealistic."
   },
   {
     title: "AI Image Upgrade Suite",
     description: "Refine and perfect your images with our advanced editing tools. Whether you need to isolate a subject, expand a scene, or improve quality, our AI-powered suite makes complex editing tasks effortless.",
     features: ["One-Click Background Removal", "AI Outpainting & Upscaling", "Resize to Any Aspect Ratio", "Preserves Image Quality"],
-    image: "https://placehold.co/600x400.png",
+    image: "/images/service-image-upgrade.png",
+    imageHint: "Close-up portrait of a woman with striking features, her face is half-covered in intricate, glowing digital patterns. A clean, minimalist background highlights her face. Cyberpunk aesthetic."
   },
   {
     title: "Prompt Enhancer",
     description: "Unlock the full potential of generative AI with better prompts. Our intelligent Prompt Enhancer analyzes your initial idea and enriches it with descriptive details, styles, and keywords for more accurate and creative results.",
     features: ["AI-Powered Suggestions", "Visual & Stylistic Enrichment", "Learn Prompt Engineering", "Integrated with Generator"],
-    image: "https://placehold.co/600x400.png",
+    image: "/images/service-prompt-enhancer.png",
+    imageHint: "A vast, brightly lit futuristic city with flying vehicles and towering skyscrapers that gleam with neon lights. A sense of scale and wonder. High-detail digital painting."
   },
   {
     title: "Image-to-Prompt Analysis",
     description: "Ever wonder what prompt could create a specific image? Upload any picture, and our AI will reverse-engineer it, generating a detailed text prompt that captures its essence, style, and composition.",
     features: ["Deconstruct Any Image Style", "Inspiration for New Creations", "Learn from Existing Art", "Copy & Paste to Generate"],
-    image: "https://placehold.co/600x400.png",
+    image: "/images/service-image-to-prompt.png",
+    imageHint: "A magnificent fantasy castle perched on a cliff overlooking a dramatic landscape with waterfalls and forests. Epic, detailed, matte painting style."
   },
 ];
 
@@ -40,10 +44,10 @@ export default function ServicesPage() {
   return (
     <div className="container mx-auto py-20 px-4">
       <div className="text-center mb-16">
-        <h1 className="font-headline text-4xl font-bold tracking-tight lg:text-5xl">
+        <h1 className="text-4xl font-bold tracking-tight text-transparent sm:text-6xl bg-gradient-to-r from-primary to-purple-400 bg-clip-text">
           A Powerful Suite of AI Tools
         </h1>
-        <p className="mt-4 text-lg text-muted-foreground max-w-3xl mx-auto">
+        <p className="mt-6 text-lg leading-8 text-muted-foreground max-w-3xl mx-auto">
           From ideation to final edits, VisionHub provides all the tools you need to streamline your creative workflow and produce exceptional results.
         </p>
       </div>
@@ -59,6 +63,7 @@ export default function ServicesPage() {
                     alt={service.title}
                     layout="fill"
                     objectFit="cover"
+                    data-ai-hint={service.imageHint}
                   />
                 </div>
                 <div className="p-4">

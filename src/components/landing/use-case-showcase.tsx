@@ -82,10 +82,10 @@ export function UseCaseShowcase() {
   return (
     <section className="py-20 lg:py-24 bg-background/50 overflow-hidden">
       <div className="container mx-auto px-4 text-center">
-        <h2 className="text-3xl font-bold tracking-tighter sm:text-4xl">
+        <h2 className="text-3xl font-bold tracking-tight text-transparent sm:text-5xl bg-gradient-to-r from-primary to-purple-400 bg-clip-text">
           Create Anything You Can Imagine
         </h2>
-        <p className="mt-4 max-w-2xl mx-auto text-muted-foreground">
+        <p className="mt-6 text-lg leading-8 text-muted-foreground max-w-2xl mx-auto">
           From professional marketing assets to personal creative projects, the possibilities are limitless.
         </p>
       </div>

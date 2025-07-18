@@ -164,12 +164,22 @@ export default function CommunityPage() {
   
   const handleNextImage = () => {
       if (selectedImageIndex === null) return;
-      setSelectedImageIndex((prevIndex) => (prevIndex! + 1) % filteredAndSortedImages.length);
+      const realImages = filteredAndSortedImages.filter(item => item.type !== 'ad');
+      const currentFilteredIndex = realImages.findIndex(img => img.id === selectedImage?.id);
+      const nextIndex = (currentFilteredIndex + 1) % realImages.length;
+      const nextImageId = realImages[nextIndex].id;
+      const nextMasterIndex = filteredAndSortedImages.findIndex(img => img.id === nextImageId);
+      setSelectedImageIndex(nextMasterIndex);
   }
   
   const handlePrevImage = () => {
        if (selectedImageIndex === null) return;
-      setSelectedImageIndex((prevIndex) => (prevIndex! - 1 + filteredAndSortedImages.length) % filteredAndSortedImages.length);
+      const realImages = filteredAndSortedImages.filter(item => item.type !== 'ad');
+      const currentFilteredIndex = realImages.findIndex(img => img.id === selectedImage?.id);
+      const prevIndex = (currentFilteredIndex - 1 + realImages.length) % realImages.length;
+      const prevImageId = realImages[prevIndex].id;
+      const prevMasterIndex = filteredAndSortedImages.findIndex(img => img.id === prevImageId);
+      setSelectedImageIndex(prevMasterIndex);
   }
 
   const selectedImage = selectedImageIndex !== null ? filteredAndSortedImages[selectedImageIndex] : null;
@@ -179,10 +189,10 @@ export default function CommunityPage() {
     <>
     <div className="container mx-auto py-12 px-4">
       <div className="text-center mb-8">
-        <h1 className="font-headline text-4xl font-bold tracking-tight lg:text-5xl">
+        <h1 className="text-4xl font-bold tracking-tight text-transparent sm:text-6xl bg-gradient-to-r from-primary to-purple-400 bg-clip-text">
           Community Showcase
         </h1>
-        <p className="mt-4 text-lg text-muted-foreground">
+        <p className="mt-6 text-lg leading-8 text-muted-foreground max-w-2xl mx-auto">
           Get inspired by what others are creating with VisionHub AI.
         </p>
       </div>
@@ -311,9 +321,9 @@ export default function CommunityPage() {
                     <Button variant="outline" size="icon" onClick={handleNextImage}><ArrowRight className="h-4 w-4" /></Button>
                  </div>
                  <div className="flex-shrink-0 bg-background/80 backdrop-blur-sm p-4 rounded-b-md">
-                    <div className="flex justify-between items-center">
-                        <div className="flex items-center gap-2">
-                             <Avatar className="h-8 w-8">
+                    <div className="flex justify-between items-start gap-4">
+                        <div className="flex items-center gap-3">
+                             <Avatar className="h-10 w-10">
                                 <AvatarImage src={selectedImage.user?.photoURL} />
                                 <AvatarFallback className="text-xs">{selectedImage.user?.displayName?.[0]}</AvatarFallback>
                             </Avatar>
@@ -329,6 +339,9 @@ export default function CommunityPage() {
                             </Button>
                         </div>
                     </div>
+                     <p className="text-xs text-muted-foreground mt-2 italic line-clamp-2">
+                        &ldquo;{selectedImage.prompt}&rdquo;
+                     </p>
                 </div>
                 </>
             )}

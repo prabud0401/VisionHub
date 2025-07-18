@@ -30,16 +30,19 @@ export default function HeroSection() {
       id="home"
       className="relative h-screen w-full flex items-center justify-center text-white bg-cover bg-center bg-no-repeat"
       style={{
-        backgroundImage: "url('https://placehold.co/1920x1080.png')"
+        backgroundImage: "url('/images/hero-background.png')"
       }}
+      data-ai-hint="A breathtaking, ultra-wide, abstract digital wallpaper. Swirling galaxies of purple, deep blue, and magenta light flow across a dark background, with constellations of tiny, bright stars. A sense of infinite creativity and digital energy. Cinematic, ethereal, high resolution."
     >
       <div className="absolute inset-0 bg-gradient-to-t from-background via-background/80 to-transparent" />
       <div className="relative z-10 container mx-auto px-4 text-center">
-        <h1 className="text-4xl md:text-6xl font-bold mb-4">Unleash Your Creativity with AI</h1>
-        <p className="text-lg md:text-xl max-w-3xl mx-auto text-foreground/80 mb-8">
+        <h1 className="text-4xl font-bold tracking-tight text-transparent sm:text-6xl bg-gradient-to-r from-white to-purple-300 bg-clip-text">
+          Unleash Your Creativity with AI
+        </h1>
+        <p className="mt-6 text-lg leading-8 text-foreground/80 max-w-2xl mx-auto">
           Turn your imagination into stunning visuals. VisionHub integrates multiple AI models to give you the ultimate creative power.
         </p>
-        <div className="max-w-2xl mx-auto flex items-center gap-2 bg-background/50 p-2 rounded-lg border border-border">
+        <div className="mt-10 max-w-2xl mx-auto flex items-center gap-2 bg-background/50 p-2 rounded-lg border border-border backdrop-blur-sm">
           <Input
             type="text"
             placeholder="A majestic lion with a crown of stars, digital painting"
@@ -48,7 +51,7 @@ export default function HeroSection() {
             onChange={(e) => setPrompt(e.target.value)}
             onKeyDown={(e) => e.key === 'Enter' && handleCreate()}
           />
-          <Button variant="accent" size="lg" onClick={handleCreate}>
+          <Button variant="default" size="lg" onClick={handleCreate}>
             <span className="hidden sm:inline">Start Creating</span>
             <ArrowRight className="sm:ml-2" />
           </Button>
