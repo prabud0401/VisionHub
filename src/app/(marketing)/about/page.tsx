@@ -23,11 +23,10 @@ export default function AboutPage() {
 
         <div className="relative w-full h-96 rounded-lg overflow-hidden mb-20 shadow-2xl shadow-primary/20">
           <Image
-            src="/images/about-hero.png"
+            src="https://placehold.co/1200x600.png"
             alt="AI generated art showcasing creativity"
             layout="fill"
             objectFit="cover"
-            data-ai-hint="A vibrant, colorful abstract wallpaper representing the explosion of creativity and ideas. Swirls of purple, blue, and orange light. Modern, dynamic, and full of energy."
           />
           <div className="absolute inset-0 bg-gradient-to-t from-background via-transparent to-transparent" />
         </div>
@@ -42,8 +41,7 @@ export default function AboutPage() {
           <div className="flex justify-center">
             <div className="relative w-80 h-80 rounded-lg overflow-hidden shadow-xl">
                  <Image
-                    src="/images/about-mission.png"
-                    data-ai-hint="A glowing, abstract representation of a target or goal. Neon blue and purple rings converging on a bright central point, symbolizing focus and mission. Dark background."
+                    src="https://placehold.co/400x400.png"
                     alt="Abstract representation of a target"
                     layout="fill"
                     objectFit="cover"
@@ -56,8 +54,7 @@ export default function AboutPage() {
            <div className="flex justify-center md:order-2">
              <div className="relative w-80 h-80 rounded-lg overflow-hidden shadow-xl">
                  <Image
-                    src="/images/about-team.png"
-                    data-ai-hint="An abstract image representing a diverse team working with technology. Silhouettes of people made of glowing digital particles, collaborating around a central data sphere. Teamwork and innovation."
+                    src="https://placehold.co/400x400.png"
                     alt="Abstract representation of a diverse team"
                     layout="fill"
                     objectFit="cover"

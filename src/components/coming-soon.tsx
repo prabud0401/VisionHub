@@ -48,7 +48,6 @@ export function ComingSoon({ title, description, imageUrl, imageHint }: ComingSo
                     alt="Coming Soon Placeholder"
                     width={400}
                     height={250}
-                    data-ai-hint={imageHint}
                     className="rounded-lg mx-auto shadow-lg"
                 />
             </div>

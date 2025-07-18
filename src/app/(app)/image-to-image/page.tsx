@@ -12,7 +12,7 @@ export default function ImageToImagePage() {
     <ComingSoon
       title="AI Image-to-Image Transformation"
       description="This powerful feature is currently under development. Soon, you'll be able to upload an image and transform it with a text prompt into something entirely new. Stay tuned!"
-      imageUrl="/images/coming-soon-image-to-image.png"
+      imageUrl="https://placehold.co/800x500.png"
       imageHint="A photorealistic image of a golden retriever dog is magically transforming into a detailed, complex robot version of itself. Half the dog is normal, the other half is chrome and wires. Cinematic lighting."
     />
   );

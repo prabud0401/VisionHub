@@ -56,7 +56,7 @@ function LandingPage() {
              <FeatureHighlight
                 title="Community Showcase"
                 description="A vibrant space to share your creations, discover what others are making, and connect with fellow artists. Get ready to be inspired."
-                imageUrl="/images/feature-community.jpeg"
+                imageUrl="https://placehold.co/1280x720.png"
                 imageHint="A digital art gallery wall showcasing many different styles of AI-generated art. The gallery is clean, modern, and well-lit. People are milling around looking at the art."
                 isLive
                 buttonLink="/community"
@@ -66,19 +66,19 @@ function LandingPage() {
             <FeatureHighlight
                 title="Image-to-Image Transformation"
                 description="Upload an image and transform it with a text prompt into something entirely new. The future of iterative design is on its way."
-                imageUrl="/images/feature-image-to-image.png"
+                imageUrl="https://placehold.co/1280x720.png"
                 imageHint="A magical transformation effect showing a photo of a real-world object (like a teacup) turning into a fantastical, artistic version of itself. Glowing particles and light trails."
              />
              <FeatureHighlight
                 title="AI Inpainting & Outpainting"
                 description="Edit images with precision. Erase parts of an image and regenerate them with a new prompt, or expand your canvas infinitely. Perfect for making targeted changes."
-                imageUrl="/images/feature-inpainting.jpg"
+                imageUrl="https://placehold.co/1280x720.png"
                 imageHint="A beautiful landscape photo being expanded. The original photo is in the center, and the AI is generating new scenery on all sides to make the image wider. The new parts blend seamlessly."
              />
             <FeatureHighlight
                 title="AI Video Generation"
                 description="The next frontier of creativity. Our AI video tool will let you create dynamic clips from simple text prompts. The future of content creation is coming."
-                imageUrl="/images/feature-video.png"
+                imageUrl="https://placehold.co/1280x720.png"
                 imageHint="An abstract representation of video creation. A film strip is twisting and turning, with vibrant, colorful galaxies and nebulae visible inside each frame. Symbolizes creating worlds."
              />
             <CtaSection />

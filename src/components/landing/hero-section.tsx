@@ -30,7 +30,7 @@ export default function HeroSection() {
       id="home"
       className="relative h-screen w-full flex items-center justify-center text-white bg-cover bg-center bg-no-repeat"
       style={{
-        backgroundImage: "url('/images/hero-background.png')"
+        backgroundImage: "url('https://placehold.co/1920x1080.png')"
       }}
     >
       <div className="absolute inset-0 bg-gradient-to-t from-background via-background/80 to-transparent" />

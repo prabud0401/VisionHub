@@ -49,7 +49,6 @@ export default function FeatureHighlight({
                 <Image
                   src={imageUrl}
                   alt={title}
-                  data-ai-hint={imageHint}
                   fill
                   className="object-cover"
                 />

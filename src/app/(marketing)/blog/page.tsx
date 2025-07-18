@@ -23,7 +23,7 @@ export default function BlogPage() {
         >
             <section id="announcing-v1">
                 <div className="relative w-full h-80 rounded-lg overflow-hidden my-8">
-                    <Image src="/images/blog-announcement.png" alt="Abstract AI art" layout="fill" objectFit="cover" data-ai-hint="Abstract technology background, glowing nodes and connections on a dark blue canvas, representing a network of ideas and innovation. Digital art." />
+                    <Image src="https://placehold.co/1000x400.png" alt="Abstract AI art" layout="fill" objectFit="cover" />
                 </div>
                 <h2>Announcing VisionHub AI v1.0</h2>
                 <p className="text-sm text-muted-foreground mb-4">Posted on {new Date().toLocaleDateString()}</p>
@@ -33,7 +33,7 @@ export default function BlogPage() {
             
             <section id="prompt-engineering-guide">
                 <div className="relative w-full h-80 rounded-lg overflow-hidden my-8">
-                     <Image src="/images/blog-prompt-guide.png" alt="AI prompt creation" layout="fill" objectFit="cover" data-ai-hint="An image of a glowing computer terminal with lines of code and text, symbolizing the creation of an AI prompt. The text on screen should be slightly blurred but artistic. Dark, high-tech theme." />
+                     <Image src="https://placehold.co/1000x400.png" alt="AI prompt creation" layout="fill" objectFit="cover" />
                 </div>
                 <h2>A Beginner's Guide to Prompt Engineering</h2>
                 <p className="text-sm text-muted-foreground mb-4">Posted on {new Date(Date.now() - 86400000 * 3).toLocaleDateString()}</p>
@@ -43,7 +43,7 @@ export default function BlogPage() {
 
             <section id="future-of-ai">
                 <div className="relative w-full h-80 rounded-lg overflow-hidden my-8">
-                     <Image src="/images/blog-future-ai.png" alt="Futuristic city" layout="fill" objectFit="cover" data-ai-hint="A breathtaking, wide-angle shot of a futuristic city with sleek, organic architecture and flying vehicles. The sky is a vibrant mix of sunset colors. Digital art, cinematic." />
+                     <Image src="https://placehold.co/1000x400.png" alt="Futuristic city" layout="fill" objectFit="cover" />
                 </div>
                 <h2>The Future of Generative AI</h2>
                 <p className="text-sm text-muted-foreground mb-4">Posted on {new Date(Date.now() - 86400000 * 7).toLocaleDateString()}</p>

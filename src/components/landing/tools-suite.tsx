@@ -9,22 +9,19 @@ const tools = [
   {
     title: 'Text-to-Image Generation',
     description: 'Transform your words into breathtaking visuals.',
-    image: '/images/tool-text-to-image.png',
-    dataAiHint: 'A beautiful, colorful abstract painting with swirling colors and dynamic shapes. Represents pure creativity. Digital art.',
+    image: 'https://placehold.co/600x400.png',
     link: '/services'
   },
   {
     title: 'Image Upgrade Suite',
     description: 'Upscale, outpaint, and remove backgrounds with ease.',
-    image: '/images/tool-image-upgrade.png',
-    dataAiHint: 'An image of a magnifying glass over a photograph, enhancing the detail and showing pixels becoming sharper. Represents upscaling and editing.',
+    image: 'https://placehold.co/600x400.png',
     link: '/services'
   },
   {
     title: 'Prompt Enhancer',
     description: 'Let our AI perfect your prompts for superior results.',
-    image: '/images/tool-prompt-enhancer.png',
-    dataAiHint: 'A glowing brain made of interconnected light particles, with ideas and words flowing from it. Represents intelligence and prompt engineering.',
+    image: 'https://placehold.co/600x400.png',
     link: '/services'
   }
 ];
@@ -48,7 +45,6 @@ export default function ToolsSuite() {
                     <Image
                       src={tool.image}
                       alt={tool.title}
-                      data-ai-hint={tool.dataAiHint}
                       fill
                       className="object-cover"
                     />

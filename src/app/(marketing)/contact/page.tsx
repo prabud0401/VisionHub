@@ -80,7 +80,7 @@ export default function ContactPage() {
                     Sri Lanka
                 </address>
                  <div className="relative w-full h-80 rounded-lg overflow-hidden my-8">
-                     <Image src="/images/contact-location.png" alt="Map of our location" layout="fill" objectFit="cover" data-ai-hint="A modern, minimalist office building with lots of glass windows, surrounded by lush green trees. Bright, sunny day. Architectural photography." />
+                     <Image src="https://placehold.co/1000x400.png" alt="Map of our location" layout="fill" objectFit="cover" />
                 </div>
             </section>
         </DocPageLayout>

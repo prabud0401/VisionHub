@@ -14,7 +14,7 @@ export default function SocialCta() {
                     <Card className="bg-card/90 backdrop-blur-sm overflow-hidden relative">
                          <div
                             className="absolute inset-0 bg-cover bg-center opacity-10"
-                            style={{ backgroundImage: "url('/images/cta-background.png')" }}
+                            style={{ backgroundImage: "url('https://placehold.co/1200x600.png')" }}
                          />
                         <div className="absolute inset-0 bg-background/50" />
                         <CardContent className="p-0 relative">
@@ -41,9 +41,8 @@ export default function SocialCta() {
                                 </div>
                                 <div className="relative h-64 md:h-full w-full">
                                     <Image
-                                        src="/images/social-cta-image.png"
+                                        src="https://placehold.co/600x400.png"
                                         alt="A vibrant community of creators"
-                                        data-ai-hint="An abstract artwork representing a connected community. Many colorful, glowing strands of light weave together into a beautiful, complex pattern. Symbolizes connection and creativity."
                                         fill
                                         className="object-cover"
                                     />
