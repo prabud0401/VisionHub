@@ -29,6 +29,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '.
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { VerifyEmailCard } from './verify-email-card';
 import Link from 'next/link';
+import { AdSlot } from '@/lib/ads-config';
 
 const models = [
   "Gemini AI",
@@ -214,7 +215,7 @@ export function DashboardClient() {
         toast({
           variant: 'destructive',
           title: 'Insufficient Credits',
-          description: "You don't have enough credits for this generation. Please purchase more.",
+          description: e.message,
           action: (
              <Button asChild variant="secondary">
                 <Link href="/pricing">Get Credits</Link>
@@ -465,7 +466,7 @@ export function DashboardClient() {
               <CardHeader>
                 <CardTitle className="font-headline">Result</CardTitle>
               </CardHeader>
-              <CardContent className="flex items-center justify-center h-full min-h-[400px]">
+              <CardContent className="flex flex-col items-center justify-center h-full min-h-[400px]">
                 {isGenerating && !generatedImages && (
                   <div className="flex flex-col items-center gap-4 text-muted-foreground">
                     <Loader2 className="h-16 w-16 animate-spin text-primary" />
@@ -509,9 +510,12 @@ export function DashboardClient() {
                   </div>
                 )}
                 {!isGenerating && !error && !generatedImages && (
-                  <div className="text-center text-muted-foreground">
-                    <ImageIcon className="h-16 w-16 mx-auto mb-4" />
+                  <div className="text-center text-muted-foreground w-full h-full flex flex-col items-center justify-center gap-4">
+                    <ImageIcon className="h-16 w-16 mx-auto " />
                     <p>Your generated images will appear here.</p>
+                     <div className="w-full aspect-video">
+                        <AdSlot slotId="dashboard-result-placeholder-ad" showAds={!!user?.showAds} />
+                     </div>
                   </div>
                 )}
               </CardContent>

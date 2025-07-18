@@ -31,6 +31,7 @@ import { shareImageToCommunity } from '@/services/image-service';
 import { useToast } from '@/hooks/use-toast';
 import { Alert, AlertTitle } from './ui/alert';
 import Link from 'next/link';
+import { AdSlot, adSlots } from '@/lib/ads-config';
 
 interface MediaItem extends GeneratedImage {
     type: 'image';
@@ -181,6 +182,22 @@ export function GalleryClient() {
     (currentPage - 1) * ITEMS_PER_PAGE,
     currentPage * ITEMS_PER_PAGE
   );
+  
+  // Intersperse ads into the gallery view
+  const itemsWithAds = useMemo(() => {
+    if (!user?.showAds) return paginatedGroups;
+
+    const itemsWithAds = [];
+    for (let i = 0; i < paginatedGroups.length; i++) {
+        itemsWithAds.push(paginatedGroups[i]);
+        // Insert an ad every 6 items
+        if ((i + 1) % 6 === 0) {
+            itemsWithAds.push({ type: 'ad' });
+        }
+    }
+    return itemsWithAds;
+  }, [paginatedGroups, user?.showAds]);
+
 
   const handleUpgradeImage = async (imageUrl: string) => {
     try {
@@ -323,15 +340,21 @@ export function GalleryClient() {
 
 
       <div className={cn("grid gap-4", gridClasses[viewMode])}>
-        {paginatedGroups.map((group) => (
-          <PromptGroupCard
-            key={group.promptId}
-            group={group}
-            onView={() => handleSelectGroup(group)}
-            onDelete={() => confirmDeleteGroup(group)}
-            onUpgrade={group.type === 'image' ? () => handleUpgradeImage(group.coverImage) : undefined}
-          />
-        ))}
+        {itemsWithAds.map((item, index) =>
+          item.type === 'ad' ? (
+            <div key={`ad-${index}`} className="aspect-square">
+               <AdSlot slotId="user-gallery-ad" showAds={!!user?.showAds} />
+            </div>
+          ) : (
+            <PromptGroupCard
+              key={item.promptId}
+              group={item}
+              onView={() => handleSelectGroup(item)}
+              onDelete={() => confirmDeleteGroup(item)}
+              onUpgrade={item.type === 'image' ? () => handleUpgradeImage(item.coverImage) : undefined}
+            />
+          )
+        )}
       </div>
 
       {totalPages > 1 && (

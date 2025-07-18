@@ -14,6 +14,8 @@ import { ToggleGroup, ToggleGroupItem } from '@/components/ui/toggle-group';
 import { Button } from '@/components/ui/button';
 import { cn } from '@/lib/utils';
 import { Badge } from '@/components/ui/badge';
+import { AdSlot } from '@/lib/ads-config';
+import { useAuth } from '@/context/auth-context';
 
 interface CommunityImage extends GeneratedImage {
   user?: {
@@ -38,6 +40,7 @@ export default function CommunityPage() {
   const [images, setImages] = useState<CommunityImage[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [selectedImage, setSelectedImage] = useState<CommunityImage | null>(null);
+  const { user } = useAuth();
   
   // Filtering and Sorting State
   const [sortOrder, setSortOrder] = useState<'newest' | 'oldest'>('newest');
@@ -81,8 +84,20 @@ export default function CommunityPage() {
         return sortOrder === 'newest' ? dateB - dateA : dateA - dateB;
     });
 
+    // Intersperse ads
+    if (user?.showAds) {
+        const withAds: any[] = [];
+        for (let i = 0; i < result.length; i++) {
+            withAds.push(result[i]);
+            if ((i + 1) % 9 === 0) { // Insert an ad every 9 images
+                withAds.push({ type: 'ad', id: `ad-${i}` });
+            }
+        }
+        return withAds;
+    }
+
     return result;
-  }, [images, filters, sortOrder]);
+  }, [images, filters, sortOrder, user?.showAds]);
 
 
   const gridClasses = {
@@ -174,40 +189,46 @@ export default function CommunityPage() {
         </div>
       ) : (
         <div className={cn("gap-4 space-y-4", gridClasses[viewMode])}>
-          {filteredAndSortedImages.map(image => (
-            <Card 
-              key={image.id} 
-              className="overflow-hidden break-inside-avoid cursor-pointer group relative"
-              onClick={() => setSelectedImage(image)}
-            >
-              <CardContent className="p-0">
-                <div className="aspect-auto">
-                    <Image
-                      src={image.url}
-                      alt={image.prompt}
-                      width={500}
-                      height={500}
-                      className="w-full h-auto object-cover transition-transform duration-300 group-hover:scale-105"
-                    />
+          {filteredAndSortedImages.map(image =>
+            image.type === 'ad' ? (
+                <div key={image.id} className="break-inside-avoid">
+                    <AdSlot slotId="community-gallery-ad" showAds={!!user?.showAds} />
                 </div>
-                 <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center">
-                    <Maximize className="w-12 h-12 text-white" />
-                 </div>
-              </CardContent>
-              <CardFooter className="p-3 absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/80 to-transparent">
-                 <div className="w-full">
-                    <p className="text-sm text-white/90 truncate font-medium">&ldquo;{image.prompt}&rdquo;</p>
-                    <div className="flex items-center gap-2 mt-1">
-                        <Avatar className="h-5 w-5 border-2 border-primary/50">
-                        <AvatarImage src={image.user?.photoURL} />
-                        <AvatarFallback className="text-xs">{image.user?.displayName?.[0]}</AvatarFallback>
-                        </Avatar>
-                        <span className="text-xs font-medium text-white/80">@{image.user?.username || 'anonymous'}</span>
+            ) : (
+                <Card 
+                  key={image.id} 
+                  className="overflow-hidden break-inside-avoid cursor-pointer group relative"
+                  onClick={() => setSelectedImage(image)}
+                >
+                  <CardContent className="p-0">
+                    <div className="aspect-auto">
+                        <Image
+                          src={image.url}
+                          alt={image.prompt}
+                          width={500}
+                          height={500}
+                          className="w-full h-auto object-cover transition-transform duration-300 group-hover:scale-105"
+                        />
                     </div>
-                 </div>
-              </CardFooter>
-            </Card>
-          ))}
+                     <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center">
+                        <Maximize className="w-12 h-12 text-white" />
+                     </div>
+                  </CardContent>
+                  <CardFooter className="p-3 absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/80 to-transparent">
+                     <div className="w-full">
+                        <p className="text-sm text-white/90 truncate font-medium">&ldquo;{image.prompt}&rdquo;</p>
+                        <div className="flex items-center gap-2 mt-1">
+                            <Avatar className="h-5 w-5 border-2 border-primary/50">
+                            <AvatarImage src={image.user?.photoURL} />
+                            <AvatarFallback className="text-xs">{image.user?.displayName?.[0]}</AvatarFallback>
+                            </Avatar>
+                            <span className="text-xs font-medium text-white/80">@{image.user?.username || 'anonymous'}</span>
+                        </div>
+                     </div>
+                  </CardFooter>
+                </Card>
+            )
+          )}
         </div>
       )}
     </div>
