@@ -4,6 +4,7 @@
 import { firestore, storage } from '@/lib/firebase-admin';
 import { getAuth } from 'firebase-admin/auth';
 import type { GeneratedImage } from '@/lib/types';
+import { subDays, format, startOfDay } from 'date-fns';
 
 export interface AdminUser {
   uid: string;
@@ -155,4 +156,44 @@ export async function getAdminStats(): Promise<{ userCount: number; imageCount: 
         userCount: usersSnapshot.size,
         imageCount: imagesSnapshot.size,
     };
+}
+
+
+export async function getImageGenerationStats(): Promise<{ name: string; total: number }[]> {
+  if (!firestore) throw new Error('Firestore not initialized');
+
+  const days = 7;
+  const endDate = startOfDay(new Date());
+  const startDate = subDays(endDate, days - 1);
+
+  // Create a map to hold counts for each day in the last week
+  const dailyCounts: { [key: string]: number } = {};
+  for (let i = 0; i < days; i++) {
+    const date = format(subDays(endDate, i), 'MMM d');
+    dailyCounts[date] = 0;
+  }
+
+  // Query for images created in the last 7 days
+  const imagesSnapshot = await firestore
+    .collection('images')
+    .where('createdAt', '>=', startDate.toISOString())
+    .get();
+
+  imagesSnapshot.forEach(doc => {
+    const data = doc.data();
+    if (data.createdAt) {
+      const creationDate = startOfDay(new Date(data.createdAt));
+      if (creationDate >= startDate && creationDate <= endDate) {
+        const dateKey = format(creationDate, 'MMM d');
+        if (dateKey in dailyCounts) {
+          dailyCounts[dateKey]++;
+        }
+      }
+    }
+  });
+
+  // Format the data for the chart, sorting by date
+  return Object.entries(dailyCounts)
+    .map(([name, total]) => ({ name, total }))
+    .sort((a, b) => new Date(a.name).getTime() - new Date(b.name).getTime());
 }
