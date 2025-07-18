@@ -44,7 +44,6 @@ const aiToolsLinks = [
 ];
 
 const comingSoonLinks = [
-  { href: '/image-to-image', label: 'Image-to-Image' },
   { href: '/inpainting', label: 'Inpainting Tool' },
 ];
 

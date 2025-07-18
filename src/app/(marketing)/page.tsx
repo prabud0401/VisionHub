@@ -10,7 +10,7 @@ import Partners from '@/components/landing/partners';
 import Testimonials from '@/components/landing/testimonials';
 import Link from 'next/link';
 import { Button } from '@/components/ui/button';
-import { ArrowRight, Brush, Gem, Sparkles, Users } from 'lucide-react';
+import { ArrowRight, Brush, Gem, Sparkles, Users, Image as ImageIcon, Wand2 } from 'lucide-react';
 import ToolsSuite from '@/components/landing/tools-suite';
 import SocialCta from '@/components/landing/social-cta';
 import FeatureHighlight from '@/components/landing/feature-highlight';
@@ -56,7 +56,7 @@ function LandingPage() {
              <FeatureHighlight
                 title="Community Showcase"
                 description="A vibrant space to share your creations, discover what others are making, and connect with fellow artists. Get ready to be inspired."
-                imageUrl="https://placehold.co/1280x720.png"
+                imageUrl="/images/Community Showcase.png"
                 imageHint="A digital art gallery wall showcasing many different styles of AI-generated art. The gallery is clean, modern, and well-lit. People are milling around looking at the art."
                 isLive
                 buttonLink="/community"
@@ -65,20 +65,24 @@ function LandingPage() {
              />
             <FeatureHighlight
                 title="Image-to-Image Transformation"
-                description="Upload an image and transform it with a text prompt into something entirely new. The future of iterative design is on its way."
-                imageUrl="https://placehold.co/1280x720.png"
+                description="Upload an image and transform it with a text prompt into something entirely new. The future of iterative design is here."
+                imageUrl="/images/Image-to-Image Transformation.png"
                 imageHint="A magical transformation effect showing a photo of a real-world object (like a teacup) turning into a fantastical, artistic version of itself. Glowing particles and light trails."
+                isLive
+                buttonLink="/dashboard"
+                buttonText="Try it Now"
+                buttonIcon={<ImageIcon />}
              />
              <FeatureHighlight
                 title="AI Inpainting & Outpainting"
                 description="Edit images with precision. Erase parts of an image and regenerate them with a new prompt, or expand your canvas infinitely. Perfect for making targeted changes."
-                imageUrl="https://placehold.co/1280x720.png"
+                imageUrl="/images/AI Inpainting & Outpainting.png"
                 imageHint="A beautiful landscape photo being expanded. The original photo is in the center, and the AI is generating new scenery on all sides to make the image wider. The new parts blend seamlessly."
              />
             <FeatureHighlight
                 title="AI Video Generation"
                 description="The next frontier of creativity. Our AI video tool will let you create dynamic clips from simple text prompts. The future of content creation is coming."
-                imageUrl="https://placehold.co/1280x720.png"
+                imageUrl="/images/AI Video Generation.png"
                 imageHint="An abstract representation of video creation. A film strip is twisting and turning, with vibrant, colorful galaxies and nebulae visible inside each frame. Symbolizes creating worlds."
              />
             <CtaSection />
