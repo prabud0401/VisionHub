@@ -3,7 +3,7 @@
 
 import { useEffect, useState, useMemo } from 'react';
 import Image from 'next/image';
-import { Loader2, X, Maximize, Bot, Tags, Briefcase, AspectRatio as AspectRatioIcon, Check, CheckCircle, LayoutGrid, Rows, Columns } from 'lucide-react';
+import { Loader2, X, Maximize, Bot, Tags, Briefcase, Crop, Check, CheckCircle, LayoutGrid, Rows, Columns } from 'lucide-react';
 import { Card, CardContent, CardFooter } from '@/components/ui/card';
 import { getCommunityImages } from '@/services/image-service';
 import type { GeneratedImage } from '@/lib/types';
@@ -232,7 +232,7 @@ export default function CommunityPage() {
                             <Badge variant="secondary">{selectedImage.model}</Badge>
                         </div>
                          <div>
-                            <h3 className="font-semibold flex items-center gap-2 mb-2"><AspectRatioIcon /> Aspect Ratio</h3>
+                            <h3 className="font-semibold flex items-center gap-2 mb-2"><Crop /> Aspect Ratio</h3>
                             <Badge variant="outline">{selectedImage.aspectRatio}</Badge>
                         </div>
                         {selectedImage.useCase && selectedImage.useCase !== 'none' && (
