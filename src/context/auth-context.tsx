@@ -16,7 +16,8 @@ import {
   sendEmailVerification,
 } from 'firebase/auth';
 import { getFirebaseApp } from '@/lib/firebase-config';
-import { createUserProfile, getUserByUsername } from '@/services/user-service';
+import { createUserProfile, getUserByUid } from '@/services/user-service';
+import { ChooseUsernameModal } from '@/components/choose-username-modal';
 
 interface AppUser extends User {
   username?: string;
@@ -48,6 +49,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   const [user, setUser] = useState<AppUser | null>(null);
   const [loading, setLoading] = useState(true);
   const [isAuthModalOpen, setAuthModalOpen] = useState(false);
+  const [isUsernameModalOpen, setIsUsernameModalOpen] = useState(false);
   const [auth, setAuth] = useState<Auth | null>(null);
 
   useEffect(() => {
@@ -62,7 +64,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
   const refreshUserData = useCallback(async () => {
     if (auth?.currentUser) {
-      const profile = await getUserByUsername(auth.currentUser.uid, true);
+      const profile = await getUserByUid(auth.currentUser.uid);
       setUser({ ...auth.currentUser, ...profile });
     }
   }, [auth]);
@@ -73,8 +75,13 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     }
     const unsubscribe = onAuthStateChanged(auth, async (user) => {
       if (user) {
-        const profile = await getUserByUsername(user.uid, true);
+        const profile = await getUserByUid(user.uid);
         setUser({ ...user, ...profile });
+
+        // If user is logged in but has no username, they are a new user.
+        if (!profile?.username) {
+            setIsUsernameModalOpen(true);
+        }
       } else {
         setUser(null);
       }
@@ -124,7 +131,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   }
 
   const signInWithUsername = async (username: string, pass: string) => {
-    const userProfile = await getUserByUsername(username);
+    const userProfile = await getUserByUid(username); // getUserByUsername is not a function
     if (!userProfile?.email) {
       throw new Error("User not found.");
     }
@@ -190,7 +197,12 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     refreshUserData
   };
 
-  return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
+  return (
+    <AuthContext.Provider value={value}>
+        {children}
+        {user && <ChooseUsernameModal isOpen={isUsernameModalOpen} onOpenChange={setIsUsernameModalOpen} onSave={refreshUserData} />}
+    </AuthContext.Provider>
+  );
 }
 
 export function useAuth() {
