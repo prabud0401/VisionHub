@@ -5,9 +5,9 @@ import { useState, useEffect, useMemo } from 'react';
 import { useRouter } from 'next/navigation';
 import { useAuth } from '@/context/auth-context';
 import type { GeneratedImage, GeneratedVideo } from '@/lib/types';
-import { PromptGroupCard } from './prompt-group-card';
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from '@/components/ui/dialog';
-import { Button } from './ui/button';
+import { PromptGroupCard } from '@/components/prompt-group-card';
+import { Dialog, DialogContent } from '@/components/ui/dialog';
+import { Button } from '@/components/ui/button';
 import { Download, Loader2, Trash2, Wand2, ArrowLeft, ArrowRight, Grid, Grid3x3, Square, Eye, Share2, CheckCircle, Info, PlusCircle, Link as LinkIcon, Twitter, Facebook, Mail, Users } from 'lucide-react';
 import { getFirestore, collection, query, where, writeBatch, doc, onSnapshot, Unsubscribe, getDocs, limit, getCountFromServer } from 'firebase/firestore';
 import { getFirebaseApp } from '@/lib/firebase-config';
@@ -29,10 +29,10 @@ import { cn } from '@/lib/utils';
 import Image from 'next/image';
 import { shareImageToCommunity } from '@/services/image-service';
 import { useToast } from '@/hooks/use-toast';
-import { Alert, AlertTitle } from './ui/alert';
+import { Alert, AlertTitle } from '@/components/ui/alert';
 import Link from 'next/link';
 import { AdSlot } from '@/lib/ads-config';
-import { Popover, PopoverContent, PopoverTrigger } from './ui/popover';
+import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
 
 
 interface MediaItem extends GeneratedImage {
@@ -220,7 +220,7 @@ export function GalleryClient() {
   const itemsWithAds = useMemo(() => {
     if (!user?.showAds) return paginatedGroups;
 
-    const itemsWithAds = [];
+    const itemsWithAds: (PromptGroup | { type: 'ad'; promptId: string })[] = [];
     for (let i = 0; i < paginatedGroups.length; i++) {
         itemsWithAds.push(paginatedGroups[i]);
         if ((i + 1) % 6 === 0) {
@@ -404,12 +404,15 @@ export function GalleryClient() {
 
 
       <div className={cn("grid gap-4", gridClasses[viewMode])}>
-        {itemsWithAds.map((item: any, index) =>
-          item.type === 'ad' ? (
-            <div key={`ad-${index}`} className="aspect-square">
-               <AdSlot slotId="user-gallery-ad" showAds={!!user?.showAds} />
-            </div>
-          ) : (
+        {itemsWithAds.map((item, index) => {
+          if (item.type === 'ad') {
+            return (
+              <div key={`ad-${index}`} className="aspect-square">
+                 <AdSlot slotId="user-gallery-ad" showAds={!!user?.showAds} />
+              </div>
+            );
+          }
+          return (
             <PromptGroupCard
               key={item.promptId}
               group={item}
@@ -417,8 +420,8 @@ export function GalleryClient() {
               onDelete={() => confirmDeleteGroup(item)}
               onUpgrade={item.type === 'image' ? () => handleUpgradeImage(item.coverImage) : undefined}
             />
-          )
-        )}
+          );
+        })}
       </div>
 
       {totalPages > 1 && (
@@ -457,7 +460,7 @@ export function GalleryClient() {
                 </>
               )}
               <div className="flex-shrink-0 bg-background/80 backdrop-blur-sm p-4 rounded-b-md">
-                 <div className="flex justify-between items-center gap-4">
+                 <div className="flex justify-between items-start gap-4">
                     <div className="flex-1 min-w-0">
                         <p className="text-sm text-muted-foreground truncate" title={selectedMedia.prompt}>
                            &ldquo;{selectedMedia.prompt}&rdquo;
@@ -469,7 +472,7 @@ export function GalleryClient() {
                             <Download className="mr-2 h-4 w-4" /> Download
                         </Button>
                         {selectedMedia.type === 'image' && (
-                            selectedMedia.isShared ? (
+                            (selectedMedia as MediaItem).isShared ? (
                                 <Button variant="outline" size="sm" disabled>
                                     <CheckCircle className="mr-2 h-4 w-4 text-green-500" />
                                     Shared
@@ -509,3 +512,5 @@ export function GalleryClient() {
     </>
   );
 }
+
+    
