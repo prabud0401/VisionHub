@@ -2,7 +2,7 @@
 'use client';
 import Link from 'next/link';
 import Image from 'next/image';
-import { Menu, LayoutDashboard, Gem, User, PlusCircle } from 'lucide-react';
+import { Menu, LayoutDashboard, Gem, User, PlusCircle, Users } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Sheet, SheetContent, SheetTrigger, SheetTitle, SheetDescription } from '@/components/ui/sheet';
 import { useAuth } from '@/context/auth-context';
@@ -25,6 +25,7 @@ import { useRouter } from 'next/navigation';
 import { useState } from 'react';
 
 const mainNavLinks = [
+  { href: '/community', label: 'Community' },
   { href: '/about', label: 'About' },
   { href: '/services', label: 'Services' },
   { href: '/pricing', label: 'Pricing' },
@@ -45,7 +46,6 @@ const aiToolsLinks = [
 const comingSoonLinks = [
   { href: '/image-to-image', label: 'Image-to-Image' },
   { href: '/inpainting', label: 'Inpainting Tool' },
-  { href: '/community', label: 'Community Showcase' },
 ];
 
 export default function Header() {
@@ -127,7 +127,7 @@ export default function Header() {
                                 <DropdownMenuSeparator />
                                 <DropdownMenuLabel className="text-xs text-muted-foreground">Coming Soon</DropdownMenuLabel>
                                 {comingSoonLinks.map(link => (
-                                    <DropdownMenuItem key={link.href} onClick={() => router.push(link.href)}>{link.label}</DropdownMenuItem>
+                                    <DropdownMenuItem key={link.href} onClick={() => router.push(link.href)} disabled>{link.label}</DropdownMenuItem>
                                 ))}
                             </DropdownMenuSubContent>
                         </DropdownMenuPortal>
@@ -207,7 +207,7 @@ export default function Header() {
                                     <DropdownMenuSeparator />
                                     <p className="text-sm text-muted-foreground pt-2">Coming Soon</p>
                                     {comingSoonLinks.map(link => (
-                                        <button key={link.href} onClick={() => handleMobileNav(link.href)} className="text-left transition-colors hover:text-primary text-muted-foreground">{link.label}</button>
+                                        <button key={link.href} onClick={() => handleMobileNav(link.href)} className="text-left transition-colors hover:text-primary text-muted-foreground" disabled>{link.label}</button>
                                     ))}
                                 </nav>
                              </AccordionContent>

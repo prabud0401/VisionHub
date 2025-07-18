@@ -1,3 +1,4 @@
+
 'use client';
 
 import { useState, useEffect, useMemo } from 'react';
@@ -7,8 +8,8 @@ import type { GeneratedImage, GeneratedVideo } from '@/lib/types';
 import { PromptGroupCard } from './prompt-group-card';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from '@/components/ui/dialog';
 import { Button } from './ui/button';
-import { Download, Loader2, Trash2, Wand2, ArrowLeft, ArrowRight, Grid, Grid3x3, Square, Eye } from 'lucide-react';
-import { getFirestore, collection, query, where, writeBatch, doc, onSnapshot, Unsubscribe } from 'firebase/firestore';
+import { Download, Loader2, Trash2, Wand2, ArrowLeft, ArrowRight, Grid, Grid3x3, Square, Eye, Share2, CheckCircle } from 'lucide-react';
+import { getFirestore, collection, query, where, writeBatch, doc, onSnapshot, Unsubscribe, getDocs, limit } from 'firebase/firestore';
 import { getFirebaseApp } from '@/lib/firebase-config';
 import {
   AlertDialog,
@@ -26,9 +27,12 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 import { ToggleGroup, ToggleGroupItem } from '@/components/ui/toggle-group';
 import { cn } from '@/lib/utils';
 import Image from 'next/image';
+import { shareImageToCommunity } from '@/services/image-service';
+import { useToast } from '@/hooks/use-toast';
 
 interface MediaItem extends GeneratedImage {
     type: 'image';
+    isShared?: boolean;
 }
 
 interface VideoItem extends GeneratedVideo {
@@ -60,6 +64,7 @@ export function GalleryClient() {
 
   const { user } = useAuth();
   const router = useRouter();
+  const { toast } = useToast();
   const [, setImageForUpgrade] = useLocalStorage<string | null>('imageForUpgrade', null);
 
 
@@ -84,9 +89,10 @@ export function GalleryClient() {
       const db = getFirestore(firebaseApp);
       let allImages: GeneratedImage[] = [];
       let allVideos: GeneratedVideo[] = [];
+      let sharedImageIds = new Set<string>();
 
       const processAndSetGroups = () => {
-        const imageItems: MediaItem[] = allImages.map(img => ({...img, type: 'image'}));
+        const imageItems: MediaItem[] = allImages.map(img => ({...img, type: 'image', isShared: sharedImageIds.has(img.id)}));
         const videoItems: VideoItem[] = allVideos.map(vid => ({...vid, type: 'video'}));
         const allItems = [...imageItems, ...videoItems];
 
@@ -118,6 +124,12 @@ export function GalleryClient() {
       }
       
       try {
+        // First, fetch all shared images by the user to know which are already shared.
+        const sharedImagesQuery = query(collection(db, 'community'), where('userId', '==', user.uid));
+        const sharedSnapshot = await getDocs(sharedImagesQuery);
+        sharedImageIds = new Set(sharedSnapshot.docs.map(doc => doc.data().originalImageId));
+
+        // Then setup listeners for images and videos
         const imageQuery = query(collection(db, 'images'), where('userId', '==', user.uid));
         const videoQuery = query(collection(db, 'videos'), where('userId', '==', user.uid));
 
@@ -183,6 +195,27 @@ export function GalleryClient() {
 
   const confirmDeleteGroup = (group: PromptGroup) => {
     setGroupToDelete(group);
+  };
+
+  const handleShareImage = async (image: MediaItem) => {
+    if (!user) return;
+    try {
+        await shareImageToCommunity(image, user.uid);
+        toast({
+            title: "Image Shared!",
+            description: "Your creation is now live in the Community Showcase.",
+        });
+        // We need a way to optimistically update the UI or refetch
+        // For now, let's close the dialog and let the snapshot listener handle it
+        setSelectedGroup(null);
+    } catch (error) {
+        toast({
+            variant: "destructive",
+            title: "Sharing Failed",
+            description: "Could not share the image. Please try again.",
+        });
+        console.error("Error sharing image:", error);
+    }
   };
 
   const handleDeleteGroup = async () => {
@@ -324,10 +357,17 @@ export function GalleryClient() {
                               </a>
                            </Button>
                            {item.type === 'image' && (
-                                <Button variant="outline" size="sm" onClick={() => handleUpgradeImage(item.url)}>
-                                    <Wand2 className="mr-2 h-4 w-4" />
-                                    Upgrade
-                                </Button>
+                                item.isShared ? (
+                                    <Button variant="outline" size="sm" disabled>
+                                        <CheckCircle className="mr-2 h-4 w-4 text-green-500" />
+                                        Shared
+                                    </Button>
+                                ) : (
+                                    <Button variant="outline" size="sm" onClick={() => handleShareImage(item as MediaItem)}>
+                                        <Share2 className="mr-2 h-4 w-4" />
+                                        Share
+                                    </Button>
+                                )
                            )}
                         </div>
                     </div>

@@ -10,7 +10,7 @@ import Partners from '@/components/landing/partners';
 import Testimonials from '@/components/landing/testimonials';
 import Link from 'next/link';
 import { Button } from '@/components/ui/button';
-import { ArrowRight, Brush, Gem, Sparkles } from 'lucide-react';
+import { ArrowRight, Brush, Gem, Sparkles, Users } from 'lucide-react';
 import ToolsSuite from '@/components/landing/tools-suite';
 import SocialCta from '@/components/landing/social-cta';
 import FeatureHighlight from '@/components/landing/feature-highlight';
@@ -53,6 +53,16 @@ function LandingPage() {
             <Partners />
             <UseCaseShowcase />
             <ToolsSuite />
+             <FeatureHighlight
+                title="Community Showcase"
+                description="A vibrant space to share your creations, discover what others are making, and connect with fellow artists. Get ready to be inspired."
+                imageUrl="https://www.dignited.com/wp-content/uploads/2023/01/midjourney-community-showcase-1024x591.jpeg"
+                imageHint="art gallery community"
+                isLive
+                buttonLink="/community"
+                buttonText="Explore the Showcase"
+                buttonIcon={<Users />}
+             />
             <FeatureHighlight
                 title="Image-to-Image Transformation"
                 description="Upload an image and transform it with a text prompt into something entirely new. The future of iterative design is on its way."
@@ -64,12 +74,6 @@ function LandingPage() {
                 description="Edit images with precision. Erase parts of an image and regenerate them with a new prompt, or expand your canvas infinitely. Perfect for making targeted changes."
                 imageUrl="https://blog.segmind.com/content/images/2023/08/Untitled-document--1-_pages-to-jpg-0001.jpg"
                 imageHint="photo editing"
-             />
-             <FeatureHighlight
-                title="Community Showcase"
-                description="A vibrant space to share your creations, discover what others are making, and connect with fellow artists. Get ready to be inspired."
-                imageUrl="https://www.dignited.com/wp-content/uploads/2023/01/midjourney-community-showcase-1024x591.jpeg"
-                imageHint="art gallery community"
              />
             <FeatureHighlight
                 title="AI Video Generation"
