@@ -37,15 +37,47 @@ const GooglePayIcon = () => (
     </svg>
 );
 
-// Helper to convert ArrayBuffer to Base64
-function bufferToBase64(buffer: ArrayBuffer) {
-  let binary = '';
-  const bytes = new Uint8Array(buffer);
-  const len = bytes.byteLength;
-  for (let i = 0; i < len; i++) {
-    binary += String.fromCharCode(bytes[i]);
-  }
-  return window.btoa(binary);
+
+// Helper to compress and convert image file to a base64 data URI
+async function compressImage(file: File, quality = 0.8, maxDimension = 1024): Promise<string> {
+    return new Promise((resolve, reject) => {
+        const reader = new FileReader();
+        reader.readAsDataURL(file);
+        reader.onload = (event) => {
+            const img = document.createElement('img');
+            img.src = event.target?.result as string;
+            img.onload = () => {
+                const canvas = document.createElement('canvas');
+                const { width, height } = img;
+                let newWidth = width;
+                let newHeight = height;
+
+                if (width > height) {
+                    if (width > maxDimension) {
+                        newHeight = height * (maxDimension / width);
+                        newWidth = maxDimension;
+                    }
+                } else {
+                    if (height > maxDimension) {
+                        newWidth = width * (maxDimension / height);
+                        newHeight = maxDimension;
+                    }
+                }
+
+                canvas.width = newWidth;
+                canvas.height = newHeight;
+                const ctx = canvas.getContext('2d');
+                if (!ctx) return reject(new Error('Could not get canvas context'));
+                
+                ctx.drawImage(img, 0, 0, newWidth, newHeight);
+                // Convert to JPEG for compression
+                const dataUrl = canvas.toDataURL('image/jpeg', quality);
+                resolve(dataUrl);
+            };
+            img.onerror = reject;
+        };
+        reader.onerror = reject;
+    });
 }
 
 
@@ -96,11 +128,13 @@ export default function BuyCreditsPage() {
     // Existing Bank Transfer Logic
     try {
       if (paymentSlip) {
-        const fileBuffer = await paymentSlip.arrayBuffer();
-        const base64Data = bufferToBase64(fileBuffer);
-        const fileName = `${user.uid}-${Date.now()}-${paymentSlip.name}`;
+        // Compress the image before getting its data
+        const compressedDataUrl = await compressImage(paymentSlip);
+        const base64Data = compressedDataUrl.split(',')[1];
+        const fileName = `${user.uid}-${Date.now()}-compressed.jpg`;
+        const mimeType = 'image/jpeg';
 
-        const slipUrl = await uploadPaymentSlip(base64Data, fileName, paymentSlip.type);
+        const slipUrl = await uploadPaymentSlip(base64Data, fileName, mimeType);
         
         const newReferenceId = `BT-${Date.now().toString().slice(-8)}`;
         
