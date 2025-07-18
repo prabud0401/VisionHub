@@ -9,22 +9,22 @@ const tools = [
   {
     title: 'Text-to-Image Generation',
     description: 'Transform your words into breathtaking visuals.',
-    image: 'https://firebasestorage.googleapis.com/v0/b/visionhub-ai-s813r.firebasestorage.app/o/generated-images%2F2ccd4f85-7fa4-468d-92ac-e80e41af5a39.png?alt=media',
-    dataAiHint: 'abstract art colorful',
+    image: '/images/tool-text-to-image.png',
+    dataAiHint: 'A beautiful, colorful abstract painting with swirling colors and dynamic shapes. Represents pure creativity. Digital art.',
     link: '/services'
   },
   {
     title: 'Image Upgrade Suite',
     description: 'Upscale, outpaint, and remove backgrounds with ease.',
-    image: 'https://firebasestorage.googleapis.com/v0/b/visionhub-ai-s813r.firebasestorage.app/o/generated-images%2F5dab8967-a114-4018-ae3e-adba8aa78de1.png?alt=media',
-    dataAiHint: 'photo editing tools',
+    image: '/images/tool-image-upgrade.png',
+    dataAiHint: 'An image of a magnifying glass over a photograph, enhancing the detail and showing pixels becoming sharper. Represents upscaling and editing.',
     link: '/services'
   },
   {
     title: 'Prompt Enhancer',
     description: 'Let our AI perfect your prompts for superior results.',
-    image: 'https://firebasestorage.googleapis.com/v0/b/visionhub-ai-s813r.firebasestorage.app/o/generated-images%2Fbf6ab35f-9f35-4c21-a6e7-8dd307a5c82b.png?alt=media',
-    dataAiHint: 'glowing brain idea',
+    image: '/images/tool-prompt-enhancer.png',
+    dataAiHint: 'A glowing brain made of interconnected light particles, with ideas and words flowing from it. Represents intelligence and prompt engineering.',
     link: '/services'
   }
 ];

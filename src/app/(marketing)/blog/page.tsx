@@ -23,7 +23,7 @@ export default function BlogPage() {
         >
             <section id="announcing-v1">
                 <div className="relative w-full h-80 rounded-lg overflow-hidden my-8">
-                    <Image src="https://firebasestorage.googleapis.com/v0/b/visionhub-ai-s813r.firebasestorage.app/o/generated-images%2F6d29a9de-8324-4835-982c-03e7c729d641.png?alt=media" alt="Abstract AI art" layout="fill" objectFit="cover" data-ai-hint="abstract technology" />
+                    <Image src="/images/blog-announcement.png" alt="Abstract AI art" layout="fill" objectFit="cover" data-ai-hint="Abstract technology background, glowing nodes and connections on a dark blue canvas, representing a network of ideas and innovation. Digital art." />
                 </div>
                 <h2>Announcing VisionHub AI v1.0</h2>
                 <p className="text-sm text-muted-foreground mb-4">Posted on {new Date().toLocaleDateString()}</p>
@@ -33,7 +33,7 @@ export default function BlogPage() {
             
             <section id="prompt-engineering-guide">
                 <div className="relative w-full h-80 rounded-lg overflow-hidden my-8">
-                     <Image src="https://firebasestorage.googleapis.com/v0/b/visionhub-ai-s813r.firebasestorage.app/o/generated-images%2Fbc9bc6be-11b4-4125-bb38-668b9539b00c.png?alt=media" alt="AI prompt creation" layout="fill" objectFit="cover" data-ai-hint="code terminal" />
+                     <Image src="/images/blog-prompt-guide.png" alt="AI prompt creation" layout="fill" objectFit="cover" data-ai-hint="An image of a glowing computer terminal with lines of code and text, symbolizing the creation of an AI prompt. The text on screen should be slightly blurred but artistic. Dark, high-tech theme." />
                 </div>
                 <h2>A Beginner's Guide to Prompt Engineering</h2>
                 <p className="text-sm text-muted-foreground mb-4">Posted on {new Date(Date.now() - 86400000 * 3).toLocaleDateString()}</p>
@@ -43,7 +43,7 @@ export default function BlogPage() {
 
             <section id="future-of-ai">
                 <div className="relative w-full h-80 rounded-lg overflow-hidden my-8">
-                     <Image src="https://firebasestorage.googleapis.com/v0/b/visionhub-ai-s813r.firebasestorage.app/o/generated-images%2Fbf6ab35f-9f35-4c21-a6e7-8dd307a5c82b.png?alt=media" alt="Futuristic city" layout="fill" objectFit="cover" data-ai-hint="futuristic city" />
+                     <Image src="/images/blog-future-ai.png" alt="Futuristic city" layout="fill" objectFit="cover" data-ai-hint="A breathtaking, wide-angle shot of a futuristic city with sleek, organic architecture and flying vehicles. The sky is a vibrant mix of sunset colors. Digital art, cinematic." />
                 </div>
                 <h2>The Future of Generative AI</h2>
                 <p className="text-sm text-muted-foreground mb-4">Posted on {new Date(Date.now() - 86400000 * 7).toLocaleDateString()}</p>

@@ -33,7 +33,7 @@ export default function TutorialsPage() {
                     <li><strong>Generate:</strong> Click the "Generate Images" button and watch the AI bring your vision to life! Your image will appear in the results panel.</li>
                 </ol>
                 <div className="relative w-full h-80 rounded-lg overflow-hidden my-8">
-                    <Image src="https://firebasestorage.googleapis.com/v0/b/visionhub-ai-s813r.firebasestorage.app/o/generated-images%2F76b739cd-ca34-4f74-96fe-b7ab3b3345f3.png?alt=media" alt="Dashboard UI" layout="fill" objectFit="cover" data-ai-hint="dashboard computer" />
+                    <Image src="/images/tutorial-dashboard.png" alt="Dashboard UI" layout="fill" objectFit="cover" data-ai-hint="A clean, modern computer dashboard UI for an AI application. It should show a prompt area, settings, and a gallery of generated images. Dark mode. Screenshot aesthetic." />
                 </div>
             </section>
             

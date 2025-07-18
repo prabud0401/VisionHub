@@ -16,10 +16,10 @@ export const metadata: Metadata = {
     siteName: 'VisionHub',
     images: [
       {
-        url: 'https://firebasestorage.googleapis.com/v0/b/visionhub-ai-s813r.firebasestorage.app/o/generated-images%2Fbc9bc6be-11b4-4125-bb38-668b9539b00c.png?alt=media', // Replace with a good OG image URL
+        url: '/images/og-image.png',
         width: 1200,
         height: 630,
-        alt: 'AI generated artwork of a woman\'s portrait',
+        alt: 'AI generated artwork showing a vibrant, abstract visual',
       },
     ],
     locale: 'en_US',
@@ -29,7 +29,7 @@ export const metadata: Metadata = {
     card: 'summary_large_image',
     title: 'VisionHub | AI Image & Video Generation',
     description: 'The ultimate AI toolkit for creators. Generate stunning images, videos, and more from text prompts.',
-    images: ['https://firebasestorage.googleapis.com/v0/b/visionhub-ai-s813r.firebasestorage.app/o/generated-images%2Fbc9bc6be-11b4-4125-bb38-668b9539b00c.png?alt=media'], // Replace with a good OG image URL
+    images: ['/images/og-image.png'],
   },
 }
 

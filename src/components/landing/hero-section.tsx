@@ -30,7 +30,7 @@ export default function HeroSection() {
       id="home"
       className="relative h-screen w-full flex items-center justify-center text-white bg-cover bg-center bg-no-repeat"
       style={{
-        backgroundImage: "url('https://static.vecteezy.com/system/resources/previews/021/171/652/large_2x/colorful-abstract-wallpaper-modern-background-ai-generated-free-photo.jpg')"
+        backgroundImage: "url('/images/hero-background.png')"
       }}
     >
       <div className="absolute inset-0 bg-gradient-to-t from-background via-background/80 to-transparent" />

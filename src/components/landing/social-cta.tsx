@@ -14,7 +14,7 @@ export default function SocialCta() {
                     <Card className="bg-card/90 backdrop-blur-sm overflow-hidden relative">
                          <div
                             className="absolute inset-0 bg-cover bg-center opacity-10"
-                            style={{ backgroundImage: "url('https://static.vecteezy.com/system/resources/previews/021/171/659/large_2x/colorful-abstract-wallpaper-modern-background-ai-generated-free-photo.jpg')" }}
+                            style={{ backgroundImage: "url('/images/cta-background.png')" }}
                          />
                         <div className="absolute inset-0 bg-background/50" />
                         <CardContent className="p-0 relative">
@@ -41,9 +41,9 @@ export default function SocialCta() {
                                 </div>
                                 <div className="relative h-64 md:h-full w-full">
                                     <Image
-                                        src="https://firebasestorage.googleapis.com/v0/b/visionhub-ai-s813r.firebasestorage.app/o/generated-images%2F3859edeb-c27b-4a27-bc8b-b78405da06e5.png?alt=media"
+                                        src="/images/social-cta-image.png"
                                         alt="A vibrant community of creators"
-                                        data-ai-hint="community abstract art"
+                                        data-ai-hint="An abstract artwork representing a connected community. Many colorful, glowing strands of light weave together into a beautiful, complex pattern. Symbolizes connection and creativity."
                                         fill
                                         className="object-cover"
                                     />

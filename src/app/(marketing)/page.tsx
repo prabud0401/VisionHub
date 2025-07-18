@@ -56,8 +56,8 @@ function LandingPage() {
              <FeatureHighlight
                 title="Community Showcase"
                 description="A vibrant space to share your creations, discover what others are making, and connect with fellow artists. Get ready to be inspired."
-                imageUrl="https://www.dignited.com/wp-content/uploads/2023/01/midjourney-community-showcase-1024x591.jpeg"
-                imageHint="art gallery community"
+                imageUrl="/images/feature-community.jpeg"
+                imageHint="A digital art gallery wall showcasing many different styles of AI-generated art. The gallery is clean, modern, and well-lit. People are milling around looking at the art."
                 isLive
                 buttonLink="/community"
                 buttonText="Explore the Showcase"
@@ -66,20 +66,20 @@ function LandingPage() {
             <FeatureHighlight
                 title="Image-to-Image Transformation"
                 description="Upload an image and transform it with a text prompt into something entirely new. The future of iterative design is on its way."
-                imageUrl="https://content-management-files.canva.com/cdn-cgi/image/f=auto,q=70/0a2c17ca-80f9-4240-b869-02980bf87112/magic-photo_promo-showcase_012x.png"
-                imageHint="robot dog future"
+                imageUrl="/images/feature-image-to-image.png"
+                imageHint="A magical transformation effect showing a photo of a real-world object (like a teacup) turning into a fantastical, artistic version of itself. Glowing particles and light trails."
              />
              <FeatureHighlight
                 title="AI Inpainting & Outpainting"
                 description="Edit images with precision. Erase parts of an image and regenerate them with a new prompt, or expand your canvas infinitely. Perfect for making targeted changes."
-                imageUrl="https://blog.segmind.com/content/images/2023/08/Untitled-document--1-_pages-to-jpg-0001.jpg"
-                imageHint="photo editing"
+                imageUrl="/images/feature-inpainting.jpg"
+                imageHint="A beautiful landscape photo being expanded. The original photo is in the center, and the AI is generating new scenery on all sides to make the image wider. The new parts blend seamlessly."
              />
             <FeatureHighlight
                 title="AI Video Generation"
                 description="The next frontier of creativity. Our AI video tool will let you create dynamic clips from simple text prompts. The future of content creation is coming."
-                imageUrl="https://blogs-cdn.imagine.art/feature_image_0ddefd1491.png"
-                imageHint="movie film"
+                imageUrl="/images/feature-video.png"
+                imageHint="An abstract representation of video creation. A film strip is twisting and turning, with vibrant, colorful galaxies and nebulae visible inside each frame. Symbolizes creating worlds."
              />
             <CtaSection />
             <Testimonials />

@@ -8,12 +8,6 @@ export const metadata: Metadata = {
   description: 'Learn about the mission, vision, and team behind VisionHub AI.',
 };
 
-const images = {
-  main: "https://static.vecteezy.com/system/resources/previews/021/171/659/large_2x/colorful-abstract-wallpaper-modern-background-ai-generated-free-photo.jpg",
-  mission: "https://firebasestorage.googleapis.com/v0/b/visionhub-ai-s813r.firebasestorage.app/o/generated-images%2F6e8b8d45-91cc-4c58-afa3-0794a536b89d.png?alt=media",
-  team: "https://firebasestorage.googleapis.com/v0/b/visionhub-ai-s813r.firebasestorage.app/o/generated-images%2Fe6b176e0-fd43-4c40-a798-70e3ff23a025.png?alt=media",
-}
-
 export default function AboutPage() {
   return (
     <div className="bg-background text-foreground">
@@ -29,11 +23,11 @@ export default function AboutPage() {
 
         <div className="relative w-full h-96 rounded-lg overflow-hidden mb-20 shadow-2xl shadow-primary/20">
           <Image
-            src={images.main}
+            src="/images/about-hero.png"
             alt="AI generated art showcasing creativity"
             layout="fill"
             objectFit="cover"
-            data-ai-hint="team collaboration"
+            data-ai-hint="A vibrant, colorful abstract wallpaper representing the explosion of creativity and ideas. Swirls of purple, blue, and orange light. Modern, dynamic, and full of energy."
           />
           <div className="absolute inset-0 bg-gradient-to-t from-background via-transparent to-transparent" />
         </div>
@@ -48,8 +42,8 @@ export default function AboutPage() {
           <div className="flex justify-center">
             <div className="relative w-80 h-80 rounded-lg overflow-hidden shadow-xl">
                  <Image
-                    src={images.mission}
-                    data-ai-hint="abstract goal target"
+                    src="/images/about-mission.png"
+                    data-ai-hint="A glowing, abstract representation of a target or goal. Neon blue and purple rings converging on a bright central point, symbolizing focus and mission. Dark background."
                     alt="Abstract representation of a target"
                     layout="fill"
                     objectFit="cover"
@@ -62,8 +56,8 @@ export default function AboutPage() {
            <div className="flex justify-center md:order-2">
              <div className="relative w-80 h-80 rounded-lg overflow-hidden shadow-xl">
                  <Image
-                    src={images.team}
-                    data-ai-hint="diverse team technology"
+                    src="/images/about-team.png"
+                    data-ai-hint="An abstract image representing a diverse team working with technology. Silhouettes of people made of glowing digital particles, collaborating around a central data sphere. Teamwork and innovation."
                     alt="Abstract representation of a diverse team"
                     layout="fill"
                     objectFit="cover"

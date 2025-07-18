@@ -80,7 +80,7 @@ export default function ContactPage() {
                     Sri Lanka
                 </address>
                  <div className="relative w-full h-80 rounded-lg overflow-hidden my-8">
-                     <Image src="https://firebasestorage.googleapis.com/v0/b/visionhub-ai-s813r.firebasestorage.app/o/generated-images%2F6e8b8d45-91cc-4c58-afa3-0794a536b89d.png?alt=media" alt="Map of our location" layout="fill" objectFit="cover" data-ai-hint="office building" />
+                     <Image src="/images/contact-location.png" alt="Map of our location" layout="fill" objectFit="cover" data-ai-hint="A modern, minimalist office building with lots of glass windows, surrounded by lush green trees. Bright, sunny day. Architectural photography." />
                 </div>
             </section>
         </DocPageLayout>
