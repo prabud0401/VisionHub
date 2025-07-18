@@ -47,15 +47,7 @@ const partners = [
         name: "Midjourney",
         href: "https://www.midjourney.com/",
         component: (
-             <div className="flex items-center gap-3">
-                <div className="relative h-10 w-10">
-                    <Image
-                    src="https://companieslogo.com/img/orig/midjourney.D-733962ee.png?t=1720244494"
-                    alt="Midjourney Icon"
-                    fill
-                    className="object-contain invert"
-                    />
-                </div>
+             <div className="flex items-center">
                 <span className="text-3xl font-bold">Midjourney</span>
             </div>
         )
