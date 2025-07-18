@@ -50,7 +50,7 @@ export default function Footer() {
       </div>
        <div className="container mx-auto mt-12 pt-8 border-t border-border/40 text-center">
          <p className="text-sm text-muted-foreground">
-           &copy; {new Date().getFullYear()} VisionHub AI. All rights reserved.
+           &copy; 2025 VisionHub. All rights reserved.
          </p>
        </div>
     </footer>
