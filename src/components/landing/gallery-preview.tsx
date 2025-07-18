@@ -1,4 +1,3 @@
-
 'use client';
 import Image from 'next/image';
 
@@ -23,6 +22,15 @@ const galleryImageUrls = [
 
 const galleryImages = galleryImageUrls.map(url => ({ src: url }));
 
+// Fisher-Yates shuffle algorithm
+const shuffleArray = (array: typeof galleryImages) => {
+  const newArray = [...array];
+  for (let i = newArray.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [newArray[i], newArray[j]] = [newArray[j], newArray[i]];
+  }
+  return newArray;
+};
 
 const MarqueeRow = ({ images, reverse = false }: { images: typeof galleryImages, reverse?: boolean }) => (
   <div className="flex w-max items-center">
@@ -56,6 +64,10 @@ const MarqueeRow = ({ images, reverse = false }: { images: typeof galleryImages,
 );
 
 export default function GalleryPreview() {
+  const shuffledRow1 = shuffleArray(galleryImages);
+  const shuffledRow2 = shuffleArray(galleryImages);
+  const shuffledRow3 = shuffleArray(galleryImages);
+  
   return (
     <section id="gallery" className="py-20 bg-transparent overflow-hidden">
       <div className="text-center mb-12">
@@ -63,9 +75,9 @@ export default function GalleryPreview() {
         <p className="mt-4 text-lg text-muted-foreground">Get inspired by what others are creating.</p>
       </div>
       <div className="space-y-4">
-        <MarqueeRow images={galleryImages} />
-        <MarqueeRow images={[...galleryImages].reverse()} reverse />
-        <MarqueeRow images={galleryImages.slice(2).concat(galleryImages.slice(0, 2))} />
+        <MarqueeRow images={shuffledRow1} />
+        <MarqueeRow images={shuffledRow2} reverse />
+        <MarqueeRow images={shuffledRow3} />
       </div>
     </section>
   );
