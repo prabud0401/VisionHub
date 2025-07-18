@@ -32,13 +32,13 @@ const CustomPlanBuilder = ({ isLKR, billing, onChoosePlan }: { isLKR: boolean, b
     const [hasApiAccess, setHasApiAccess] = useState(false);
     const [price, setPrice] = useState(0);
 
-    const priceConfig = {
+    const priceConfig = useMemo(() => ({
         creditBase: isLKR ? 0.8 : 0.01,
         adFreeMultiplier: 1.2,
         highQualityMultiplier: 1.5,
         apiAccessMultiplier: 2.0,
         annualDiscount: 0.8,
-    };
+    }), [isLKR]);
 
     useEffect(() => {
         let calculatedPrice = credits * priceConfig.creditBase;
@@ -48,7 +48,7 @@ const CustomPlanBuilder = ({ isLKR, billing, onChoosePlan }: { isLKR: boolean, b
         if (billing === 'annually') calculatedPrice *= priceConfig.annualDiscount;
         
         setPrice(parseFloat(calculatedPrice.toFixed(2)));
-    }, [credits, isAdFree, isHighQuality, hasApiAccess, billing, isLKR, priceConfig]);
+    }, [credits, isAdFree, isHighQuality, hasApiAccess, billing, priceConfig]);
 
     const handlePurchase = () => {
         const customPlan = {
@@ -153,7 +153,7 @@ export function PricingClient() {
       setAuthModalOpen(true);
       return;
     }
-    const finalPrice = plan.price || (isLKR ? `LKR ${plan.lkrPrice}` : plan.price);
+    const finalPrice = isLKR ? `LKR ${plan.lkrPrice}` : plan.price;
     const planDetails = {
       ...plan,
       price: finalPrice, 

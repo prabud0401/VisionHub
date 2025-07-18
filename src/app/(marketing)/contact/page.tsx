@@ -64,23 +64,23 @@ export default function ContactPage() {
                 <h2>Other Ways to Reach Us</h2>
                 <p>If you prefer other methods of communication, here are a few options:</p>
                 <ul className="list-disc list-inside space-y-2 my-4">
-                    <li><strong>Support:</strong> For technical issues or questions about using the platform, please email us at <a href="mailto:support@visionhub.ai">support@visionhub.ai</a>.</li>
-                    <li><strong>Sales:</strong> For questions about enterprise plans or high-volume API usage, please contact <a href="mailto:sales@visionhub.ai">sales@visionhub.ai</a>.</li>
+                    <li><strong>Support Email:</strong> For technical issues or questions, please email us at <a href="mailto:prabud0401@gmail.com">prabud0401@gmail.com</a>.</li>
+                    <li><strong>Phone:</strong> You can reach us at <a href="tel:+94760704491">+94760704491</a> for urgent inquiries.</li>
                     <li><strong>Social Media:</strong> You can also reach out to us on our social media channels. Find the links in our website footer.</li>
                 </ul>
             </section>
 
             <section id="our-location">
                 <h2>Our Location</h2>
-                <p>While we are a remote-first company, our main office is located in the heart of the tech world.</p>
+                <p>While we are a remote-first company, our main office is located in Sri Lanka.</p>
                 <address className="not-italic my-4 p-4 border-l-4">
-                    VisionHub AI Headquarters<br />
-                    123 Innovation Drive<br />
-                    San Francisco, CA 94105<br />
-                    United States
+                    VisionHub AI<br />
+                    No 15, Amherst<br />
+                    Udapussellawa, Nuwara Eliya<br />
+                    Sri Lanka
                 </address>
                  <div className="relative w-full h-80 rounded-lg overflow-hidden my-8">
-                     <Image src="https://placehold.co/1200x400.png" alt="Map of San Francisco" layout="fill" objectFit="cover" data-ai-hint="city map" />
+                     <Image src="https://firebasestorage.googleapis.com/v0/b/visionhub-ai-s813r.firebasestorage.app/o/generated-images%2F6e8b8d45-91cc-4c58-afa3-0794a536b89d.png?alt=media" alt="Map of our location" layout="fill" objectFit="cover" data-ai-hint="office building" />
                 </div>
             </section>
         </DocPageLayout>
