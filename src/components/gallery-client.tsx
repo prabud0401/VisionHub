@@ -10,7 +10,7 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } f
 import { Button } from './ui/button';
 import { Download, Loader2, Trash2, Wand2, ArrowLeft, ArrowRight, Grid, Grid3x3, Square, Eye, Share2, CheckCircle, Info, PlusCircle, Link as LinkIcon, Twitter, Facebook, Mail, Users } from 'lucide-react';
 import { getFirestore, collection, query, where, writeBatch, doc, onSnapshot, Unsubscribe, getDocs, limit, getCountFromServer } from 'firebase/firestore';
-import { firebaseApp } from '@/lib/firebase-config';
+import { getFirebaseApp } from '@/lib/firebase-config';
 import {
   AlertDialog,
   AlertDialogAction,
@@ -31,7 +31,7 @@ import { shareImageToCommunity } from '@/services/image-service';
 import { useToast } from '@/hooks/use-toast';
 import { Alert, AlertTitle } from './ui/alert';
 import Link from 'next/link';
-import { AdSlot, adSlots } from '@/lib/ads-config';
+import { AdSlot } from '@/lib/ads-config';
 import { Popover, PopoverContent, PopoverTrigger } from './ui/popover';
 
 
@@ -108,90 +108,95 @@ export function GalleryClient() {
 
 
   useEffect(() => {
-    if (!user || !firebaseApp) {
-        setIsLoading(false);
-        return;
-    }
-
+    let isMounted = true;
     let imageUnsubscribe: Unsubscribe = () => {};
     let videoUnsubscribe: Unsubscribe = () => {};
 
     const setupListeners = async () => {
-      setIsLoading(true);
-
-      const db = getFirestore(firebaseApp);
-      let allImages: GeneratedImage[] = [];
-      let allVideos: GeneratedVideo[] = [];
-      let sharedImageIds = new Set<string>();
-      
-      const imageColl = collection(db, 'images');
-      const imageQuery = query(imageColl, where('userId', '==', user.uid));
-      const countSnapshot = await getCountFromServer(imageQuery);
-      setImageCount(countSnapshot.data().count);
-
-
-      const processAndSetGroups = () => {
-        const imageItems: MediaItem[] = allImages.map(img => ({...img, type: 'image', isShared: sharedImageIds.has(img.id)}));
-        const videoItems: VideoItem[] = allVideos.map(vid => ({...vid, type: 'video'}));
-        const allItems = [...imageItems, ...videoItems];
-
-        const groups: { [key: string]: PromptGroup } = {};
-
-        allItems.forEach(item => {
-            const promptId = item.promptId || item.prompt;
-            if (!groups[promptId]) {
-              groups[promptId] = {
-                promptId: promptId,
-                prompt: item.prompt,
-                items: [],
-                createdAt: item.createdAt,
-                coverImage: item.type === 'image' ? item.url : 'https://placehold.co/400x400.png', // Placeholder for video cover
-                type: item.type,
-              };
-            }
-            groups[promptId].items.push(item);
-            if(item.type === 'image') {
-               groups[promptId].coverImage = item.url;
-            }
-            if (new Date(item.createdAt) > new Date(groups[promptId].createdAt)) {
-              groups[promptId].createdAt = item.createdAt;
-            }
-        });
+        const firebaseApp = await getFirebaseApp();
+        if (!user || !firebaseApp || !isMounted) {
+            setIsLoading(false);
+            return;
+        }
         
-        setAllPromptGroups(Object.values(groups));
-        setIsLoading(false);
-      }
-      
-      try {
-        // First, fetch all shared images by the user to know which are already shared.
-        const sharedImagesQuery = query(collection(db, 'community'), where('userId', '==', user.uid));
-        const sharedSnapshot = await getDocs(sharedImagesQuery);
-        sharedImageIds = new Set(sharedSnapshot.docs.map(doc => doc.data().originalImageId));
+        setIsLoading(true);
 
-        // Then setup listeners for images and videos
+        const db = getFirestore(firebaseApp);
+        let allImages: GeneratedImage[] = [];
+        let allVideos: GeneratedVideo[] = [];
+        let sharedImageIds = new Set<string>();
         
-        const videoQuery = query(collection(db, 'videos'), where('userId', '==', user.uid));
+        const imageColl = collection(db, 'images');
+        const imageQuery = query(imageColl, where('userId', '==', user.uid));
+        
+        try {
+            const countSnapshot = await getCountFromServer(imageQuery);
+            if (isMounted) setImageCount(countSnapshot.data().count);
+        } catch(e) { console.error("Could not get image count", e)}
 
-        imageUnsubscribe = onSnapshot(imageQuery, (snapshot) => {
-            allImages = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() } as GeneratedImage));
-            setImageCount(snapshot.size); // Update count on change
-            processAndSetGroups();
-        }, (error) => console.error("Error with image snapshot listener: ", error));
 
-        videoUnsubscribe = onSnapshot(videoQuery, (snapshot) => {
-            allVideos = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() } as GeneratedVideo));
-            processAndSetGroups();
-        }, (error) => console.error("Error with video snapshot listener: ", error));
+        const processAndSetGroups = () => {
+            if (!isMounted) return;
 
-      } catch (error) {
-        console.error("Error setting up snapshot listeners: ", error);
-        setIsLoading(false);
-      }
+            const imageItems: MediaItem[] = allImages.map(img => ({...img, type: 'image', isShared: sharedImageIds.has(img.id)}));
+            const videoItems: VideoItem[] = allVideos.map(vid => ({...vid, type: 'video'}));
+            const allItems = [...imageItems, ...videoItems];
+
+            const groups: { [key: string]: PromptGroup } = {};
+
+            allItems.forEach(item => {
+                const promptId = item.promptId || item.prompt;
+                if (!groups[promptId]) {
+                groups[promptId] = {
+                    promptId: promptId,
+                    prompt: item.prompt,
+                    items: [],
+                    createdAt: item.createdAt,
+                    coverImage: item.type === 'image' ? item.url : 'https://placehold.co/400x400.png', // Placeholder for video cover
+                    type: item.type,
+                };
+                }
+                groups[promptId].items.push(item);
+                if(item.type === 'image') {
+                groups[promptId].coverImage = item.url;
+                }
+                if (new Date(item.createdAt) > new Date(groups[promptId].createdAt)) {
+                groups[promptId].createdAt = item.createdAt;
+                }
+            });
+            
+            setAllPromptGroups(Object.values(groups));
+            setIsLoading(false);
+        }
+        
+        try {
+            const sharedImagesQuery = query(collection(db, 'community'), where('userId', '==', user.uid));
+            const sharedSnapshot = await getDocs(sharedImagesQuery);
+            sharedImageIds = new Set(sharedSnapshot.docs.map(doc => doc.data().originalImageId));
+
+            const videoQuery = query(collection(db, 'videos'), where('userId', '==', user.uid));
+
+            imageUnsubscribe = onSnapshot(imageQuery, (snapshot) => {
+                allImages = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() } as GeneratedImage));
+                if (isMounted) setImageCount(snapshot.size);
+                processAndSetGroups();
+            }, (error) => console.error("Error with image snapshot listener: ", error));
+
+            videoUnsubscribe = onSnapshot(videoQuery, (snapshot) => {
+                allVideos = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() } as GeneratedVideo));
+                processAndSetGroups();
+            }, (error) => console.error("Error with video snapshot listener: ", error));
+
+        } catch (error) {
+            console.error("Error setting up snapshot listeners: ", error);
+            setIsLoading(false);
+        }
     };
     
     setupListeners();
     
     return () => {
+        isMounted = false;
         imageUnsubscribe();
         videoUnsubscribe();
     };
@@ -212,16 +217,14 @@ export function GalleryClient() {
     currentPage * ITEMS_PER_PAGE
   );
   
-  // Intersperse ads into the gallery view
   const itemsWithAds = useMemo(() => {
     if (!user?.showAds) return paginatedGroups;
 
     const itemsWithAds = [];
     for (let i = 0; i < paginatedGroups.length; i++) {
         itemsWithAds.push(paginatedGroups[i]);
-        // Insert an ad every 6 items
         if ((i + 1) % 6 === 0) {
-            itemsWithAds.push({ type: 'ad' });
+            itemsWithAds.push({ type: 'ad', promptId: `ad-${i}` });
         }
     }
     return itemsWithAds;
@@ -247,7 +250,7 @@ export function GalleryClient() {
 
   const handleSelectGroup = (group: PromptGroup) => {
     setSelectedGroup(group);
-    setSelectedMediaIndex(0); // Start at the first item
+    setSelectedMediaIndex(0);
   };
 
   const confirmDeleteGroup = (group: PromptGroup) => {
@@ -262,7 +265,6 @@ export function GalleryClient() {
             title: "Image Shared!",
             description: "Your creation is now live in the Community Showcase.",
         });
-        // This will automatically update via the snapshot listener
     } catch (error) {
         toast({
             variant: "destructive",
@@ -293,6 +295,7 @@ export function GalleryClient() {
 
 
   const handleDeleteGroup = async () => {
+    const firebaseApp = await getFirebaseApp();
     if (!groupToDelete || !firebaseApp) return;
     
     try {
@@ -345,6 +348,7 @@ export function GalleryClient() {
       <div className="text-center py-20">
         <h2 className="text-2xl font-semibold">Your gallery is empty</h2>
         <p className="text-muted-foreground mt-2">Start creating images or videos on the dashboard to see them here.</p>
+        <Button asChild className="mt-4"><Link href="/dashboard">Start Creating</Link></Button>
       </div>
     );
   }
@@ -400,7 +404,7 @@ export function GalleryClient() {
 
 
       <div className={cn("grid gap-4", gridClasses[viewMode])}>
-        {itemsWithAds.map((item, index) =>
+        {itemsWithAds.map((item: any, index) =>
           item.type === 'ad' ? (
             <div key={`ad-${index}`} className="aspect-square">
                <AdSlot slotId="user-gallery-ad" showAds={!!user?.showAds} />
@@ -442,18 +446,24 @@ export function GalleryClient() {
                   <video src={selectedMedia.url} controls autoPlay className="w-full h-full object-contain rounded-md bg-black" />
                 )}
               </div>
-              <div className="absolute top-1/2 left-2 -translate-y-1/2 z-10">
-                <Button variant="outline" size="icon" onClick={handlePrevMedia}><ArrowLeft className="h-4 w-4" /></Button>
-              </div>
-              <div className="absolute top-1/2 right-2 -translate-y-1/2 z-10">
-                <Button variant="outline" size="icon" onClick={handleNextMedia}><ArrowRight className="h-4 w-4" /></Button>
-              </div>
+              {selectedGroup.items.length > 1 && (
+                <>
+                <div className="absolute top-1/2 left-2 -translate-y-1/2 z-10">
+                    <Button variant="outline" size="icon" onClick={handlePrevMedia}><ArrowLeft className="h-4 w-4" /></Button>
+                </div>
+                <div className="absolute top-1/2 right-2 -translate-y-1/2 z-10">
+                    <Button variant="outline" size="icon" onClick={handleNextMedia}><ArrowRight className="h-4 w-4" /></Button>
+                </div>
+                </>
+              )}
               <div className="flex-shrink-0 bg-background/80 backdrop-blur-sm p-4 rounded-b-md">
-                 <div className="flex justify-between items-center">
-                    <div>
-                        <p className="text-sm text-muted-foreground truncate">{selectedMedia.prompt}</p>
+                 <div className="flex justify-between items-center gap-4">
+                    <div className="flex-1 min-w-0">
+                        <p className="text-sm text-muted-foreground truncate" title={selectedMedia.prompt}>
+                           &ldquo;{selectedMedia.prompt}&rdquo;
+                        </p>
                     </div>
-                    <div className="flex items-center gap-2">
+                    <div className="flex-shrink-0 flex items-center gap-2">
                         <SocialSharePopover item={selectedMedia} />
                         <Button variant="secondary" size="sm" onClick={() => handleDownload(selectedMedia)}>
                             <Download className="mr-2 h-4 w-4" /> Download
@@ -486,6 +496,7 @@ export function GalleryClient() {
             <AlertDialogDescription>
               This action cannot be undone. This will permanently delete all {groupToDelete?.items.length} items
               associated with this prompt.
+            </CRLF>
             </AlertDialogDescription>
           </AlertDialogHeader>
           <AlertDialogFooter>
