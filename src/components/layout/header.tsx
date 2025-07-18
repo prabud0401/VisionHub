@@ -21,8 +21,9 @@ import {
 } from '@/components/ui/dropdown-menu';
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '@/components/ui/accordion';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
-import { useRouter } from 'next/navigation';
-import { useState } from 'react';
+import { useRouter, usePathname } from 'next/navigation';
+import { useState, useEffect } from 'react';
+import { cn } from '@/lib/utils';
 
 const mainNavLinks = [
   { href: '/community', label: 'Community' },
@@ -50,8 +51,10 @@ const comingSoonLinks = [
 export default function Header() {
   const { user, setAuthModalOpen, signOut } = useAuth();
   const router = useRouter();
+  const pathname = usePathname();
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
-
+  
+  const isHomepage = pathname === '/';
 
   const handleLogout = async () => {
     await signOut();
@@ -65,7 +68,10 @@ export default function Header() {
 
   return (
     <>
-      <header className="fixed top-0 left-0 z-50 w-full bg-background/80 backdrop-blur-sm">
+      <header className={cn(
+        "w-full z-50",
+        isHomepage ? "absolute top-0 left-0" : "fixed top-0 left-0 bg-background/80 backdrop-blur-sm"
+      )}>
         <div className="container mx-auto flex h-20 items-center justify-between px-4 md:px-6">
           <Link href="/">
              <Image src="/visionhub.png" alt="VisionHub Logo" width={180} height={45} className="w-[150px] md:w-[180px]" />

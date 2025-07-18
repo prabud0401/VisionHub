@@ -10,7 +10,7 @@ export default function MarketingLayout({
   return (
     <div className="flex flex-col min-h-screen bg-background">
       <Header />
-      <main className="flex-1 pt-20">{children}</main>
+      <main className="flex-1">{children}</main>
       <Footer />
     </div>
   );

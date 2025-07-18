@@ -1,29 +1,24 @@
+
 'use client';
 import Image from 'next/image';
 
-const galleryImageUrls = [
-    "/images/gallery/1.png",
-    "/images/gallery/2.png",
-    "/images/gallery/3.png",
-    "/images/gallery/4.png",
-    "/images/gallery/5.png",
-    "/images/gallery/6.png",
-    "/images/gallery/7.png",
-    "/images/gallery/8.png",
-    "/images/gallery/9.png",
-    "/images/gallery/10.png",
-    "/images/gallery/11.png",
-    "/images/gallery/12.png",
-    "/images/gallery/13.png",
-    "/images/gallery/14.png",
-    "/images/gallery/15.png",
-    "/images/gallery/16.png",
+const galleryImages = [
+  '/images/gallery/gallery-1.png',
+  '/images/gallery/gallery-2.png',
+  '/images/gallery/gallery-3.png',
+  '/images/gallery/gallery-4.png',
+  '/images/gallery/gallery-5.png',
+  '/images/gallery/gallery-6.png',
+  '/images/gallery/gallery-7.png',
+  '/images/gallery/gallery-8.png',
+  '/images/gallery/gallery-9.png',
+  '/images/gallery/gallery-10.png',
+  '/images/gallery/gallery-11.png',
+  '/images/gallery/gallery-12.png',
 ];
 
-const galleryImages = galleryImageUrls.map(url => ({ src: url }));
-
 // Fisher-Yates shuffle algorithm
-const shuffleArray = (array: typeof galleryImages) => {
+const shuffleArray = (array: string[]) => {
   const newArray = [...array];
   for (let i = newArray.length - 1; i > 0; i--) {
     const j = Math.floor(Math.random() * (i + 1));
@@ -32,13 +27,13 @@ const shuffleArray = (array: typeof galleryImages) => {
   return newArray;
 };
 
-const MarqueeRow = ({ images, reverse = false }: { images: typeof galleryImages, reverse?: boolean }) => (
+const MarqueeRow = ({ images, reverse = false }: { images: string[], reverse?: boolean }) => (
   <div className="flex w-max items-center">
     <div className={`flex w-max items-center ${reverse ? 'animate-marquee-reverse' : 'animate-marquee'}`}>
-      {images.map((img, i) => (
+      {images.map((imgSrc, i) => (
         <div key={`marquee-${i}`} className="w-64 h-64 p-2">
            <Image
-            src={img.src}
+            src={imgSrc}
             alt="AI generated art preview"
             width={400}
             height={400}
@@ -48,10 +43,10 @@ const MarqueeRow = ({ images, reverse = false }: { images: typeof galleryImages,
       ))}
     </div>
     <div className={`flex w-max items-center ${reverse ? 'animate-marquee-reverse' : 'animate-marquee'}`}>
-      {images.map((img, i) => (
+      {images.map((imgSrc, i) => (
         <div key={`marquee-clone-${i}`} className="w-64 h-64 p-2">
            <Image
-            src={img.src}
+            src={imgSrc}
             alt="AI generated art preview"
             width={400}
             height={400}
