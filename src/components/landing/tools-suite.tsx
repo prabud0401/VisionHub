@@ -9,7 +9,7 @@ const tools = [
   {
     title: 'Text-to-Image Generation',
     description: 'Transform your words into breathtaking visuals.',
-    image: 'https://placehold.co/600x400.png',
+    image: '/images/Text-to-Image Generation.png',
     link: '/services'
   },
   {
