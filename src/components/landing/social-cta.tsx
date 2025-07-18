@@ -14,7 +14,7 @@ export default function SocialCta() {
                     <Card className="bg-card/90 backdrop-blur-sm overflow-hidden relative">
                          <div
                             className="absolute inset-0 bg-cover bg-center opacity-10"
-                            style={{ backgroundImage: "url('/images/join-Community.png')" }}
+                            style={{ backgroundImage: "url('/images/about-hero.png')" }}
                          />
                         <div className="absolute inset-0 bg-background/50" />
                         <CardContent className="p-0 relative">

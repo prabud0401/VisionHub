@@ -11,6 +11,7 @@ import { useAuth } from '@/context/auth-context';
 import { useRouter } from 'next/navigation';
 import { useLocalStorage } from '@/hooks/use-local-storage';
 import { Slider } from './ui/slider';
+import Image from 'next/image';
 
 const plans = {
   monthly: [
@@ -179,7 +180,7 @@ export function PricingClient() {
             )}>
               <div
                   className="absolute inset-0 bg-cover bg-center opacity-5"
-                  style={{ backgroundImage: "url('https://firebasestorage.googleapis.com/v0/b/visionhub-ai-s813r.firebasestorage.app/o/generated-images%2Fbc9bc6be-11b4-4125-bb38-668b9539b00c.png?alt=media')" }}
+                  style={{ backgroundImage: "url('/images/about-hero.png')" }}
               />
               <div className="relative flex flex-col flex-grow">
                 <CardHeader>

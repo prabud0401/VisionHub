@@ -4,6 +4,7 @@ import { Button } from '@/components/ui/button';
 import Faq from '@/components/faq';
 import Link from 'next/link';
 import { Card, CardContent } from '@/components/ui/card';
+import Image from 'next/image';
 
 export const metadata: Metadata = {
   title: 'FAQ | VisionHub AI',
@@ -27,7 +28,7 @@ export default function FaqPage() {
             <Card className="mt-16 text-center p-8 rounded-lg relative overflow-hidden">
                 <div
                     className="absolute inset-0 bg-cover bg-center opacity-10"
-                    style={{ backgroundImage: "url('https://static.vecteezy.com/system/resources/previews/021/171/659/large_2x/colorful-abstract-wallpaper-modern-background-ai-generated-free-photo.jpg')" }}
+                    style={{ backgroundImage: "url('/images/about-hero.png')" }}
                  />
                 <div className="absolute inset-0 bg-background/70" />
                 <CardContent className="relative">
