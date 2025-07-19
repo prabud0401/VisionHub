@@ -6,11 +6,12 @@ import { Switch } from '@/components/ui/switch';
 import { Label } from '@/components/ui/label';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
-import { Check, Gem } from 'lucide-react';
+import { Check, Gem, Mail } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { useAuth } from '@/context/auth-context';
 import { useLocalStorage } from '@/hooks/use-local-storage';
 import { Loader2 } from 'lucide-react';
+import Link from 'next/link';
 
 const plans = {
   monthly: [
@@ -80,7 +81,7 @@ function PricingComponent() {
             </div>
         </div>
         
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 max-w-5xl mx-auto">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 max-w-7xl mx-auto">
           {currentPlans.map((plan) => (
             <Card key={plan.id} className={cn(
               "flex flex-col text-center transform hover:-translate-y-2 transition-transform duration-300",
@@ -118,6 +119,34 @@ function PricingComponent() {
               </CardContent>
             </Card>
           ))}
+          <Card className="flex flex-col text-center transform hover:-translate-y-2 transition-transform duration-300 border-border">
+              <CardHeader>
+                <CardTitle className="text-2xl">Enterprise</CardTitle>
+                <CardDescription>
+                    <span className="text-4xl font-bold text-foreground">
+                        Custom
+                    </span>
+                </CardDescription>
+              </CardHeader>
+              <CardContent className="flex flex-col flex-grow">
+                 <p className="text-lg font-semibold text-muted-foreground mb-4">
+                    For large-scale needs
+                </p>
+                <ul className="space-y-3 mb-8 text-left">
+                    <li className="flex items-start gap-3"><Check className="h-5 w-5 text-green-500 mt-1 flex-shrink-0" />Custom Credit Limits</li>
+                    <li className="flex items-start gap-3"><Check className="h-5 w-5 text-green-500 mt-1 flex-shrink-0" />Volume Discounts</li>
+                    <li className="flex items-start gap-3"><Check className="h-5 w-5 text-green-500 mt-1 flex-shrink-0" />Advanced Security</li>
+                    <li className="flex items-start gap-3"><Check className="h-5 w-5 text-green-500 mt-1 flex-shrink-0" />Dedicated Support</li>
+                    <li className="flex items-start gap-3"><Check className="h-5 w-5 text-green-500 mt-1 flex-shrink-0" />Custom Integrations</li>
+                </ul>
+                <Button asChild variant="secondary" className="w-full mt-auto">
+                   <Link href="/contact">
+                        <Mail className="mr-2 h-4 w-4" />
+                        Contact Sales
+                   </Link>
+                </Button>
+              </CardContent>
+            </Card>
         </div>
     </div>
   );
