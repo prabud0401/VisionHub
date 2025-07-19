@@ -43,7 +43,7 @@ export default function AdminLayout({
   if (loading || !user) {
     return (
       <div className="flex h-screen flex-col items-center justify-center bg-background gap-4">
-        <Image src="https://storage.googleapis.com/visionhub-ai-s813r.appspot.com/public/visionhub.png" alt="VisionHub Logo" width={200} height={50} />
+        <Image src="/images/visionhub.png" alt="VisionHub Logo" width={200} height={50} />
         <p className="text-muted-foreground animate-pulse">Loading Admin Panel...</p>
       </div>
     );
@@ -54,7 +54,7 @@ export default function AdminLayout({
       <aside className="hidden w-64 flex-col border-r bg-background sm:flex">
         <div className="flex h-[60px] items-center border-b px-6">
           <Link href="/admin/dashboard" className="flex items-center gap-2 font-semibold">
-            <Image src="https://storage.googleapis.com/visionhub-ai-s813r.appspot.com/public/visionhub.png" alt="VisionHub Logo" width={120} height={30} />
+            <Image src="/images/visionhub.png" alt="VisionHub Logo" width={120} height={30} />
             <span className="text-sm text-muted-foreground">Admin</span>
           </Link>
         </div>
@@ -89,7 +89,7 @@ export default function AdminLayout({
             <SheetContent side="left" className="sm:max-w-xs">
               <nav className="grid gap-6 text-lg font-medium">
                 <Link href="/admin/dashboard" className="flex items-center gap-2 text-lg font-semibold">
-                  <Image src="https://storage.googleapis.com/visionhub-ai-s813r.appspot.com/public/visionhub.png" alt="VisionHub Logo" width={150} height={37} />
+                  <Image src="/images/visionhub.png" alt="VisionHub Logo" width={150} height={37} />
                 </Link>
                 {navLinks.map((link) => (
                   <Link

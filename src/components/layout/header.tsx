@@ -74,7 +74,7 @@ export default function Header() {
       )}>
         <div className="container mx-auto flex h-20 items-center justify-between px-4 md:px-6">
           <Link href="/">
-             <Image src="https://storage.googleapis.com/visionhub-ai-s813r.appspot.com/public/visionhub.png" alt="VisionHub Logo" width={180} height={45} className="w-[150px] md:w-[180px]" />
+             <Image src="/images/visionhub.png" alt="VisionHub Logo" width={180} height={45} className="w-[150px] md:w-[180px]" />
           </Link>
           <nav className="hidden items-center gap-6 text-sm font-medium md:flex">
             {mainNavLinks.map((link) => (

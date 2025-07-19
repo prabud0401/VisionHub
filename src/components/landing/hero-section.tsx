@@ -30,7 +30,7 @@ export default function HeroSection() {
       id="home"
       className="relative w-full flex items-center justify-center text-white bg-cover bg-center bg-no-repeat pt-20"
       style={{
-        backgroundImage: "url('https://storage.googleapis.com/visionhub-ai-s813r.appspot.com/public/hero-background.png')"
+        backgroundImage: "url('/images/hero-background.png')"
       }}
       data-ai-hint="A breathtaking, ultra-wide, abstract digital wallpaper. Swirling galaxies of purple, deep blue, and magenta light flow across a dark background, with constellations of tiny, bright stars. A sense of infinite creativity and digital energy. Cinematic, ethereal, high resolution."
     >

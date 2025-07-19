@@ -14,7 +14,7 @@ export default function Footer() {
       <div className="container mx-auto grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 text-sm relative z-10">
         <div className="flex flex-col gap-4">
            <Link href="/">
-            <Image src="/visionhub.png" alt="VisionHub Logo" width={180} height={45} />
+            <Image src="/images/visionhub.png" alt="VisionHub Logo" width={180} height={45} />
           </Link>
           <p className="text-muted-foreground">
             The ultimate AI image generation platform for content creators.

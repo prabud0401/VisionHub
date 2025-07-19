@@ -14,7 +14,6 @@ import FeatureHighlight from '@/components/landing/feature-highlight';
 import Image from 'next/image';
 import { UseCaseShowcase } from '@/components/landing/use-case-showcase';
 import GalleryPreview from './gallery-preview';
-import Header from '@/components/layout/header';
 
 
 const CtaSection = () => (
@@ -51,7 +50,7 @@ export default function LandingPageClient({ imagePaths }: { imagePaths: string[]
     if (loading) {
         return (
             <div className="flex h-screen flex-col items-center justify-center bg-background gap-4">
-                <Image src="https://storage.googleapis.com/visionhub-ai-s813r.appspot.com/public/visionhub.png" alt="VisionHub Logo" width={200} height={50} />
+                <Image src="/images/visionhub.png" alt="VisionHub Logo" width={200} height={50} />
                 <p className="text-muted-foreground animate-pulse">Unleashing Creativity...</p>
             </div>
         );
@@ -59,7 +58,6 @@ export default function LandingPageClient({ imagePaths }: { imagePaths: string[]
     
     return (
         <div className="min-h-screen flex flex-col">
-            <Header />
             <main className="flex-1">
                 <HeroSection />
                 <Partners />
@@ -88,7 +86,7 @@ export default function LandingPageClient({ imagePaths }: { imagePaths: string[]
                  <FeatureHighlight
                     title="AI Inpainting & Outpainting"
                     description="Edit images with precision. Erase parts of an image and regenerate them with a new prompt, or expand your canvas infinitely. Perfect for making targeted changes."
-                    imageUrl="https://storage.googleapis.com/visionhub-ai-s813r.appspot.com/public/AI Inpainting & Outpainting.png"
+                    imageUrl="/images/AI Inpainting & Outpainting.png"
                     imageHint="A beautiful landscape photo being expanded. The original photo is in the center, and the AI is generating new scenery on all sides to make the image wider. The new parts blend seamlessly."
                  />
                 <FeatureHighlight

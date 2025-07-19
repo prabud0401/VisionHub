@@ -155,7 +155,7 @@ function AuthActionManager() {
   return (
     <Card className="w-full max-w-md">
         <CardHeader className="text-center">
-            <Image src="https://storage.googleapis.com/visionhub-ai-s813r.appspot.com/public/visionhub.png" alt="VisionHub Logo" width={150} height={40} className="mx-auto" />
+            <Image src="/images/visionhub.png" alt="VisionHub Logo" width={150} height={40} className="mx-auto" />
             <CardTitle className="pt-4">Invalid Action</CardTitle>
         </CardHeader>
         <CardContent>
@@ -169,7 +169,7 @@ export default function AuthActionPage() {
     return (
         <div className="min-h-screen flex flex-col items-center justify-center bg-background text-foreground p-4">
            <Link href="/" className="mb-8">
-                <Image src="https://storage.googleapis.com/visionhub-ai-s813r.appspot.com/public/visionhub.png" alt="VisionHub Logo" width={200} height={50} />
+                <Image src="/images/visionhub.png" alt="VisionHub Logo" width={200} height={50} />
            </Link>
            <Suspense fallback={<Loader2 className="h-12 w-12 animate-spin" />}>
                <AuthActionManager />

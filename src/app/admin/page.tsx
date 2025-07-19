@@ -54,7 +54,7 @@ export default function AdminLoginPage() {
     <div className="min-h-screen flex flex-col items-center justify-center bg-background p-4">
       <Link href="/" className="mb-8">
         <div className="flex items-end gap-2">
-            <Image src="https://storage.googleapis.com/visionhub-ai-s813r.appspot.com/public/visionhub.png" alt="VisionHub Logo" width={200} height={50} />
+            <Image src="/images/visionhub.png" alt="VisionHub Logo" width={200} height={50} />
             <span className="text-2xl font-bold pb-1">Admin</span>
         </div>
       </Link>

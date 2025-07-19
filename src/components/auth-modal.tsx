@@ -95,7 +95,7 @@ export function AuthModal() {
     <Dialog open={isAuthModalOpen} onOpenChange={setAuthModalOpen}>
       <DialogContent className="sm:max-w-md">
         <DialogHeader className="items-center text-center">
-          <Image src="https://storage.googleapis.com/visionhub-ai-s813r.appspot.com/public/visionhub.png" alt="VisionHub Logo" width={150} height={40} className="mb-2" />
+          <Image src="/images/visionhub.png" alt="VisionHub Logo" width={150} height={40} className="mb-2" />
           <DialogTitle className="text-2xl font-headline">Welcome Back</DialogTitle>
           <DialogDescription>
             Sign in to continue your creative journey.
