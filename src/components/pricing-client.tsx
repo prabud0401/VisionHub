@@ -149,7 +149,7 @@ function PricingComponent() {
       setAuthModalOpen(true);
       return;
     }
-    const finalPrice = isLKR ? `LKR ${plan.lkrPrice}` : plan.price;
+    const finalPrice = isLKR ? plan.lkrPrice : plan.price;
     const planDetails = {
       ...plan,
       price: finalPrice, 
