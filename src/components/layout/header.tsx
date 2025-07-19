@@ -69,7 +69,8 @@ export default function Header() {
   return (
     <>
       <header className={cn(
-        "fixed top-0 left-0 w-full z-50 bg-background/80 backdrop-blur-sm"
+        "fixed top-0 left-0 w-full z-50",
+        isHomepage ? "bg-transparent" : "bg-background/80 backdrop-blur-sm"
       )}>
         <div className="container mx-auto flex h-20 items-center justify-between px-4 md:px-6">
           <Link href="/">
@@ -77,7 +78,7 @@ export default function Header() {
           </Link>
           <nav className="hidden items-center gap-6 text-sm font-medium md:flex">
             {mainNavLinks.map((link) => (
-              <Link key={link.href} href={link.href} className="transition-colors hover:text-primary">
+              <Link key={link.href} href={link.href} className={cn("transition-colors hover:text-primary", isHomepage && "text-white")}>
                 {link.label}
               </Link>
             ))}
@@ -143,7 +144,7 @@ export default function Header() {
                 </DropdownMenu>
               </>
             ) : (
-              <Button variant="accent" onClick={() => setAuthModalOpen(true)}>
+              <Button onClick={() => setAuthModalOpen(true)}>
                 Get Started
               </Button>
             )}
@@ -184,7 +185,7 @@ export default function Header() {
                     </div>
                   ) : (
                      <div className="flex flex-col gap-2 mt-4">
-                        <Button variant="accent" onClick={() => { setAuthModalOpen(true); setIsMobileMenuOpen(false); }}>Get Started</Button>
+                        <Button onClick={() => { setAuthModalOpen(true); setIsMobileMenuOpen(false); }}>Get Started</Button>
                      </div>
                   )}
                 </div>

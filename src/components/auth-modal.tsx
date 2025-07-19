@@ -108,7 +108,7 @@ export function AuthModal() {
             <TabsTrigger value="password">Use Username</TabsTrigger>
           </TabsList>
           <TabsContent value="google" className="py-4 text-center">
-             <Button onClick={handleGoogleSignIn} disabled={isLoading} className="w-full">
+             <Button onClick={handleGoogleSignIn} disabled={isLoading} className="w-full" variant="outline">
                 {isLoading ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : <GoogleIcon />}
                 Continue with Google
             </Button>
