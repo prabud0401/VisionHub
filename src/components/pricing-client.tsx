@@ -1,11 +1,12 @@
 
 'use client';
-import { useState, useEffect, useMemo } from 'react';
+import { useState, useEffect, useMemo, Suspense } from 'react';
+import { useSearchParams } from 'next/navigation';
 import { Switch } from '@/components/ui/switch';
 import { Label } from '@/components/ui/label';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription, CardFooter } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
-import { Check, Edit, Gem, ShieldCheck, Star, Zap } from 'lucide-react';
+import { Check, Edit, Gem, ShieldCheck, Star, Zap, Loader2 } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { useAuth } from '@/context/auth-context';
 import { useRouter } from 'next/navigation';
@@ -15,14 +16,14 @@ import Image from 'next/image';
 
 const plans = {
   monthly: [
-    { id: 'price_starter_monthly', name: 'Starter', price: '$2', lkrPrice: '150', slashedPrice: '$4', lkrSlashedPrice: '300', credits: 100, features: ['100 credits', 'Supported by ads', 'Standard quality'] },
-    { id: 'price_basic_monthly', name: 'Basic', price: '$10', lkrPrice: '800', slashedPrice: '$15', lkrSlashedPrice: '1200', credits: 500, features: ['Supported by ads', 'Standard quality', 'Limited access to models'] },
-    { id: 'price_standard_monthly', name: 'Standard', price: '$25', lkrPrice: '2000', slashedPrice: '$35', lkrSlashedPrice: '2800', credits: 1500, features: ['Ad-Free Experience', 'High quality outputs', 'Full access to models', 'Priority support'], highlighted: true },
+    { id: 'price_starter_monthly', name: 'Starter', price: '$2', lkrPrice: '600', slashedPrice: '$4', lkrSlashedPrice: '1200', credits: 100, features: ['100 credits', 'Supported by ads', 'Standard quality'] },
+    { id: 'price_basic_monthly', name: 'Basic', price: '$10', lkrPrice: '3000', slashedPrice: '$15', lkrSlashedPrice: '4500', credits: 500, features: ['Supported by ads', 'Standard quality', 'Limited access to models'] },
+    { id: 'price_standard_monthly', name: 'Standard', price: '$25', lkrPrice: '7500', slashedPrice: '$35', lkrSlashedPrice: '10500', credits: 1500, features: ['Ad-Free Experience', 'High quality outputs', 'Full access to models', 'Priority support'], highlighted: true },
   ],
   annually: [
-    { id: 'price_starter_annual', name: 'Starter', price: '$18', lkrPrice: '1500', slashedPrice: '$24', lkrSlashedPrice: '2000', credits: 100, features: ['100 credits/mo', 'Supported by ads', 'Standard quality'] },
-    { id: 'price_basic_annual', name: 'Basic', price: '$96', lkrPrice: '7500', slashedPrice: '$120', lkrSlashedPrice: '9500', credits: 500, features: ['500 credits/mo', 'Supported by ads', 'Standard quality', 'Limited access to models'] },
-    { id: 'price_standard_annual', name: 'Standard', price: '$240', lkrPrice: '19000', slashedPrice: '$300', lkrSlashedPrice: '24000', credits: 1500, features: ['1500 credits/mo', 'Ad-Free Experience', 'High quality outputs', 'Full access to models', 'Priority support'], highlighted: true },
+    { id: 'price_starter_annual', name: 'Starter', price: '$18', lkrPrice: '5400', slashedPrice: '$24', lkrSlashedPrice: '7200', credits: 100, features: ['100 credits/mo', 'Supported by ads', 'Standard quality'] },
+    { id: 'price_basic_annual', name: 'Basic', price: '$96', lkrPrice: '28800', slashedPrice: '$120', lkrSlashedPrice: '36000', credits: 500, features: ['500 credits/mo', 'Supported by ads', 'Standard quality', 'Limited access to models'] },
+    { id: 'price_standard_annual', name: 'Standard', price: '$240', lkrPrice: '72000', slashedPrice: '$300', lkrSlashedPrice: '90000', credits: 1500, features: ['1500 credits/mo', 'Ad-Free Experience', 'High quality outputs', 'Full access to models', 'Priority support'], highlighted: true },
   ],
 };
 
@@ -34,7 +35,7 @@ const CustomPlanBuilder = ({ isLKR, billing, onChoosePlan }: { isLKR: boolean, b
     const [price, setPrice] = useState(0);
 
     const priceConfig = useMemo(() => ({
-        creditBase: isLKR ? 0.8 : 0.01,
+        creditBase: isLKR ? 3 : 0.01, // Adjusted LKR base price
         adFreeMultiplier: 1.2,
         highQualityMultiplier: 1.5,
         apiAccessMultiplier: 2.0,
@@ -132,19 +133,13 @@ const CustomPlanBuilder = ({ isLKR, billing, onChoosePlan }: { isLKR: boolean, b
 };
 
 
-export function PricingClient() {
+function PricingComponent() {
   const [isAnnual, setIsAnnual] = useState(false);
-  const [isLKR, setIsLKR] = useState(false);
   const { user, setAuthModalOpen } = useAuth();
   const router = useRouter();
   const [, setSelectedPlan] = useLocalStorage('selectedPlan', null);
-
-  useEffect(() => {
-    // Detect user's language to default to LKR if applicable
-    if (typeof navigator !== 'undefined' && (navigator.language === 'si-LK' || navigator.language === 'ta-LK')) {
-      setIsLKR(true);
-    }
-  }, []);
+  const searchParams = useSearchParams();
+  const isLKR = searchParams.get('currency') === 'LKR';
   
   const currentPlans = isAnnual ? plans.annually : plans.monthly;
   const billingCycle = isAnnual ? 'annually' : 'monthly';
@@ -231,4 +226,12 @@ export function PricingClient() {
         </div>
     </div>
   );
+}
+
+export function PricingClient() {
+  return (
+    <Suspense fallback={<div className="flex justify-center items-center h-64"><Loader2 className="h-12 w-12 animate-spin text-primary" /></div>}>
+      <PricingComponent />
+    </Suspense>
+  )
 }
