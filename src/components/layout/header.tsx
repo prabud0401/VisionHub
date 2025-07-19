@@ -68,17 +68,14 @@ export default function Header() {
 
   return (
     <>
-      <header className={cn(
-        "fixed top-0 left-0 w-full z-50",
-        isHomepage ? "bg-transparent" : "bg-background/80 backdrop-blur-sm"
-      )}>
+      <header className="fixed top-0 left-0 w-full z-50 bg-background/80 backdrop-blur-sm">
         <div className="container mx-auto flex h-20 items-center justify-between px-4 md:px-6">
           <Link href="/">
              <Image src="/visionhub.png" alt="VisionHub Logo" width={180} height={45} className="w-[150px] md:w-[180px]" />
           </Link>
           <nav className="hidden items-center gap-6 text-sm font-medium md:flex">
             {mainNavLinks.map((link) => (
-              <Link key={link.href} href={link.href} className={cn("transition-colors hover:text-primary", isHomepage && "text-white")}>
+              <Link key={link.href} href={link.href} className="transition-colors hover:text-primary">
                 {link.label}
               </Link>
             ))}
@@ -144,7 +141,7 @@ export default function Header() {
                 </DropdownMenu>
               </>
             ) : (
-              <Button onClick={() => setAuthModalOpen(true)}>
+              <Button variant="accent" onClick={() => setAuthModalOpen(true)}>
                 Get Started
               </Button>
             )}
@@ -185,7 +182,7 @@ export default function Header() {
                     </div>
                   ) : (
                      <div className="flex flex-col gap-2 mt-4">
-                        <Button onClick={() => { setAuthModalOpen(true); setIsMobileMenuOpen(false); }}>Get Started</Button>
+                        <Button variant="accent" onClick={() => { setAuthModalOpen(true); setIsMobileMenuOpen(false); }}>Get Started</Button>
                      </div>
                   )}
                 </div>
