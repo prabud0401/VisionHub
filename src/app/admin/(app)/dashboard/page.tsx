@@ -4,43 +4,23 @@
 import { useEffect, useState } from 'react';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
 import { Users, ImageIcon, BarChart, Loader2, Database } from 'lucide-react';
-import { getAdminStats, getImageGenerationStats } from '@/services/admin-service';
-import { Bar, XAxis, YAxis, BarChart as RechartsBarChart } from 'recharts';
-import { ChartContainer, ChartTooltip, ChartTooltipContent } from '@/components/ui/chart';
+import { getAdminStats } from '@/services/admin-service';
 
 interface AdminStats {
   userCount: number;
   imageCount: number;
 }
 
-interface ChartData {
-    name: string;
-    total: number;
-}
-
-const chartConfig = {
-    total: {
-        label: 'Images',
-        color: 'hsl(var(--chart-1))',
-    },
-} satisfies import('@/components/ui/chart').ChartConfig;
-
 export default function AdminDashboardPage() {
   const [stats, setStats] = useState<AdminStats | null>(null);
-  const [chartData, setChartData] = useState<ChartData[]>([]);
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
     const fetchStats = async () => {
       setIsLoading(true);
       try {
-        const adminStatsPromise = getAdminStats();
-        const chartDataPromise = getImageGenerationStats();
-
-        const [adminStats, imageStats] = await Promise.all([adminStatsPromise, chartDataPromise]);
-
+        const adminStats = await getAdminStats();
         setStats(adminStats);
-        setChartData(imageStats);
       } catch (error) {
         console.error('Failed to fetch admin stats:', error);
       } finally {
@@ -109,29 +89,13 @@ export default function AdminDashboardPage() {
         <div className="grid gap-4 md:grid-cols-2">
           <Card>
             <CardHeader>
-                <CardTitle>Image Generation - Last 7 Days</CardTitle>
+                <CardTitle>Image Generation Stats</CardTitle>
                 <CardDescription>Daily count of newly generated images.</CardDescription>
             </CardHeader>
             <CardContent>
-                <ChartContainer config={chartConfig} className="h-[250px] w-full">
-                    <RechartsBarChart data={chartData} margin={{ top: 10, right: 10, left: -20, bottom: 0 }}>
-                        <XAxis
-                            dataKey="name"
-                            tickLine={false}
-                            axisLine={false}
-                            tickMargin={8}
-                            tickFormatter={(value) => value.slice(0, 3)}
-                        />
-                        <YAxis
-                            tickLine={false}
-                            axisLine={false}
-                            tickMargin={8}
-                            allowDecimals={false}
-                        />
-                        <ChartTooltip cursor={false} content={<ChartTooltipContent />} />
-                        <Bar dataKey="total" fill="var(--color-total)" radius={4} />
-                    </RechartsBarChart>
-                </ChartContainer>
+                 <div className="text-center text-muted-foreground py-12">
+                    <p>Chart functionality coming soon.</p>
+                </div>
             </CardContent>
           </Card>
          <Card>
