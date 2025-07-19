@@ -117,7 +117,7 @@ const CustomPlanCard = ({ isAnnual, isLKR }: { isAnnual: boolean, isLKR: boolean
             </div>
             
             <div className="!mt-auto pt-6">
-                <CardDescription>Billed {isAnnual ? 'Annually' : 'Monthly'}</CardDescription>
+                <div className="text-sm text-muted-foreground">Billed {isAnnual ? 'Annually' : 'Monthly'}</div>
                 <p className="text-4xl font-bold text-foreground">
                     {isLKR ? `LKR ${(calculatePrice * 300).toLocaleString()}` : `$${calculatePrice}`}
                 </p>
@@ -191,7 +191,7 @@ function PricingComponent() {
             )}>
               <CardHeader>
                 <CardTitle className="text-2xl">{plan.name}</CardTitle>
-                <CardDescription>
+                <div className="text-sm text-muted-foreground">
                     <div className="flex justify-center items-end gap-2">
                         <span className="text-4xl font-bold text-foreground">
                             {isLKR ? plan.lkrPrice : plan.price}
@@ -199,7 +199,7 @@ function PricingComponent() {
                          {plan.originalPrice && <span className="text-lg line-through text-muted-foreground">{isLKR ? '' : plan.originalPrice}</span>}
                     </div>
                     /{isAnnual ? 'year' : 'month'}
-                </CardDescription>
+                </div>
               </CardHeader>
               <CardContent className="flex flex-col flex-grow">
                 <p className="flex items-center justify-center gap-2 text-lg font-semibold text-primary mb-4">

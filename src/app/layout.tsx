@@ -7,12 +7,13 @@ import { CookieConsentBanner } from '@/components/cookie-consent-banner';
 import type { Metadata } from 'next'
 
 export const metadata: Metadata = {
+  metadataBase: new URL('https://www.visionhub.pics'),
   title: 'VisionHub | AI Image & Video Generation',
   description: 'The ultimate AI toolkit for creators. Generate stunning images, videos, and more from text prompts with our suite of advanced generative AI models.',
   openGraph: {
     title: 'VisionHub | AI Image & Video Generation',
     description: 'Turn your imagination into reality. Create, edit, and upscale with the power of AI.',
-    url: 'https://www.visionhub.pics', // Replace with your domain
+    url: 'https://www.visionhub.pics',
     siteName: 'VisionHub',
     images: [
       {
