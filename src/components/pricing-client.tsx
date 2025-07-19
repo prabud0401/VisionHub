@@ -16,14 +16,14 @@ import { Slider } from './ui/slider';
 
 const plans = {
   monthly: [
-    { id: 'price_starter_monthly', name: 'Basic', price: '$10', lkrPrice: 'LKR 3,000', credits: 500, features: ['500 credits/mo', 'Standard quality', 'Limited access to models'] },
-    { id: 'price_standard_monthly', name: 'Standard', price: '$25', lkrPrice: 'LKR 7,500', credits: 1500, features: ['1500 credits/mo', 'Ad-Free Experience', 'High quality outputs', 'Full access to models', 'Priority support'], highlighted: true },
-    { id: 'price_premium_monthly', name: 'Premium', price: '$60', lkrPrice: 'LKR 18,000', credits: 4000, features: ['4000 credits/mo', 'Everything in Standard', 'Up to 4K+ quality', 'API Access', 'Dedicated Support'], highlighted: false },
+    { id: 'price_starter_monthly', name: 'Starter', price: '$2', originalPrice: '$4', lkrPrice: 'LKR 600', credits: 100, features: ['100 credits', 'Supported by ads', 'Standard quality'] },
+    { id: 'price_basic_monthly', name: 'Basic', price: '$10', originalPrice: '$15', lkrPrice: 'LKR 3,000', credits: 500, features: ['500 credits/mo', 'Supported by ads', 'Standard quality', 'Limited access to models'] },
+    { id: 'price_standard_monthly', name: 'Standard', price: '$25', originalPrice: '$35', lkrPrice: 'LKR 7,500', credits: 1500, features: ['1500 credits/mo', 'Ad-Free Experience', 'High quality outputs', 'Full access to models', 'Priority support'], highlighted: true },
   ],
   annually: [
-    { id: 'price_starter_annual', name: 'Basic', price: '$96', lkrPrice: 'LKR 28,800', credits: 500, features: ['500 credits/mo', 'Standard quality', 'Limited access to models'] },
-    { id: 'price_standard_annual', name: 'Standard', price: '$240', lkrPrice: 'LKR 72,000', credits: 1500, features: ['1500 credits/mo', 'Ad-Free Experience', 'High quality outputs', 'Full access to models', 'Priority support'], highlighted: true },
-    { id: 'price_premium_annual', name: 'Premium', price: '$576', lkrPrice: 'LKR 172,800', credits: 4000, features: ['4000 credits/mo', 'Everything in Standard', 'Up to 4K+ quality', 'API Access', 'Dedicated Support'], highlighted: false },
+    { id: 'price_starter_annual', name: 'Starter', price: '$20', originalPrice: '$48', lkrPrice: 'LKR 6,000', credits: 100, features: ['100 credits/mo', 'Supported by ads', 'Standard quality'] },
+    { id: 'price_basic_annual', name: 'Basic', price: '$96', originalPrice: '$180', lkrPrice: 'LKR 28,800', credits: 500, features: ['500 credits/mo', 'Supported by ads', 'Standard quality', 'Limited access to models'] },
+    { id: 'price_standard_annual', name: 'Standard', price: '$240', originalPrice: '$420', lkrPrice: 'LKR 72,000', credits: 1500, features: ['1500 credits/mo', 'Ad-Free Experience', 'High quality outputs', 'Full access to models', 'Priority support'], highlighted: true },
   ],
 };
 
@@ -192,9 +192,12 @@ function PricingComponent() {
               <CardHeader>
                 <CardTitle className="text-2xl">{plan.name}</CardTitle>
                 <CardDescription>
-                    <span className="text-4xl font-bold text-foreground">
-                        {isLKR ? plan.lkrPrice : plan.price}
-                    </span>
+                    <div className="flex justify-center items-end gap-2">
+                        <span className="text-4xl font-bold text-foreground">
+                            {isLKR ? plan.lkrPrice : plan.price}
+                        </span>
+                         {plan.originalPrice && <span className="text-lg line-through text-muted-foreground">{isLKR ? '' : plan.originalPrice}</span>}
+                    </div>
                     /{isAnnual ? 'year' : 'month'}
                 </CardDescription>
               </CardHeader>
@@ -234,5 +237,3 @@ export function PricingClient() {
     </Suspense>
   )
 }
-
-    

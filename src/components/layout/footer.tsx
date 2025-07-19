@@ -5,8 +5,13 @@ import { Facebook, Twitter, Instagram, Linkedin } from "lucide-react";
 
 export default function Footer() {
   return (
-    <footer id="contact" className="w-full bg-card/80 backdrop-blur-sm border-t border-border/40 py-12">
-      <div className="container mx-auto grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 text-sm">
+    <footer id="contact" className="w-full bg-card/80 backdrop-blur-sm border-t border-border/40 py-12 relative overflow-hidden">
+        <div
+            className="absolute inset-0 bg-cover bg-center opacity-5"
+            style={{ backgroundImage: "url('/images/about-hero.png')" }}
+        />
+        <div className="absolute inset-0 bg-background/80" />
+      <div className="container mx-auto grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 text-sm relative z-10">
         <div className="flex flex-col gap-4">
            <Link href="/">
             <Image src="/visionhub.png" alt="VisionHub Logo" width={180} height={45} />
@@ -48,7 +53,7 @@ export default function Footer() {
           </ul>
         </div>
       </div>
-       <div className="container mx-auto mt-12 pt-8 border-t border-border/40 text-center">
+       <div className="container mx-auto mt-12 pt-8 border-t border-border/40 text-center relative z-10">
          <p className="text-sm text-muted-foreground">
            &copy; 2025 VisionHub. All rights reserved.
          </p>

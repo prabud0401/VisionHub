@@ -9,11 +9,20 @@ const Card = React.forwardRef<
   <div
     ref={ref}
     className={cn(
-      "rounded-lg border bg-card text-card-foreground shadow-sm",
+      "rounded-lg border bg-card text-card-foreground shadow-sm relative overflow-hidden",
       className
     )}
     {...props}
-  />
+  >
+    <div
+      className="absolute inset-0 bg-cover bg-center opacity-[0.02]"
+      style={{ backgroundImage: "url('/images/about-hero.png')" }}
+    />
+    <div className="absolute inset-0 bg-background/50" />
+    <div className="relative z-10 h-full">
+      {props.children}
+    </div>
+  </div>
 ))
 Card.displayName = "Card"
 

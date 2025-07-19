@@ -65,6 +65,9 @@
   }
   body {
     @apply bg-background text-foreground font-body;
+    background-image: url('/images/about-hero.png');
+    background-blend-mode: overlay;
+    background-size: cover;
   }
   html {
     scroll-behavior: smooth;
