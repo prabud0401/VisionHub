@@ -1,7 +1,7 @@
 import { MetadataRoute } from 'next'
  
 export default function sitemap(): MetadataRoute.Sitemap {
-  const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://www.visionhub.pics';
+  const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || 'http://visionhub.pics';
 
   const marketingPages = [
     '/',
