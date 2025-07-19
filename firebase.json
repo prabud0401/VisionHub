@@ -10,7 +10,15 @@
     "frameworksBackend": {
       "serviceId": "visionhub-ai-backend",
       "region": "us-central1"
-    }
+    },
+    "rewrites": [
+      {
+        "source": "**",
+        "function": {
+          "serviceId": "visionhub-ai-backend",
+          "region": "us-central1"
+        }
+      }
+    ]
   }
 }
-
