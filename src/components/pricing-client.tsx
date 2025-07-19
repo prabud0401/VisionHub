@@ -1,7 +1,7 @@
 
 'use client';
 import { useState, useEffect, useMemo, Suspense } from 'react';
-import { useSearchParams } from 'next/navigation';
+import { useSearchParams, useRouter, usePathname } from 'next/navigation';
 import { Switch } from '@/components/ui/switch';
 import { Label } from '@/components/ui/label';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription, CardFooter } from '@/components/ui/card';
@@ -9,7 +9,6 @@ import { Button } from '@/components/ui/button';
 import { Check, Edit, Gem, ShieldCheck, Star, Zap, Loader2 } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { useAuth } from '@/context/auth-context';
-import { useRouter } from 'next/navigation';
 import { useLocalStorage } from '@/hooks/use-local-storage';
 import { Slider } from './ui/slider';
 import Image from 'next/image';
@@ -137,9 +136,23 @@ function PricingComponent() {
   const [isAnnual, setIsAnnual] = useState(false);
   const { user, setAuthModalOpen } = useAuth();
   const router = useRouter();
-  const [, setSelectedPlan] = useLocalStorage('selectedPlan', null);
+  const pathname = usePathname();
   const searchParams = useSearchParams();
+  const [, setSelectedPlan] = useLocalStorage('selectedPlan', null);
+
   const isLKR = searchParams.get('currency') === 'LKR';
+
+  const handleCurrencyToggle = (checked: boolean) => {
+    const current = new URLSearchParams(Array.from(searchParams.entries()));
+    if (checked) {
+        current.set("currency", "LKR");
+    } else {
+        current.set("currency", "USD");
+    }
+    const search = current.toString();
+    const query = search ? `?${search}` : "";
+    router.push(`${pathname}${query}`);
+  };
   
   const currentPlans = isAnnual ? plans.annually : plans.monthly;
   const billingCycle = isAnnual ? 'annually' : 'monthly';
@@ -161,10 +174,17 @@ function PricingComponent() {
 
   return (
     <div className="w-full">
-        <div className="flex items-center justify-center space-x-2 mb-12">
-          <Label htmlFor="billing-toggle">Monthly</Label>
-          <Switch id="billing-toggle" checked={isAnnual} onCheckedChange={setIsAnnual} />
-          <Label htmlFor="billing-toggle">Annually (Save 20%)</Label>
+        <div className="flex items-center justify-center space-x-4 mb-8">
+            <div className="flex items-center space-x-2">
+                <Label htmlFor="billing-toggle">Monthly</Label>
+                <Switch id="billing-toggle" checked={isAnnual} onCheckedChange={setIsAnnual} />
+                <Label htmlFor="billing-toggle">Annually (Save 20%)</Label>
+            </div>
+             <div className="flex items-center space-x-2">
+                <Label htmlFor="currency-toggle">USD</Label>
+                <Switch id="currency-toggle" checked={isLKR} onCheckedChange={handleCurrencyToggle} />
+                <Label htmlFor="currency-toggle">LKR</Label>
+            </div>
         </div>
         
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 max-w-7xl mx-auto">

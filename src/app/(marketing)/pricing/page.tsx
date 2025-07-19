@@ -27,7 +27,9 @@ export default function PricingPage() {
           Choose a plan that scales with your ambition. All plans include access to our full suite of AI tools.
         </p>
       </div>
-      <PricingClient />
+      <Suspense fallback={<div className="flex justify-center items-center h-64"><Loader2 className="h-12 w-12 animate-spin text-primary" /></div>}>
+        <PricingClient />
+      </Suspense>
       <Suspense fallback={
         <div className="flex justify-center items-center h-64">
           <Loader2 className="h-12 w-12 animate-spin text-primary" />

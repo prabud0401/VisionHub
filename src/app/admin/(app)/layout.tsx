@@ -43,7 +43,7 @@ export default function AdminLayout({
   if (loading || !user) {
     return (
       <div className="flex h-screen flex-col items-center justify-center bg-background gap-4">
-        <Image src="/load.png" alt="VisionHub Logo" width={200} height={50} />
+        <Image src="/visionhub.png" alt="VisionHub Logo" width={200} height={50} />
         <p className="text-muted-foreground animate-pulse">Loading Admin Panel...</p>
       </div>
     );
