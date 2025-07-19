@@ -12,7 +12,7 @@ export const metadata: Metadata = {
   openGraph: {
     title: 'VisionHub | AI Image & Video Generation',
     description: 'Turn your imagination into reality. Create, edit, and upscale with the power of AI.',
-    url: 'https://www.visionhub.ai', // Replace with your domain
+    url: 'https://www.visionhub.pics', // Replace with your domain
     siteName: 'VisionHub',
     images: [
       {

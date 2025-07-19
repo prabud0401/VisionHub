@@ -1,7 +1,7 @@
 import { MetadataRoute } from 'next'
  
 export default function sitemap(): MetadataRoute.Sitemap {
-  const baseUrl = 'https://www.visionhub.ai'; // Replace with your actual domain
+  const baseUrl = 'https://www.visionhub.pics'; // Replace with your actual domain
 
   const marketingPages = [
     '/',
