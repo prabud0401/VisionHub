@@ -1,17 +1,18 @@
 
 'use client';
-import { useState, Suspense } from 'react';
+import { useState, Suspense, useMemo } from 'react';
 import { useSearchParams, useRouter, usePathname } from 'next/navigation';
 import { Switch } from '@/components/ui/switch';
 import { Label } from '@/components/ui/label';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
-import { Check, Gem, Mail } from 'lucide-react';
+import { Check, Gem, Mail, Edit, ShieldCheck, Star, Zap } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { useAuth } from '@/context/auth-context';
 import { useLocalStorage } from '@/hooks/use-local-storage';
 import { Loader2 } from 'lucide-react';
 import Link from 'next/link';
+import { Slider } from './ui/slider';
 
 const plans = {
   monthly: [
@@ -25,6 +26,107 @@ const plans = {
     { id: 'price_premium_annual', name: 'Premium', price: '$576', lkrPrice: 'LKR 172,800', credits: 4000, features: ['4000 credits/mo', 'Everything in Standard', 'Up to 4K+ quality', 'API Access', 'Dedicated Support'], highlighted: false },
   ],
 };
+
+const CustomPlanCard = ({ isAnnual, isLKR }: { isAnnual: boolean, isLKR: boolean }) => {
+  const [credits, setCredits] = useState(5000);
+  const [adFree, setAdFree] = useState(true);
+  const [highQuality, setHighQuality] = useState(true);
+  const [apiAccess, setApiAccess] = useState(false);
+  
+  const { user, setAuthModalOpen } = useAuth();
+  const router = useRouter();
+  const [, setSelectedPlan] = useLocalStorage('selectedPlan', null);
+
+  const calculatePrice = useMemo(() => {
+    let price = 0;
+    // Credit cost: ~$0.01 per credit
+    price += credits * 0.01;
+    if (adFree) price += 5;
+    if (highQuality) price += 10;
+    if (apiAccess) price += 20;
+
+    if (isAnnual) price *= 0.8 * 12;
+
+    return Math.round(price);
+  }, [credits, adFree, highQuality, apiAccess, isAnnual]);
+
+  const handlePurchase = () => {
+     if (!user) {
+      setAuthModalOpen(true);
+      return;
+    }
+    const priceString = isLKR ? `LKR ${(calculatePrice * 300).toLocaleString()}` : `$${calculatePrice}`;
+    const planDetails = {
+      id: 'custom_plan',
+      name: 'Custom Plan',
+      price: priceString,
+      credits: credits,
+      billing: isAnnual ? 'annually' : 'monthly',
+      features: [
+          `${credits.toLocaleString()} credits/mo`,
+          adFree && 'Ad-Free Experience',
+          highQuality && 'High Quality Outputs',
+          apiAccess && 'API Access'
+      ].filter(Boolean)
+    };
+    setSelectedPlan(planDetails);
+    router.push('/buy-credits');
+  }
+
+  return (
+    <Card className="flex flex-col text-center transform hover:-translate-y-2 transition-transform duration-300 border-primary shadow-primary/20 shadow-lg relative overflow-hidden">
+        <div className="absolute top-0 left-0 w-full h-full bg-gradient-to-br from-primary/10 via-transparent to-transparent"></div>
+        <CardHeader className="relative z-10">
+            <div className="w-16 h-16 bg-primary/20 text-primary rounded-full mx-auto flex items-center justify-center mb-4 ring-4 ring-primary/10">
+                <Edit className="w-8 h-8"/>
+            </div>
+            <CardTitle className="text-2xl">Build Your Own Plan</CardTitle>
+            <CardDescription>Tailor a plan that fits your exact needs.</CardDescription>
+        </CardHeader>
+        <CardContent className="flex flex-col flex-grow relative z-10 space-y-6">
+            <div className="space-y-4 text-left">
+                <div className="flex justify-between items-center">
+                    <Label htmlFor="credits-slider" className="font-semibold">Credits</Label>
+                    <span className="flex items-center gap-2 font-bold text-primary">
+                        <Gem className="h-4 w-4" />{credits.toLocaleString()}
+                    </span>
+                </div>
+                <Slider 
+                    id="credits-slider" 
+                    value={[credits]} 
+                    onValueChange={([val]) => setCredits(val)} 
+                    min={100} 
+                    max={10000} 
+                    step={100} 
+                />
+            </div>
+
+            <div className="space-y-4">
+                <div className="flex items-center justify-between">
+                    <Label htmlFor="ad-free-switch" className="flex items-center gap-2"><ShieldCheck /> Ad-Free</Label>
+                    <Switch id="ad-free-switch" checked={adFree} onCheckedChange={setAdFree} />
+                </div>
+                <div className="flex items-center justify-between">
+                    <Label htmlFor="high-quality-switch" className="flex items-center gap-2"><Star /> High Quality</Label>
+                    <Switch id="high-quality-switch" checked={highQuality} onCheckedChange={setHighQuality} />
+                </div>
+                <div className="flex items-center justify-between">
+                    <Label htmlFor="api-access-switch" className="flex items-center gap-2"><Zap /> API Access</Label>
+                    <Switch id="api-access-switch" checked={apiAccess} onCheckedChange={setApiAccess} />
+                </div>
+            </div>
+            
+            <div className="!mt-auto pt-6">
+                <CardDescription>Billed {isAnnual ? 'Annually' : 'Monthly'}</CardDescription>
+                <p className="text-4xl font-bold text-foreground">
+                    {isLKR ? `LKR ${(calculatePrice * 300).toLocaleString()}` : `$${calculatePrice}`}
+                </p>
+                <Button className="w-full mt-4" onClick={handlePurchase}>Purchase Custom Plan</Button>
+            </div>
+        </CardContent>
+    </Card>
+  )
+}
 
 function PricingComponent() {
   const [isAnnual, setIsAnnual] = useState(false);
@@ -119,34 +221,7 @@ function PricingComponent() {
               </CardContent>
             </Card>
           ))}
-          <Card className="flex flex-col text-center transform hover:-translate-y-2 transition-transform duration-300 border-border">
-              <CardHeader>
-                <CardTitle className="text-2xl">Enterprise</CardTitle>
-                <CardDescription>
-                    <span className="text-4xl font-bold text-foreground">
-                        Custom
-                    </span>
-                </CardDescription>
-              </CardHeader>
-              <CardContent className="flex flex-col flex-grow">
-                 <p className="text-lg font-semibold text-muted-foreground mb-4">
-                    For large-scale needs
-                </p>
-                <ul className="space-y-3 mb-8 text-left">
-                    <li className="flex items-start gap-3"><Check className="h-5 w-5 text-green-500 mt-1 flex-shrink-0" />Custom Credit Limits</li>
-                    <li className="flex items-start gap-3"><Check className="h-5 w-5 text-green-500 mt-1 flex-shrink-0" />Volume Discounts</li>
-                    <li className="flex items-start gap-3"><Check className="h-5 w-5 text-green-500 mt-1 flex-shrink-0" />Advanced Security</li>
-                    <li className="flex items-start gap-3"><Check className="h-5 w-5 text-green-500 mt-1 flex-shrink-0" />Dedicated Support</li>
-                    <li className="flex items-start gap-3"><Check className="h-5 w-5 text-green-500 mt-1 flex-shrink-0" />Custom Integrations</li>
-                </ul>
-                <Button asChild variant="secondary" className="w-full mt-auto">
-                   <Link href="/contact">
-                        <Mail className="mr-2 h-4 w-4" />
-                        Contact Sales
-                   </Link>
-                </Button>
-              </CardContent>
-            </Card>
+          <CustomPlanCard isAnnual={isAnnual} isLKR={isLKR} />
         </div>
     </div>
   );
@@ -159,3 +234,5 @@ export function PricingClient() {
     </Suspense>
   )
 }
+
+    
