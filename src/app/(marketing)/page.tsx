@@ -10,7 +10,9 @@ export default function LandingPage() {
   let imagePaths: string[] = [];
   try {
     const imageFiles = fs.readdirSync(imageDirectory);
-    imagePaths = imageFiles.map(file => `/images/${file}`);
+    imagePaths = imageFiles
+      .filter(file => /\.(png|jpg|jpeg|webp)$/i.test(file)) // Filter for image files
+      .map(file => `/images/${file}`);
   } catch (error) {
     console.error("Could not read gallery images:", error);
     // If there's an error, we'll pass an empty array to the client
