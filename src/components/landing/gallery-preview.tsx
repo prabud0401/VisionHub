@@ -56,6 +56,10 @@ export default function GalleryPreview({ imagePaths }: { imagePaths: string[] })
   const shuffledRow2 = useMemo(() => shuffleArray(imagePaths), [imagePaths]);
   const shuffledRow3 = useMemo(() => shuffleArray(imagePaths), [imagePaths]);
   
+  if (imagePaths.length === 0) {
+    return null; // Don't render anything if no images were found
+  }
+
   return (
     <section id="gallery" className="py-20 bg-transparent overflow-hidden">
       <div className="text-center mb-12">
