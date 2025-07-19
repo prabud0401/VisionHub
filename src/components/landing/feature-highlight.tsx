@@ -30,6 +30,10 @@ export default function FeatureHighlight({
   buttonLink,
   buttonIcon,
 }: FeatureHighlightProps) {
+  if (title === 'AI Inpainting & Outpainting') {
+    imageUrl = "https://storage.googleapis.com/visionhub-ai-s813r.appspot.com/public/AI%20Inpainting%20&%20Outpainting.png";
+  }
+
   return (
     <section className="py-12 lg:py-16">
       <div className="container mx-auto px-4 flex justify-center">

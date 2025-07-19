@@ -26,7 +26,7 @@ export default function AppLayout({
   if (loading || !user) {
     return (
       <div className="flex h-screen flex-col items-center justify-center bg-background gap-4">
-        <Image src="/visionhub.png" alt="VisionHub Logo" width={200} height={50} />
+        <Image src="https://storage.googleapis.com/visionhub-ai-s813r.appspot.com/public/visionhub.png" alt="VisionHub Logo" width={200} height={50} />
         <p className="text-muted-foreground animate-pulse">Unleashing Creativity...</p>
       </div>
     );
