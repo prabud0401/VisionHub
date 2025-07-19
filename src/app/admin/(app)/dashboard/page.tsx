@@ -19,11 +19,11 @@ interface ChartData {
 }
 
 const chartConfig = {
-    images: {
+    total: {
         label: 'Images',
         color: 'hsl(var(--chart-1))',
     },
-}
+} satisfies import('@/components/ui/chart').ChartConfig;
 
 export default function AdminDashboardPage() {
   const [stats, setStats] = useState<AdminStats | null>(null);
@@ -130,7 +130,7 @@ export default function AdminDashboardPage() {
                                 allowDecimals={false}
                             />
                             <ChartTooltip cursor={false} content={<ChartTooltipContent />} />
-                            <Bar dataKey="total" fill="var(--color-images)" radius={4} />
+                            <Bar dataKey="total" fill="var(--color-total)" radius={4} />
                         </BarChart>
                     </ResponsiveContainer>
                 </ChartContainer>
