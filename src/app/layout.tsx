@@ -6,14 +6,16 @@ import { AuthModal } from '@/components/auth-modal';
 import { CookieConsentBanner } from '@/components/cookie-consent-banner';
 import type { Metadata } from 'next'
 
+const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://www.visionhub.pics';
+
 export const metadata: Metadata = {
-  metadataBase: new URL('https://www.visionhub.pics'),
+  metadataBase: new URL(siteUrl),
   title: 'VisionHub | AI Image & Video Generation',
   description: 'The ultimate AI toolkit for creators. Generate stunning images, videos, and more from text prompts with our suite of advanced generative AI models.',
   openGraph: {
     title: 'VisionHub | AI Image & Video Generation',
     description: 'Turn your imagination into reality. Create, edit, and upscale with the power of AI.',
-    url: 'https://www.visionhub.pics',
+    url: siteUrl,
     siteName: 'VisionHub',
     images: [
       {
