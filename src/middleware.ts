@@ -4,6 +4,13 @@ import fetch from 'node-fetch';
 
 const IPINFO_TOKEN = '6236b457796e9a';
 
+interface IPInfoResponse {
+  country?: string;
+  asn?: {
+    asn?: string;
+  };
+}
+
 export async function middleware(request: NextRequest) {
   // Only run this middleware for the pricing page
   if (request.nextUrl.pathname !== '/pricing') {
@@ -19,19 +26,20 @@ export async function middleware(request: NextRequest) {
     // Get IP address from request headers
     const ip = request.ip || request.headers.get('x-forwarded-for')?.split(',')[0] || '8.8.8.8';
     
-    // Fetch geolocation data from ipinfo.io
+    // Fetch geolocation data from ipinfo.io, including ASN details
     const response = await fetch(`https://ipinfo.io/${ip}?token=${IPINFO_TOKEN}`);
     if (!response.ok) {
         throw new Error(`IPInfo request failed with status ${response.status}`);
     }
-    const data: { country?: string } = await response.json();
+    const data: IPInfoResponse = await response.json();
     
     const country = data.country;
-    
+    const asn = data.asn?.asn;
+
     const url = request.nextUrl.clone();
 
-    // Set currency based on country
-    if (country === 'LK') {
+    // Set currency based on country or ASN
+    if (country === 'LK' || asn === 'AS32') {
       url.searchParams.set('currency', 'LKR');
     } else {
       url.searchParams.set('currency', 'USD');
