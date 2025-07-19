@@ -1,4 +1,3 @@
-
 'use client';
 import { useState } from 'react';
 import { Button } from '@/components/ui/button';
@@ -28,7 +27,7 @@ export default function HeroSection() {
   return (
     <section
       id="home"
-      className="relative w-full flex items-center justify-center text-white bg-cover bg-center bg-no-repeat pt-20"
+      className="relative w-full flex items-center justify-center min-h-screen text-white bg-cover bg-center bg-no-repeat pt-20"
       style={{
         backgroundImage: "url('/images/hero-background.png')"
       }}

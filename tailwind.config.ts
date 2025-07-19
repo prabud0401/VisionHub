@@ -16,6 +16,9 @@ export default {
       },
     },
     extend: {
+       minHeight: {
+        'screen': '100vh',
+      },
       fontFamily: {
         body: ['Inter', 'sans-serif'],
         headline: ['"Space Grotesk"', 'sans-serif'],
