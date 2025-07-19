@@ -14,6 +14,7 @@ import FeatureHighlight from '@/components/landing/feature-highlight';
 import Image from 'next/image';
 import { UseCaseShowcase } from '@/components/landing/use-case-showcase';
 import GalleryPreview from './gallery-preview';
+import Header from '@/components/layout/header';
 
 
 const CtaSection = () => (
@@ -50,7 +51,7 @@ export default function LandingPageClient({ imagePaths }: { imagePaths: string[]
     if (loading) {
         return (
             <div className="flex h-screen flex-col items-center justify-center bg-background gap-4">
-                <Image src="/images/visionhub.png" alt="VisionHub Logo" width={200} height={50} />
+                <Image src="/images/load.png" alt="VisionHub Logo" width={200} height={50} />
                 <p className="text-muted-foreground animate-pulse">Unleashing Creativity...</p>
             </div>
         );
@@ -58,6 +59,7 @@ export default function LandingPageClient({ imagePaths }: { imagePaths: string[]
     
     return (
         <div className="min-h-screen flex flex-col">
+            <Header />
             <main className="flex-1">
                 <HeroSection />
                 <Partners />
