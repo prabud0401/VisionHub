@@ -29,4 +29,4 @@ identity: {}
 # Defines the branch from your Git repository that will be deployed to the live channel.
 # Any push to this branch will trigger a new deployment.
 liveBranches:
-  - main
+  - live
