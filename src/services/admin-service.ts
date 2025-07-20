@@ -30,9 +30,10 @@ export async function verifyAdmin(email: string, secretCode: string): Promise<{ 
     return { success: false, message: 'Unauthorized email address.' };
   }
   
-  const serverSecret = process.env.ADMIN_SECRET_CODE;
+  // Hardcoded for simplicity as requested, though env variable is safer.
+  const serverSecret = "YourSuperSecretAdminPassword123";
   if (!serverSecret) {
-    console.error("ADMIN_SECRET_CODE is not set in environment variables.");
+    console.error("ADMIN_SECRET_CODE is not set.");
     return { success: false, message: 'Server configuration error.' };
   }
 
