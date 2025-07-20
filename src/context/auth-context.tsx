@@ -71,6 +71,9 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
   useEffect(() => {
     if (!auth) {
+      if (!loading) { // If auth is still null after initial loading attempt, stop loading.
+         setLoading(false);
+      }
       return;
     }
     const unsubscribe = onAuthStateChanged(auth, async (user) => {
@@ -88,7 +91,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       setLoading(false);
     });
     return () => unsubscribe();
-  }, [auth, refreshUserData]);
+  }, [auth, refreshUserData, loading]);
 
   const signInWithGoogle = async () => {
     if (!auth) throw new Error("Firebase is not configured. Cannot sign in.");
