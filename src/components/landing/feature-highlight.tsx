@@ -4,6 +4,7 @@
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader } from '@/components/ui/card';
+import { cn } from '@/lib/utils';
 import Image from 'next/image';
 import Link from 'next/link';
 
@@ -59,7 +60,7 @@ export default function FeatureHighlight({
           </CardHeader>
           <CardContent>
             <div className="py-6 text-center lg:relative lg:z-10 lg:h-full lg:flex lg:flex-col lg:justify-end lg:items-center lg:p-12 lg:text-foreground">
-              <Badge variant="secondary" className={`mb-4 text-sm ${!isLive && "animate-pulse"}`}>
+              <Badge variant="secondary" className={cn("mb-4 text-sm", !isLive && "animate-pulse")}>
                 {isLive ? 'Now Live!' : 'Coming Soon'}
               </Badge>
               <h2 className="text-3xl md:text-5xl font-bold mb-4">{title}</h2>
