@@ -54,8 +54,6 @@ export default function Header() {
   const pathname = usePathname();
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   
-  const isHomepage = pathname === '/';
-
   const handleLogout = async () => {
     await signOut();
     router.push('/');
