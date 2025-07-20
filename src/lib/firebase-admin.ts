@@ -9,7 +9,7 @@ if (!admin.apps.length) {
         // In a deployed environment, initialize with Application Default Credentials.
         try {
             admin.initializeApp({
-                storageBucket: "visionhub-77e32.firebasestorage.app",
+                storageBucket: "visionhub-8337b.appspot.com",
             });
             console.log("Firebase Admin SDK initialized with Application Default Credentials.");
         } catch (e) {
@@ -23,7 +23,7 @@ if (!admin.apps.length) {
                 const serviceAccount = JSON.parse(serviceAccountKey);
                 admin.initializeApp({
                     credential: admin.credential.cert(serviceAccount),
-                    storageBucket: "visionhub-77e32.firebasestorage.app",
+                    storageBucket: "visionhub-8337b.appspot.com",
                 });
                 console.log("Firebase Admin SDK initialized for local development with service account key.");
             } catch (e) {
