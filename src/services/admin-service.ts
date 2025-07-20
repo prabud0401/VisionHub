@@ -25,19 +25,20 @@ export interface AdminImage extends GeneratedImage {
   };
 }
 
+// IMPORTANT: The admin secret code has been hardcoded here.
+const ADMIN_SECRET_CODE = "YourSuperSecretAdminPassword123";
+
 export async function verifyAdmin(email: string, secretCode: string): Promise<{ success: boolean, message: string }> {
   if (email !== 'prabud0401@gmail.com') {
     return { success: false, message: 'Unauthorized email address.' };
   }
   
-  // Hardcoded for simplicity as requested, though env variable is safer.
-  const serverSecret = "YourSuperSecretAdminPassword123";
-  if (!serverSecret) {
+  if (!ADMIN_SECRET_CODE) {
     console.error("ADMIN_SECRET_CODE is not set.");
     return { success: false, message: 'Server configuration error.' };
   }
 
-  if (secretCode !== serverSecret) {
+  if (secretCode !== ADMIN_SECRET_CODE) {
     return { success: false, message: 'Invalid secret code.' };
   }
 
