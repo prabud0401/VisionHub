@@ -1,7 +1,7 @@
 import { MetadataRoute } from 'next'
  
 export default function sitemap(): MetadataRoute.Sitemap {
-  const baseUrl = 'http://visionhub.pics';
+  const baseUrl = 'http://localhost:9002';
 
   const marketingPages = [
     '/',
