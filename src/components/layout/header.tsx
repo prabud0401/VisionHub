@@ -68,20 +68,14 @@ export default function Header() {
 
   return (
     <>
-      <header className={cn(
-        "absolute top-0 left-0 w-full z-50",
-        !isHomepage && "relative bg-background/80 backdrop-blur-sm"
-      )}>
+      <header className="fixed top-0 left-0 w-full z-50 bg-background/80 backdrop-blur-sm">
         <div className="container mx-auto flex h-20 items-center justify-between px-4 md:px-6">
           <Link href="/">
              <Image src="/images/visionhub.png" alt="VisionHub Logo" width={180} height={45} className="w-[150px] md:w-[180px]" />
           </Link>
           <nav className="hidden items-center gap-6 text-sm font-medium md:flex">
             {mainNavLinks.map((link) => (
-              <Link key={link.href} href={link.href} className={cn(
-                "transition-colors hover:text-primary",
-                isHomepage ? 'text-white' : ''
-                )}>
+              <Link key={link.href} href={link.href} className="transition-colors hover:text-primary">
                 {link.label}
               </Link>
             ))}
@@ -89,10 +83,7 @@ export default function Header() {
           <div className="hidden items-center gap-2 md:flex">
             {user ? (
               <>
-                <div className={cn(
-                  "flex items-center gap-2 text-sm font-medium border border-border/50 rounded-full px-3 py-1.5",
-                  isHomepage ? "bg-black/20 backdrop-blur-sm text-white border-white/20" : "bg-card/50"
-                  )}>
+                <div className="flex items-center gap-2 text-sm font-medium border border-border/50 rounded-full px-3 py-1.5 bg-card/50">
                     <Gem className="mr-1 h-4 w-4 text-primary" />
                     <span>{user.credits ?? 0} Credits</span>
                      <Button variant="ghost" size="icon" className="h-6 w-6" asChild>
@@ -248,7 +239,7 @@ export default function Header() {
           </div>
         </div>
       </header>
-      {!isHomepage && <div className="h-20" />} 
+      <div className="h-20" />
     </>
   );
 }
