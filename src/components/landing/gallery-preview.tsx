@@ -2,6 +2,7 @@
 'use client';
 import Image from 'next/image';
 import { useMemo } from 'react';
+import { cn } from '@/lib/utils';
 
 // Fisher-Yates shuffle algorithm
 const shuffleArray = (array: string[]) => {
@@ -19,7 +20,7 @@ const MarqueeRow = ({ images, reverse = false }: { images: string[], reverse?: b
 
   return (
     <div className="flex w-max items-center">
-      <div className={`flex w-max items-center ${reverse ? 'animate-marquee-reverse' : 'animate-marquee'}`}>
+      <div className={cn("flex w-max items-center", reverse ? 'animate-marquee-reverse' : 'animate-marquee')}>
         {images.map((imgSrc, i) => (
           <div key={`marquee-${i}`} className="w-64 h-64 p-2">
              <Image
@@ -32,7 +33,7 @@ const MarqueeRow = ({ images, reverse = false }: { images: string[], reverse?: b
           </div>
         ))}
       </div>
-      <div className={`flex w-max items-center ${reverse ? 'animate-marquee-reverse' : 'animate-marquee'}`}>
+      <div className={cn("flex w-max items-center", reverse ? 'animate-marquee-reverse' : 'animate-marquee')}>
         {images.map((imgSrc, i) => (
           <div key={`marquee-clone-${i}`} className="w-64 h-64 p-2">
              <Image
