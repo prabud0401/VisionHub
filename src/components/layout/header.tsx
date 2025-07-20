@@ -69,7 +69,8 @@ export default function Header() {
   return (
     <>
       <header className={cn(
-        "z-50 relative bg-background/80 backdrop-blur-sm"
+        "z-50",
+        isHomepage ? "absolute top-0 left-0 w-full" : "relative bg-background/80 backdrop-blur-sm"
       )}>
         <div className="container mx-auto flex h-20 items-center justify-between px-4 md:px-6">
           <Link href="/">
@@ -247,7 +248,7 @@ export default function Header() {
           </div>
         </div>
       </header>
-      <div className="h-20" /> 
+      {!isHomepage && <div className="h-20" />} 
     </>
   );
 }
