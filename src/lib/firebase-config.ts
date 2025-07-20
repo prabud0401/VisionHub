@@ -1,11 +1,12 @@
 
 import { initializeApp, getApps, getApp, type FirebaseApp } from "firebase/app";
+import { getMessaging } from "firebase/messaging";
 
 const firebaseConfig = {
   apiKey: "AIzaSyBXLnz3KKO5WWgmkP_hbqb9L1cSySBbhis",
   authDomain: "visionhub-8337b.firebaseapp.com",
   projectId: "visionhub-8337b",
-  storageBucket: "visionhub-8337b.appspot.com",
+  storageBucket: "visionhub-8337b.firebasestorage.app",
   messagingSenderId: "186862385892",
   appId: "1:186862385892:web:467b5fe845b492a960caf1",
 };
@@ -30,6 +31,12 @@ function initializeFirebase() {
     } else {
         firebaseApp = getApp();
     }
+    
+    // Initialize messaging if in a browser environment
+    if (typeof window !== 'undefined') {
+        getMessaging(firebaseApp);
+    }
+    
     return firebaseApp;
   })();
 }
