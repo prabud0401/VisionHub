@@ -33,8 +33,8 @@ export async function verifyAdmin(email: string, secretCode: string): Promise<{ 
     return { success: false, message: 'Unauthorized email address.' };
   }
   
-  if (!ADMIN_SECRET_CODE) {
-    console.error("ADMIN_SECRET_CODE is not set.");
+  if (!ADMIN_SECRET_CODE || ADMIN_SECRET_CODE === "YourSuperSecretAdminPassword123") {
+    console.error("ADMIN_SECRET_CODE is not set or is using the default value.");
     return { success: false, message: 'Server configuration error.' };
   }
 
