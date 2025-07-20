@@ -2,12 +2,12 @@
 import { initializeApp, getApps, getApp, type FirebaseApp } from "firebase/app";
 
 const firebaseConfig = {
-  apiKey: "AIzaSyBXLnz3KKO5WWgmkP_hbqb9L1cSySBbhis",
-  authDomain: "visionhub-8337b.firebaseapp.com",
-  projectId: "visionhub-8337b",
-  storageBucket: "visionhub-8337b.firebasestorage.app",
-  messagingSenderId: "186862385892",
-  appId: "1:186862385892:web:467b5fe845b492a960caf1",
+  apiKey: "AIzaSyADeCv7wpYrCu6gbiHHQ_YUFOzkmnVvA8I",
+  authDomain: "visionhub-d7qr5.firebaseapp.com",
+  projectId: "visionhub-d7qr5",
+  storageBucket: "visionhub-d7qr5.firebasestorage.app",
+  messagingSenderId: "35792305008",
+  appId: "1:35792305008:web:YOUR_WEB_APP_ID_HERE",
 };
 
 let firebaseApp: FirebaseApp | null = null;
