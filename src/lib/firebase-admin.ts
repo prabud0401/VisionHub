@@ -9,7 +9,7 @@ if (!admin.apps.length) {
         // In a deployed environment, initialize with Application Default Credentials.
         try {
             admin.initializeApp({
-                storageBucket: "visionhub-ai-s813r.firebasestorage.app",
+                storageBucket: "visionhub-77e32.firebasestorage.app",
             });
             console.log("Firebase Admin SDK initialized with Application Default Credentials.");
         } catch (e) {
@@ -17,20 +17,20 @@ if (!admin.apps.length) {
         }
     } else {
         // In a local environment, fall back to a service account key.
-        const serviceAccountKey = process.env.FIREBASE_SERVICE_ACCOUNT_KEY;
+        const serviceAccountKey = process.env.SERVICE_ACCOUNT_KEY;
         if (serviceAccountKey) {
             try {
                 const serviceAccount = JSON.parse(serviceAccountKey);
                 admin.initializeApp({
                     credential: admin.credential.cert(serviceAccount),
-                    storageBucket: "visionhub-ai-s813r.firebasestorage.app",
+                    storageBucket: "visionhub-77e32.firebasestorage.app",
                 });
                 console.log("Firebase Admin SDK initialized for local development with service account key.");
             } catch (e) {
                 console.error("Failed to parse Firebase service account key or initialize app for local development:", e);
             }
         } else {
-            console.error("FIREBASE_SERVICE_ACCOUNT_KEY environment variable is not set. Firebase Admin SDK could not be initialized for local development.");
+            console.error("SERVICE_ACCOUNT_KEY environment variable is not set. Firebase Admin SDK could not be initialized for local development.");
         }
     }
 }
