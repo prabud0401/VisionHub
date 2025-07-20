@@ -69,8 +69,8 @@ export default function Header() {
   return (
     <>
       <header className={cn(
-        "z-50",
-        isHomepage ? "absolute top-0 left-0 w-full" : "relative bg-background/80 backdrop-blur-sm"
+        "absolute top-0 left-0 w-full z-50",
+        !isHomepage && "relative bg-background/80 backdrop-blur-sm"
       )}>
         <div className="container mx-auto flex h-20 items-center justify-between px-4 md:px-6">
           <Link href="/">
