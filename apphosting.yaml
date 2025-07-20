@@ -44,5 +44,4 @@ runConfig:
 # https://firebase.google.com/docs/app-hosting/manage-access
 #
 # This specifies that the backend should run as the default service account for App Hosting.
-identity:
-  serviceAccount: firebase-adminsdk-fbsvc@visionhub-77e32.iam.gserviceaccount.com
+identity: {}

@@ -7,9 +7,6 @@
       "**/.*",
       "**/node_modules/**"
     ],
-    "frameworksBackend": {
-      "serviceId": "visionhub-ai-backend",
-      "region": "us-central1"
-    }
+    "frameworksBackend": {}
   }
 }
