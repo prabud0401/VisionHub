@@ -9,7 +9,7 @@ The platform features a complete user authentication system, a credit-based usag
 
 You can view the live, deployed version of the application here:
 
-**[https://studio--visionhub-ai-s813r.us-central1.hosted.app/](https://studio--visionhub-ai-s813r.us-central1.hosted.app/)**
+**[https://studio--visionhub-uffkz.us-central1.hosted.app/](https://studio--visionhub-uffkz.us-central1.hosted.app/)**
 
 ## 🔧 Tech Stack
 

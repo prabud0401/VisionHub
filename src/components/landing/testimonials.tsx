@@ -24,7 +24,7 @@ export default function Testimonials() {
             <Card key={index} className="bg-card border-border/50 text-left relative overflow-hidden">
                 <div
                     className="absolute inset-0 bg-cover bg-center opacity-5"
-                    style={{ backgroundImage: "url('https://firebasestorage.googleapis.com/v0/b/visionhub-ai-s813r.firebasestorage.app/o/generated-images%2F6e8b8d45-91cc-4c58-afa3-0794a536b89d.png?alt=media')" }}
+                    style={{ backgroundImage: "url('https://firebasestorage.googleapis.com/v0/b/visionhub-uffkz.firebasestorage.app/o/generated-images%2F6e8b8d45-91cc-4c58-afa3-0794a536b89d.png?alt=media')" }}
                 />
                 <div className="absolute inset-0 bg-background/80" />
               <CardContent className="p-6 relative">

@@ -1,13 +1,13 @@
 
 {
   "projects": {
-    "default": "visionhub-ai-s813r"
+    "default": "visionhub-uffkz"
   },
   "targets": {
-    "visionhub-ai-s813r": {
+    "visionhub-uffkz": {
       "hosting": {
         "live": [
-          "visionhub-ai-s813r"
+          "visionhub-uffkz"
         ]
       }
     }
