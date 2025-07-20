@@ -7,7 +7,7 @@ const firebaseConfig = {
   projectId: "visionhub-d7qr5",
   storageBucket: "visionhub-d7qr5.firebasestorage.app",
   messagingSenderId: "35792305008",
-  appId: "1:35792305008:web:YOUR_WEB_APP_ID_HERE",
+  appId: "1:35792305008:web:2368097c39f7cca720adb5",
 };
 
 let firebaseApp: FirebaseApp | null = null;
