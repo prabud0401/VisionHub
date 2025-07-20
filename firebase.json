@@ -7,6 +7,9 @@
       "**/.*",
       "**/node_modules/**"
     ],
-    "frameworksBackend": {}
+    "frameworksBackend": {
+      "backendId": "studio",
+      "region": "us-central1"
+    }
   }
 }
