@@ -85,7 +85,7 @@ export default function LandingPageClient({ imagePaths }: { imagePaths: string[]
                  <FeatureHighlight
                     title="AI Inpainting & Outpainting"
                     description="Edit images with precision. Erase parts of an image and regenerate them with a new prompt, or expand your canvas infinitely. Perfect for making targeted changes."
-                    imageUrl="/images/AI Inpainting & Outpainting.png"
+                    imageUrl="https://visionhub.pics/images/AI Inpainting & Outpainting.png"
                     imageHint="A beautiful landscape photo being expanded. The original photo is in the center, and the AI is generating new scenery on all sides to make the image wider. The new parts blend seamlessly."
                  />
                 <FeatureHighlight
