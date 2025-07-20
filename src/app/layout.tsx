@@ -21,7 +21,7 @@ export const metadata: Metadata = {
     siteName: 'VisionHub',
     images: [
       {
-        url: '/images/og-image.png',
+        url: '/og-image.png',
         width: 1200,
         height: 630,
         alt: 'AI generated artwork showing a vibrant, abstract visual',
@@ -34,7 +34,7 @@ export const metadata: Metadata = {
     card: 'summary_large_image',
     title: 'VisionHub | AI Image & Video Generation',
     description: 'The ultimate AI toolkit for creators. Generate stunning images, videos, and more from text prompts.',
-    images: ['/images/og-image.png'],
+    images: ['/og-image.png'],
   },
 }
 
