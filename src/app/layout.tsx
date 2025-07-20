@@ -6,7 +6,9 @@ import { AuthModal } from '@/components/auth-modal';
 import { CookieConsentBanner } from '@/components/cookie-consent-banner';
 import type { Metadata } from 'next'
 
-const siteUrl = 'http://localhost:9002';
+const siteUrl = process.env.NODE_ENV === 'production' 
+  ? 'https://visionhub.pics' 
+  : 'http://localhost:9002';
 
 export const metadata: Metadata = {
   metadataBase: new URL(siteUrl),
