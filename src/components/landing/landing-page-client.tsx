@@ -14,8 +14,6 @@ import FeatureHighlight from '@/components/landing/feature-highlight';
 import Image from 'next/image';
 import { UseCaseShowcase } from '@/components/landing/use-case-showcase';
 import GalleryPreview from './gallery-preview';
-import Header from '@/components/layout/header';
-
 
 const CtaSection = () => (
     <section className="py-20 lg:py-24 bg-card/50">
@@ -59,7 +57,6 @@ export default function LandingPageClient({ imagePaths }: { imagePaths: string[]
     
     return (
         <div className="min-h-screen flex flex-col">
-            <Header />
             <main className="flex-1">
                 <HeroSection />
                 <Partners />
