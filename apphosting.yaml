@@ -25,3 +25,8 @@ runConfig:
 #
 # This specifies that the backend should run as the default service account for App Hosting.
 identity: {}
+
+# Defines the branch from your Git repository that will be deployed to the live channel.
+# Any push to this branch will trigger a new deployment.
+liveBranches:
+  - live
