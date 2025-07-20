@@ -10,7 +10,7 @@ if (!admin.apps.length) {
     try {
         admin.initializeApp({
             credential: admin.credential.cert(serviceAccountKey),
-            storageBucket: "visionhub-8337b.firebasestorage.app",
+            storageBucket: "visionhub-d7qr5.appspot.com",
         });
         console.log("Firebase Admin SDK initialized with hardcoded service account key.");
     } catch (e) {
