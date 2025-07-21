@@ -4,12 +4,14 @@
 import { Moon, Sun } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { useLocalStorage } from '@/hooks/use-local-storage';
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 
 export function ThemeToggle() {
   const [theme, setTheme] = useLocalStorage<'dark' | 'light'>('theme', 'dark');
+  const [mounted, setMounted] = useState(false);
 
   useEffect(() => {
+    setMounted(true);
     document.documentElement.classList.remove('dark', 'light');
     document.documentElement.classList.add(theme);
   }, [theme]);
@@ -17,6 +19,11 @@ export function ThemeToggle() {
   const toggleTheme = () => {
     setTheme(theme === 'dark' ? 'light' : 'dark');
   };
+
+  if (!mounted) {
+    // Render a placeholder or nothing until mounted to avoid hydration mismatch
+    return <Button variant="ghost" size="icon" disabled className="h-10 w-10" />;
+  }
 
   return (
     <Button variant="ghost" size="icon" onClick={toggleTheme}>
