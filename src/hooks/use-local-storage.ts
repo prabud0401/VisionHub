@@ -19,26 +19,20 @@ export function useLocalStorage<T>(
   const isClient = useIsClient();
   const [loaded, setLoaded] = useState(false);
 
-  // This function reads the value from localStorage
-  const readValue = useCallback((): T => {
-    // Prevent server-side execution
-    if (!isClient) {
+  // Initialize state with a function to read from localStorage only on the client
+  const [storedValue, setStoredValue] = useState<T>(() => {
+    // During server-side rendering or before the client is ready, return initialValue.
+    if (typeof window === 'undefined') {
       return initialValue;
     }
-    // Read from localStorage
     try {
       const item = window.localStorage.getItem(key);
-      if (item) {
-        return JSON.parse(item) as T;
-      }
+      return item ? JSON.parse(item) : initialValue;
     } catch (error) {
       console.warn(`Error reading localStorage key “${key}”:`, error);
+      return initialValue;
     }
-    setLoaded(true);
-    return initialValue;
-  }, [isClient, key, initialValue]);
-
-  const [storedValue, setStoredValue] = useState<T>(initialValue);
+  });
 
   // This function sets the value in both state and localStorage
   const setValue = (value: T | ((val: T) => T)) => {
@@ -56,14 +50,24 @@ export function useLocalStorage<T>(
     }
   };
 
-  // Re-read from localStorage when the key or client status changes.
+  // Effect to update the state if localStorage changes in another tab
   useEffect(() => {
-    setStoredValue(readValue());
     if (isClient) {
-      setLoaded(true);
+      const handleStorageChange = (e: StorageEvent) => {
+        if (e.key === key) {
+          try {
+            setStoredValue(e.newValue ? JSON.parse(e.newValue) : initialValue);
+          } catch (error) {
+            console.warn(`Error parsing localStorage change for key “${key}”:`, error);
+          }
+        }
+      };
+      window.addEventListener('storage', handleStorageChange);
+      // Set loaded to true once we're on the client
+      setLoaded(true); 
+      return () => window.removeEventListener('storage', handleStorageChange);
     }
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [key, isClient]);
+  }, [isClient, key, initialValue]);
 
   return [storedValue, setValue, loaded];
 }

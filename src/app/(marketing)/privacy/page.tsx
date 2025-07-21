@@ -1,11 +1,14 @@
 
+'use client';
+
 import { DocPageLayout } from "@/components/doc-page-layout";
 import { Metadata } from 'next';
+import { useEffect, useState } from "react";
 
-export const metadata: Metadata = {
-  title: 'Privacy Policy | VisionHub AI',
-  description: 'Read the privacy policy for the VisionHub AI platform.',
-};
+// export const metadata: Metadata = { // Metadata export is not allowed in client components
+//   title: 'Privacy Policy | VisionHub AI',
+//   description: 'Read the privacy policy for the VisionHub AI platform.',
+// };
 
 const sections = [
     { id: 'information-collection', title: '1. Information We Collect' },
@@ -15,10 +18,17 @@ const sections = [
 ];
 
 export default function PrivacyPage() {
+    const [lastUpdated, setLastUpdated] = useState('');
+
+    useEffect(() => {
+        // Safely set the date on the client side to avoid hydration mismatch
+        setLastUpdated(new Date().toLocaleDateString());
+    }, []);
+
     return (
         <DocPageLayout
             title="Privacy Policy"
-            description="Last updated: "
+            description={`Last updated: ${lastUpdated}`}
             sections={sections}
         >
             <section id="information-collection">
