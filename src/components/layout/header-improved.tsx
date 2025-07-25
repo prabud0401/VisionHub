@@ -244,19 +244,7 @@ const MobileMenu = memo(({
   }, [onLogout, onOpenChange]);
 
   return (
-    <Sheet open={isOpen} onOpenChange={onOpenChange}>
-      <SheetTrigger asChild>
-        <Button 
-          variant="ghost" 
-          size="icon" 
-          className="h-12 w-12 md:hidden focus:ring-2 focus:ring-primary focus:ring-offset-2"
-          aria-label="Open navigation menu"
-        >
-          <Menu className="h-8 w-8" />
-          <span className="sr-only">Toggle navigation menu</span>
-        </Button>
-      </SheetTrigger>
-      <SheetContent side="right" className="p-0 flex flex-col">
+    <SheetContent side="right" className="p-0 flex flex-col">
         <SheetTitle className="sr-only">Navigation Menu</SheetTitle>
         <SheetDescription className="sr-only">
           Main navigation menu for VisionHub
@@ -387,7 +375,6 @@ const MobileMenu = memo(({
           </div>
         )}
       </SheetContent>
-    </Sheet>
   );
 });
 
@@ -548,29 +535,31 @@ export default function ImprovedHeader() {
 
           {/* Mobile Menu */}
           <div className="md:hidden">
-            <Button 
-              variant="ghost" 
-              size="icon" 
-              className={`h-12 w-12 focus:ring-2 focus:ring-offset-2 focus:ring-offset-transparent transition-colors ${
-                isScrolled 
-                  ? 'text-foreground hover:bg-muted focus:ring-primary' 
-                  : 'text-white hover:bg-white/20 focus:ring-white/50'
-              }`}
-              aria-label="Open navigation menu"
-              onClick={() => setMobileMenuOpen(true)}
-            >
-              <Menu className="h-8 w-8" />
-              <span className="sr-only">Toggle navigation menu</span>
-            </Button>
+            <Sheet open={ui.isMobileMenuOpen} onOpenChange={setMobileMenuOpen}>
+              <SheetTrigger asChild>
+                <Button 
+                  variant="ghost" 
+                  size="icon" 
+                  className={`h-12 w-12 focus:ring-2 focus:ring-offset-2 focus:ring-offset-transparent transition-colors ${
+                    isScrolled 
+                      ? 'text-foreground hover:bg-muted focus:ring-primary' 
+                      : 'text-white hover:bg-white/20 focus:ring-white/50'
+                  }`}
+                  aria-label="Open navigation menu"
+                >
+                  <Menu className="h-8 w-8" />
+                  <span className="sr-only">Toggle navigation menu</span>
+                </Button>
+              </SheetTrigger>
+              <MobileMenu
+                isOpen={ui.isMobileMenuOpen}
+                onOpenChange={setMobileMenuOpen}
+                user={user}
+                onLogout={handleLogout}
+                onAuthModalOpen={handleAuthModalOpen}
+              />
+            </Sheet>
           </div>
-          
-          <MobileMenu
-            isOpen={ui.isMobileMenuOpen}
-            onOpenChange={setMobileMenuOpen}
-            user={user}
-            onLogout={handleLogout}
-            onAuthModalOpen={handleAuthModalOpen}
-          />
         </div>
       </header>
       
