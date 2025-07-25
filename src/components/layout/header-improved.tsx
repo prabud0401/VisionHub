@@ -423,11 +423,17 @@ export default function ImprovedHeader() {
   const [isClient, setIsClient] = useState(false);
   const [isVisible, setIsVisible] = useState(true);
   const [isScrolled, setIsScrolled] = useState(false);
+  const [isHydrated, setIsHydrated] = useState(false);
   const lastScrollY = useRef(0);
 
   // Handle hydration issues
   useEffect(() => {
     setIsClient(true);
+    // Add a small delay to ensure proper hydration
+    const timer = setTimeout(() => {
+      setIsHydrated(true);
+    }, 100);
+    return () => clearTimeout(timer);
   }, []);
 
   // Handle scroll behavior
@@ -489,7 +495,7 @@ export default function ImprovedHeader() {
   }, [setAuthModalOpen]);
 
   // Show skeleton during SSR and initial hydration
-  if (!isClient) {
+  if (!isClient || !isHydrated) {
     return <HeaderSkeleton />;
   }
 

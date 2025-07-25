@@ -50,13 +50,38 @@ export default function RootLayout({
         <link rel="preconnect" href="https://fonts.googleapis.com" />
         <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
         <link
-          href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700&family=Space+Grotesk:wght@400;500;700&display=swap"
+          href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Space+Grotesk:wght@400;500;600;700&display=swap"
           rel="stylesheet"
         />
         <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-4363233136452065"
      crossOrigin="anonymous"></script>
+        {/* Ensure consistent styling across environments */}
+        <style dangerouslySetInnerHTML={{
+          __html: `
+            /* Force dark mode consistency */
+            html { color-scheme: dark; }
+            
+            /* Ensure proper font loading */
+            body { 
+              font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+              -webkit-font-smoothing: antialiased;
+              -moz-osx-font-smoothing: grayscale;
+            }
+            
+            /* Prevent FOUC (Flash of Unstyled Content) */
+            .dark { color-scheme: dark; }
+            
+            /* Ensure proper backdrop blur support */
+            @supports (backdrop-filter: blur(10px)) {
+              .backdrop-blur-glass {
+                backdrop-filter: blur(12px) saturate(180%);
+                background-color: rgba(255, 255, 255, 0.1);
+              }
+            }
+          `
+        }} />
       </head>
-      <body className="font-body antialiased bg-background text-foreground">
+      <body className="font-body antialiased bg-background text-foreground min-h-screen">
           <AuthProvider>
             {children}
             <AuthModal />
