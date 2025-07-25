@@ -25,8 +25,8 @@ export interface AdminImage extends GeneratedImage {
   };
 }
 
-// IMPORTANT: The admin secret code has been hardcoded here.
-const ADMIN_SECRET_CODE = "YourSuperSecretAdminPassword123";
+// Use environment variable for admin secret code
+const ADMIN_SECRET_CODE = process.env.ADMIN_SECRET_CODE;
 
 export async function verifyAdmin(email: string, secretCode: string): Promise<{ success: boolean, message: string }> {
   if (email !== 'prabud0401@gmail.com') {
@@ -82,7 +82,7 @@ export async function deleteUser(uid: string): Promise<void> {
 
     // Optionally, delete user's generated images (batch delete for efficiency)
     const imagesSnapshot = await firestore.collection('images').where('userId', '==', uid).get();
-    if (!imagesSnapshot.empty) {
+    if (!imagesSnapshot.empty && firestore) {
         const batch = firestore.batch();
         imagesSnapshot.docs.forEach(doc => {
             batch.delete(doc.ref);
