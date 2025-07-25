@@ -1,5 +1,6 @@
 
-import { DashboardClient } from '@/components/dashboard-client';
+import { DashboardContainer } from '@/components/dashboard/dashboard-container';
+import { ErrorBoundary } from '@/components/error-boundary';
 import { Metadata } from 'next';
 
 export const metadata: Metadata = {
@@ -18,7 +19,9 @@ export default function DashboardPage() {
           Describe your vision and let our AI bring it to life. Use the prompt enhancer for more creative results.
         </p>
       </div>
-      <DashboardClient />
+      <ErrorBoundary>
+        <DashboardContainer />
+      </ErrorBoundary>
     </div>
   );
 }

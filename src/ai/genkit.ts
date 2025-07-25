@@ -1,9 +1,12 @@
 import {genkit} from 'genkit';
 import {googleAI} from '@genkit-ai/googleai';
 
-// IMPORTANT: Your Gemini API key has been hardcoded here.
-// This is a security risk. It is strongly recommended to use environment variables.
-const GEMINI_API_KEY = "AIzaSyDHNPNcQ98-iU0H-_EAzmeiRblkrVPzU64";
+// Use environment variable for API key for security
+const GEMINI_API_KEY = process.env.GEMINI_API_KEY || process.env.NEXT_PUBLIC_GEMINI_API_KEY;
+
+if (!GEMINI_API_KEY) {
+  throw new Error('GEMINI_API_KEY environment variable is required');
+}
 
 export const ai = genkit({
   plugins: [googleAI({apiKey: GEMINI_API_KEY})],

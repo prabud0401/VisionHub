@@ -4,8 +4,9 @@
 import { useAuth } from '@/context/auth-context';
 import { useRouter } from 'next/navigation';
 import { useEffect } from 'react';
-import Header from '@/components/layout/header';
+import ImprovedHeader from '@/components/layout/header-improved';
 import Footer from '@/components/layout/footer';
+import { ErrorBoundary } from '@/components/error-boundary';
 import { Bot } from 'lucide-react';
 import Image from 'next/image';
 
@@ -34,9 +35,11 @@ export default function AppLayout({
 
   return (
     <div className="relative flex min-h-screen flex-col bg-background">
-      <Header />
-      <main className="flex-1">{children}</main>
-      <Footer />
+      <ErrorBoundary>
+        <ImprovedHeader />
+        <main className="flex-1 pt-20">{children}</main>
+        <Footer />
+      </ErrorBoundary>
     </div>
   );
 }

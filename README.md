@@ -64,9 +64,10 @@ Follow these instructions to set up and run the project on your local machine fo
 
 ### Prerequisites
 
-- [Node.js](https://nodejs.org/) (v18 or later recommended)
+- [Node.js](https://nodejs.org/) (v22.x recommended - see engines in package.json)
 - [npm](https://www.npmjs.com/) (usually comes with Node.js)
-- A Google account to create a Firebase project.
+- A Google account to create a Firebase project
+- A Google AI/Gemini API key for image generation
 
 ### **Step 1: Create and Configure Your Firebase Project**
 
@@ -146,6 +147,12 @@ This project requires Firebase credentials to connect to your backend services.
     ADMIN_SECRET_CODE=YourSuperSecretAdminPassword123
     ```
 
+5. **Set Google AI/Gemini API Key**
+    - Get your API key from [Google AI Studio](https://makersuite.google.com/app/apikey)
+    ```env
+    GEMINI_API_KEY=your_gemini_api_key_here
+    ```
+
 ### **Step 4: Running the Application**
 
 Once your environment variables are set, you can start the development server.
@@ -162,3 +169,16 @@ The application will be running at `http://localhost:9002`.
 2. Log in using:
    - **Email:** `prabud0401@gmail.com`
    - **Secret Code:** The value you set for `ADMIN_SECRET_CODE` in your `.env` file.
+
+## 🚀 Recent Improvements
+
+This application has been significantly improved with:
+
+- **🔧 Enhanced Architecture**: Modular component structure with better separation of concerns
+- **⚡ Performance Optimizations**: Memoization, lazy loading, and optimized rendering
+- **🛡️ Error Handling**: React Error Boundaries and comprehensive error management
+- **🎨 Better UX**: Improved loading states, animations, and accessibility
+- **🔒 Security**: Environment-based configuration and secure API key management
+- **📱 SSR/Hydration**: Fixed deployment issues with proper server-side rendering
+
+For detailed information about the improvements, see [IMPROVEMENTS.md](./IMPROVEMENTS.md).

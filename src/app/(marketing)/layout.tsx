@@ -1,6 +1,7 @@
 
 import Footer from "@/components/layout/footer";
-import Header from "@/components/layout/header";
+import ImprovedHeader from "@/components/layout/header-improved";
+import { ErrorBoundary } from "@/components/error-boundary";
 
 export default function MarketingLayout({
   children,
@@ -9,9 +10,11 @@ export default function MarketingLayout({
 }) {
   return (
     <div className="flex flex-col min-h-screen bg-background">
-      <Header />
-      <main className="flex-1">{children}</main>
-      <Footer />
+      <ErrorBoundary>
+        <ImprovedHeader />
+        <main className="flex-1 relative">{children}</main>
+        <Footer />
+      </ErrorBoundary>
     </div>
   );
 }
