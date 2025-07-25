@@ -3,7 +3,7 @@
 
 import { useState, useRef, useEffect } from 'react';
 import Image from 'next/image';
-import { Download, Loader2, UploadCloud, Wand2, X, AspectRatio, Trash2 } from 'lucide-react';
+import { Download, Loader2, UploadCloud, Wand2, X, Trash2 } from 'lucide-react';
 import { removeImageBackground } from '@/ai/flows/remove-image-background';
 import { upscaleImage } from '@/ai/flows/upscale-image';
 import { Button } from '@/components/ui/button';
@@ -152,7 +152,7 @@ export function ImageUpgradeClient() {
             <Tabs defaultValue="remove-bg" className="w-full">
               <TabsList className="grid w-full grid-cols-2">
                 <TabsTrigger value="remove-bg"><Trash2 className="mr-2 h-4 w-4" />Remove Background</TabsTrigger>
-                <TabsTrigger value="upscale"><AspectRatio className="mr-2 h-4 w-4" />Upscale & Resize</TabsTrigger>
+                <TabsTrigger value="upscale"><Wand2 className="mr-2 h-4 w-4" />Upscale & Resize</TabsTrigger>
               </TabsList>
               <TabsContent value="remove-bg" className="pt-4 text-center">
                  <Button onClick={() => executeAiFlow('removeBg')} disabled={isLoading || !originalImage}>

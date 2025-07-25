@@ -2,6 +2,11 @@
 @tailwind components;
 @tailwind utilities;
 
+/* Force consistent dark mode across environments */
+:root {
+  color-scheme: dark;
+}
+
 /* Custom animations for improved UX */
 @keyframes float {
   0%, 100% {
@@ -139,6 +144,36 @@ html {
   );
 }
 
+/* Ensure consistent font rendering across environments */
+@layer base {
+  * {
+    @apply border-border;
+  }
+  
+  html {
+    color-scheme: dark;
+  }
+  
+  body {
+    @apply bg-background text-foreground;
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    text-rendering: optimizeLegibility;
+  }
+  
+  /* Ensure proper heading font weights */
+  h1, h2, h3, h4, h5, h6 {
+    @apply font-headline;
+    font-weight: 600;
+  }
+  
+  /* Improve button and input styling consistency */
+  button, input, textarea {
+    font-family: inherit;
+  }
+}
+
 @layer base {
   :root {
     --background: 222.2 84% 4.9%;
@@ -166,19 +201,6 @@ html {
     --chart-4: 280 65% 60%;
     --chart-5: 340 75% 55%;
   }
-}
-
-@layer base {
-  * {
-    @apply border-border;
-  }
-  body {
-    @apply bg-background text-foreground;
-  }
-}
-
-h1, h2, h3, h4, h5, h6 {
-  @apply font-headline;
 }
 
 @keyframes marquee {
@@ -261,4 +283,35 @@ h1, h2, h3, h4, h5, h6 {
 .ai-loader-dot {
     @apply absolute top-0 left-1/2 h-2 w-2 -ml-1 rounded-full bg-primary;
     animation: loader-inner-orbit 2s ease-in-out infinite;
+}
+
+/* Additional production-specific fixes */
+@media (prefers-reduced-motion: no-preference) {
+  .animate-float {
+    animation: float 4s ease-in-out infinite;
+  }
+}
+
+/* Ensure proper backdrop filter support */
+@supports (backdrop-filter: blur(10px)) {
+  .backdrop-blur-glass {
+    backdrop-filter: blur(12px) saturate(180%);
+    background-color: rgba(255, 255, 255, 0.1);
+  }
+  
+  .header-backdrop {
+    backdrop-filter: blur(10px) saturate(180%);
+    background-color: rgba(0, 0, 0, 0.1);
+  }
+}
+
+/* Fallback for browsers without backdrop-filter support */
+@supports not (backdrop-filter: blur(10px)) {
+  .backdrop-blur-glass {
+    background-color: rgba(0, 0, 0, 0.8);
+  }
+  
+  .header-backdrop {
+    background-color: rgba(0, 0, 0, 0.8);
+  }
 }
