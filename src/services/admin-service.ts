@@ -26,24 +26,34 @@ export interface AdminImage extends GeneratedImage {
   };
 }
 
-// Use environment variable for admin secret code
-const ADMIN_SECRET_CODE = env.ADMIN_SECRET_CODE;
-
 export async function verifyAdmin(email: string, secretCode: string): Promise<{ success: boolean, message: string }> {
-  if (email !== 'prabud0401@gmail.com') {
-    return { success: false, message: 'Unauthorized email address.' };
+  if (!firestore) {
+    return { success: false, message: 'Database service is not available.' };
   }
-  
-  if (!ADMIN_SECRET_CODE || ADMIN_SECRET_CODE === "YourSuperSecretAdminPassword123") {
-    console.error("ADMIN_SECRET_CODE is not set or is using the default value.");
-    return { success: false, message: 'Server configuration error.' };
+  if (!email || !secretCode) {
+    return { success: false, message: 'Email and secret code are required.' };
   }
 
-  if (secretCode !== ADMIN_SECRET_CODE) {
-    return { success: false, message: 'Invalid secret code.' };
-  }
+  try {
+    const usersRef = firestore.collection('users');
+    const snapshot = await usersRef.where('email', '==', email).limit(1).get();
 
-  return { success: true, message: 'Admin verified.' };
+    if (snapshot.empty) {
+      return { success: false, message: 'No admin account found for this email.' };
+    }
+
+    const adminUserDoc = snapshot.docs[0];
+    const adminUserData = adminUserDoc.data();
+
+    if (adminUserData.secretCode && adminUserData.secretCode === secretCode) {
+      return { success: true, message: 'Admin verified.' };
+    } else {
+      return { success: false, message: 'Invalid secret code.' };
+    }
+  } catch (error) {
+    console.error("Error verifying admin:", error);
+    return { success: false, message: 'An error occurred during verification.' };
+  }
 }
 
 export async function getAllUsers(): Promise<AdminUser[]> {
