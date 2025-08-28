@@ -17,6 +17,11 @@ let firebaseApp: FirebaseApp | null = null;
  * @returns The FirebaseApp instance, or null if configuration is missing.
  */
 export function getFirebaseApp(): FirebaseApp | null {
+    if (typeof window === 'undefined') {
+        // Return null on the server to prevent initialization
+        return null;
+    }
+    
     if (firebaseApp) {
         return firebaseApp;
     }
