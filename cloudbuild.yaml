@@ -1,0 +1,18 @@
+
+steps:
+  # Install dependencies
+  - name: 'gcr.io/cloud-builders/npm'
+    args: ['install']
+  # Build the Next.js application
+  - name: 'gcr.io/cloud-builders/npm'
+    args: ['run', 'build']
+artifacts:
+  objects:
+    location: 'gs://${_BUCKET_NAME}/'
+    paths:
+      - '.next/**'
+      - 'public/**'
+      - 'package.json'
+      - 'next.config.ts'
+options:
+  logging: CLOUD_LOGGING_ONLY

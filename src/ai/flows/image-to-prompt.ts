@@ -37,6 +37,7 @@ Describe the key elements, the style, the composition, the lighting, and any oth
 
 const prompt = ai.definePrompt({
   name: 'imageToPromptPrompt',
+  model: 'googleai/gemini-pro-vision',
   input: {schema: ImageToPromptInputSchema},
   output: {schema: ImageToPromptOutputSchema},
   system: systemPrompt,
