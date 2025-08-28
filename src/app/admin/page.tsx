@@ -27,13 +27,6 @@ export default function AdminLoginPage() {
     setIsLoading(true);
     setError(null);
 
-    // Basic validation
-    if (email !== 'prabud0401@gmail.com') {
-      setError('Invalid admin email address.');
-      setIsLoading(false);
-      return;
-    }
-
     try {
       const { success, message } = await verifyAdmin(email, secretCode);
 
@@ -70,7 +63,7 @@ export default function AdminLoginPage() {
               <Input
                 id="email"
                 type="email"
-                placeholder="prabud0401@gmail.com"
+                placeholder="admin@example.com"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
                 required

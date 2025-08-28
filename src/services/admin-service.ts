@@ -25,33 +25,48 @@ export interface AdminImage extends GeneratedImage {
   };
 }
 
-// Use environment variable for admin secret code
-const ADMIN_SECRET_CODE = process.env.ADMIN_SECRET_CODE;
-
 export async function verifyAdmin(email: string, secretCode: string): Promise<{ success: boolean, message: string }> {
-  if (email !== 'prabud0401@gmail.com') {
-    return { success: false, message: 'Unauthorized email address.' };
+  if (!firestore) {
+    return { success: false, message: 'Database service is not available.' };
   }
-  
-  if (!ADMIN_SECRET_CODE || ADMIN_SECRET_CODE === "YourSuperSecretAdminPassword123") {
-    console.error("ADMIN_SECRET_CODE is not set or is using the default value.");
-    return { success: false, message: 'Server configuration error.' };
+  if (!email || !secretCode) {
+    return { success: false, message: 'Email and secret code are required.' };
   }
 
-  if (secretCode !== ADMIN_SECRET_CODE) {
-    return { success: false, message: 'Invalid secret code.' };
-  }
+  try {
+    // Query the dedicated 'admins' collection
+    const adminRef = firestore.collection('admins').doc(email);
+    const adminDoc = await adminRef.get();
 
-  return { success: true, message: 'Admin verified.' };
+    if (!adminDoc.exists) {
+      return { success: false, message: 'Admin account not found for this email.' };
+    }
+
+    const adminData = adminDoc.data();
+
+    // Check if the secretCode in the document matches the one provided
+    if (adminData?.secretCode && adminData.secretCode === secretCode) {
+      return { success: true, message: 'Admin verified.' };
+    } else {
+      return { success: false, message: 'Invalid secret code.' };
+    }
+  } catch (error) {
+    console.error("Error verifying admin:", error);
+    return { success: false, message: 'An error occurred during verification.' };
+  }
 }
 
 export async function getAllUsers(): Promise<AdminUser[]> {
   if (!firestore) throw new Error('Firestore not initialized');
   const usersSnapshot = await firestore.collection('users').orderBy('createdAt', 'desc').get();
-  return usersSnapshot.docs.map(doc => ({
-    uid: doc.id,
-    ...doc.data()
-  } as AdminUser));
+  return usersSnapshot.docs.map(doc => {
+    const data = doc.data();
+    // Ensure createdAt is a serializable string
+    if (data.createdAt && typeof data.createdAt.toDate === 'function') {
+      data.createdAt = data.createdAt.toDate().toISOString();
+    }
+    return { uid: doc.id, ...data } as AdminUser;
+  });
 }
 
 export async function updateUserCredits(uid: string, credits: number): Promise<void> {
@@ -95,7 +110,14 @@ export async function getAllImages(): Promise<AdminImage[]> {
   if (!firestore) throw new Error('Firestore not initialized');
 
   const imagesSnapshot = await firestore.collection('images').orderBy('createdAt', 'desc').get();
-  const images = imagesSnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() } as GeneratedImage));
+  const images = imagesSnapshot.docs.map(doc => {
+    const data = doc.data();
+    // Ensure createdAt is a serializable string
+    if (data.createdAt && typeof data.createdAt.toDate === 'function') {
+      data.createdAt = data.createdAt.toDate().toISOString();
+    }
+    return { id: doc.id, ...data } as GeneratedImage
+  });
 
   // Fetch user data for each image to display owner info
   const userIds = [...new Set(images.map(img => img.userId))];

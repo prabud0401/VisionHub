@@ -2,7 +2,7 @@
 import { initializeApp, getApps, getApp, type FirebaseApp } from "firebase/app";
 
 const firebaseConfig = {
-    apiKey: "AIzaSyC9Q4HiRsruDd5weP0UCTcUnGb6PBZrtcE",
+    apiKey: "AIzaSyDHNPNcQ98-iU0H-_EAzmeiRblkrVPzU64",
     authDomain: "visionhub-uffkz.firebaseapp.com",
     projectId: "visionhub-uffkz",
     storageBucket: "visionhub-uffkz.firebasestorage.app",

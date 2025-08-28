@@ -161,7 +161,11 @@ export function DashboardResults({
 
   const handleDownloadImage = useCallback(async (image: GeneratedImage) => {
     try {
-      const response = await fetch(image.url);
+      // Use fetch with cors mode to handle potential cross-origin issues
+      const response = await fetch(image.url, { mode: 'cors' });
+      if (!response.ok) {
+          throw new Error(`Failed to fetch image: ${response.statusText}`);
+      }
       const blob = await response.blob();
       const url = window.URL.createObjectURL(blob);
       const link = document.createElement('a');
@@ -177,10 +181,11 @@ export function DashboardResults({
         description: 'Your image is being downloaded.',
       });
     } catch (error) {
+      console.error("Download error:", error);
       toast({
         variant: 'destructive',
         title: 'Download Failed',
-        description: 'Could not download the image. Please try again.',
+        description: 'Could not download the image. This might be a CORS issue. Please ensure your storage bucket is configured for cross-origin access.',
       });
     }
   }, [toast]);

@@ -47,7 +47,7 @@
     "dotenv": "^16.5.0",
     "embla-carousel-react": "^8.6.0",
     "express": "^5.1.0",
-    "firebase": "^10.12.2",
+    "firebase": "^10.14.1",
     "firebase-admin": "^12.1.1",
     "genkit": "^1.13.0",
     "lucide-react": "^0.480.0",
@@ -64,7 +64,7 @@
     "tailwindcss-animate": "^1.0.7",
     "use-debounce": "^10.0.3",
     "zod": "^3.24.2",
-    "zustand": "^5.0.6"
+    "zustand": "^4.5.2"
   },
   "devDependencies": {
     "@types/diff": "^5.2.1",
