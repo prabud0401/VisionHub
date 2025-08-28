@@ -59,10 +59,14 @@ export async function verifyAdmin(email: string, secretCode: string): Promise<{ 
 export async function getAllUsers(): Promise<AdminUser[]> {
   if (!firestore) throw new Error('Firestore not initialized');
   const usersSnapshot = await firestore.collection('users').orderBy('createdAt', 'desc').get();
-  return usersSnapshot.docs.map(doc => ({
-    uid: doc.id,
-    ...doc.data()
-  } as AdminUser));
+  return usersSnapshot.docs.map(doc => {
+    const data = doc.data();
+    // Ensure createdAt is a serializable string
+    if (data.createdAt && typeof data.createdAt.toDate === 'function') {
+      data.createdAt = data.createdAt.toDate().toISOString();
+    }
+    return { uid: doc.id, ...data } as AdminUser;
+  });
 }
 
 export async function updateUserCredits(uid: string, credits: number): Promise<void> {
@@ -106,7 +110,14 @@ export async function getAllImages(): Promise<AdminImage[]> {
   if (!firestore) throw new Error('Firestore not initialized');
 
   const imagesSnapshot = await firestore.collection('images').orderBy('createdAt', 'desc').get();
-  const images = imagesSnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() } as GeneratedImage));
+  const images = imagesSnapshot.docs.map(doc => {
+    const data = doc.data();
+    // Ensure createdAt is a serializable string
+    if (data.createdAt && typeof data.createdAt.toDate === 'function') {
+      data.createdAt = data.createdAt.toDate().toISOString();
+    }
+    return { id: doc.id, ...data } as GeneratedImage
+  });
 
   // Fetch user data for each image to display owner info
   const userIds = [...new Set(images.map(img => img.userId))];

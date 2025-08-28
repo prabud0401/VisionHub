@@ -2,7 +2,7 @@
 'use server';
 
 import { firestore, storage } from '@/lib/firebase-admin';
-import { FieldValue } from 'firebase-admin/firestore';
+import { FieldValue, Timestamp } from 'firebase-admin/firestore';
 
 if (!firestore || !storage) {
   console.warn(
@@ -72,13 +72,27 @@ export async function uploadPaymentSlip(
 export async function getPaymentSubmissions() {
     if (!firestore) throw new Error('Firestore is not initialized.');
     const snapshot = await firestore.collection('payments').orderBy('createdAt', 'desc').get();
-    return snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+    return snapshot.docs.map(doc => {
+      const data = doc.data();
+      // Ensure createdAt is a serializable string
+      if (data.createdAt && typeof data.createdAt.toDate === 'function') {
+        data.createdAt = data.createdAt.toDate().toISOString();
+      }
+      return { id: doc.id, ...data };
+    });
 }
 
 export async function getPaymentHistoryForUser(userId: string): Promise<UserPayment[]> {
     if (!firestore) throw new Error('Firestore is not initialized.');
     const snapshot = await firestore.collection('payments').where('userId', '==', userId).orderBy('createdAt', 'desc').get();
-    return snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() } as UserPayment));
+    return snapshot.docs.map(doc => {
+        const data = doc.data();
+        // Ensure createdAt is a serializable string
+        if (data.createdAt && typeof data.createdAt.toDate === 'function') {
+          data.createdAt = data.createdAt.toDate().toISOString();
+        }
+        return { id: doc.id, ...data } as UserPayment;
+    });
 }
 
 export async function approvePaymentAndAddCredits(paymentId: string, userId: string, creditsToAdd: number) {
