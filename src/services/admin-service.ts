@@ -34,18 +34,18 @@ export async function verifyAdmin(email: string, secretCode: string): Promise<{ 
   }
 
   try {
-    const usersRef = firestore.collection('users');
-    const snapshot = await usersRef.where('email', '==', email).limit(1).get();
+    // Query the dedicated 'admins' collection
+    const adminRef = firestore.collection('admins').doc(email);
+    const adminDoc = await adminRef.get();
 
-    if (snapshot.empty) {
-      return { success: false, message: 'No admin account found for this email.' };
+    if (!adminDoc.exists) {
+      return { success: false, message: 'Admin account not found for this email.' };
     }
 
-    const adminUserDoc = snapshot.docs[0];
-    const adminUserData = adminUserDoc.data();
+    const adminData = adminDoc.data();
 
-    // Check for the secretCode field in the user's document
-    if (adminUserData.secretCode && adminUserData.secretCode === secretCode) {
+    // Check if the secretCode in the document matches the one provided
+    if (adminData?.secretCode && adminData.secretCode === secretCode) {
       return { success: true, message: 'Admin verified.' };
     } else {
       return { success: false, message: 'Invalid secret code.' };
