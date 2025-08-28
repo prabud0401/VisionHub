@@ -12,26 +12,30 @@ const firebaseConfig = {
 
 let firebaseApp: FirebaseApp | null = null;
 
-function initializeFirebaseApp() {
-  if (getApps().length === 0) {
-    if (firebaseConfig.apiKey && !firebaseConfig.apiKey.includes('YOUR_API_KEY')) {
-      firebaseApp = initializeApp(firebaseConfig);
+/**
+ * Initializes and returns the Firebase app instance, ensuring it's only created once.
+ * @returns The FirebaseApp instance, or null if configuration is missing.
+ */
+export function getFirebaseApp(): FirebaseApp | null {
+    if (firebaseApp) {
+        return firebaseApp;
+    }
+
+    if (!getApps().length) {
+        if (firebaseConfig.apiKey && !firebaseConfig.apiKey.includes('YOUR_API_KEY')) {
+            try {
+                firebaseApp = initializeApp(firebaseConfig);
+            } catch (e) {
+                console.error("Firebase initialization error:", e);
+                return null;
+            }
+        } else {
+            console.warn("Firebase configuration is missing or incomplete. Firebase services will be disabled.");
+            return null;
+        }
     } else {
-      console.error("Firebase configuration is missing or incomplete. Firebase services will be disabled.");
+        firebaseApp = getApp();
     }
-  } else {
-    firebaseApp = getApp();
-  }
-}
-
-// Initialize the app
-initializeFirebaseApp();
-
-export function getFirebaseApp() {
-    if (!firebaseApp) {
-        console.error("Firebase App has not been initialized.");
-        // Attempt to re-initialize if it hasn't been set.
-        initializeFirebaseApp();
-    }
+    
     return firebaseApp;
 }
