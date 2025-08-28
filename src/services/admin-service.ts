@@ -5,6 +5,7 @@ import { firestore, storage } from '@/lib/firebase-admin';
 import { getAuth } from 'firebase-admin/auth';
 import type { GeneratedImage } from '@/lib/types';
 import { subDays, format, startOfDay } from 'date-fns';
+import { env } from '@/lib/env';
 
 export interface AdminUser {
   uid: string;
@@ -26,7 +27,7 @@ export interface AdminImage extends GeneratedImage {
 }
 
 // Use environment variable for admin secret code
-const ADMIN_SECRET_CODE = process.env.ADMIN_SECRET_CODE;
+const ADMIN_SECRET_CODE = env.ADMIN_SECRET_CODE;
 
 export async function verifyAdmin(email: string, secretCode: string): Promise<{ success: boolean, message: string }> {
   if (email !== 'prabud0401@gmail.com') {
