@@ -44,6 +44,7 @@ export async function verifyAdmin(email: string, secretCode: string): Promise<{ 
     const adminUserDoc = snapshot.docs[0];
     const adminUserData = adminUserDoc.data();
 
+    // Check for the secretCode field in the user's document
     if (adminUserData.secretCode && adminUserData.secretCode === secretCode) {
       return { success: true, message: 'Admin verified.' };
     } else {
