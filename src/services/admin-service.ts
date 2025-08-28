@@ -5,7 +5,6 @@ import { firestore, storage } from '@/lib/firebase-admin';
 import { getAuth } from 'firebase-admin/auth';
 import type { GeneratedImage } from '@/lib/types';
 import { subDays, format, startOfDay } from 'date-fns';
-import { env } from '@/lib/env';
 
 export interface AdminUser {
   uid: string;

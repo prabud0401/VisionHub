@@ -1,11 +1,11 @@
 import {genkit} from 'genkit';
 import {googleAI} from '@genkit-ai/googleai';
 
-// Use environment variable for API key for security
-const GEMINI_API_KEY = process.env.GEMINI_API_KEY || process.env.NEXT_PUBLIC_GEMINI_API_KEY;
+// IMPORTANT: Replace this with your actual Gemini API key
+const GEMINI_API_KEY = "YOUR_GEMINI_API_KEY_HERE";
 
-if (!GEMINI_API_KEY) {
-  throw new Error('GEMINI_API_KEY environment variable is required');
+if (!GEMINI_API_KEY || GEMINI_API_KEY === "YOUR_GEMINI_API_KEY_HERE") {
+  throw new Error('GEMINI_API_KEY is not set in src/ai/genkit.ts. Please add your key.');
 }
 
 export const ai = genkit({
