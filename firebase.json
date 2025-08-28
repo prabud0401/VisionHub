@@ -8,6 +8,7 @@
       "**/node_modules/**"
     ],
     "frameworksBackend": {
+      "customBuild": true,
       "backendId": "studio",
       "region": "us-central1"
     }
