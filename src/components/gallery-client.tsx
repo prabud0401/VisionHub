@@ -9,7 +9,7 @@ import { PromptGroupCard } from './prompt-group-card';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from '@/components/ui/dialog';
 import { Button } from './ui/button';
 import { Download, Loader2, Trash2, Wand2, ArrowLeft, ArrowRight, Grid, Grid3x3, Square, Eye, Share2, CheckCircle, Info, PlusCircle, Link as LinkIcon, Twitter, Facebook, Mail, Users } from 'lucide-react';
-import { getFirestore, collection, query, where, writeBatch, doc, onSnapshot, Unsubscribe, getDocs, limit, getCountFromServer } from 'firebase/firestore';
+import { getFirestore, collection, query, where, writeBatch, doc, onSnapshot, Unsubscribe, getDocs } from 'firebase/firestore';
 import { getFirebaseApp } from '@/lib/firebase-config';
 import {
   AlertDialog,
@@ -129,13 +129,6 @@ export function GalleryClient() {
         const imageColl = collection(db, 'images');
         const imageQuery = query(imageColl, where('userId', '==', user.uid));
         
-        const countQuery = query(collection(db, "images"), where("userId", "==", user.uid));
-        try {
-            const countSnapshot = await getCountFromServer(countQuery);
-            if (isMounted) setImageCount(countSnapshot.data().count);
-        } catch(e) { console.error("Could not get image count", e)}
-
-
         const processAndSetGroups = () => {
             if (!isMounted) return;
 
