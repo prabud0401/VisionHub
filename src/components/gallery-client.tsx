@@ -129,8 +129,9 @@ export function GalleryClient() {
         const imageColl = collection(db, 'images');
         const imageQuery = query(imageColl, where('userId', '==', user.uid));
         
+        const countQuery = query(collection(db, "images"), where("userId", "==", user.uid));
         try {
-            const countSnapshot = await getCountFromServer(imageQuery);
+            const countSnapshot = await getCountFromServer(countQuery);
             if (isMounted) setImageCount(countSnapshot.data().count);
         } catch(e) { console.error("Could not get image count", e)}
 
@@ -178,7 +179,7 @@ export function GalleryClient() {
 
             imageUnsubscribe = onSnapshot(imageQuery, (snapshot) => {
                 allImages = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() } as GeneratedImage));
-                if (isMounted) setImageCount(snapshot.size);
+                if (isMounted) setImageCount(snapshot.size); // Update count on snapshot change
                 processAndSetGroups();
             }, (error) => console.error("Error with image snapshot listener: ", error));
 
@@ -220,7 +221,7 @@ export function GalleryClient() {
   const itemsWithAds = useMemo(() => {
     if (!user?.showAds) return paginatedGroups;
 
-    const itemsWithAds = [];
+    const itemsWithAds: any[] = [];
     for (let i = 0; i < paginatedGroups.length; i++) {
         itemsWithAds.push(paginatedGroups[i]);
         if ((i + 1) % 6 === 0) {
@@ -404,18 +405,18 @@ export function GalleryClient() {
 
 
       <div className={cn("grid gap-4", gridClasses[viewMode])}>
-        {itemsWithAds.map((item: any, index) =>
-          item.type === 'ad' ? (
+        {itemsWithAds.map((item, index) =>
+          (item as any).type === 'ad' ? (
             <div key={`ad-${index}`} className="aspect-square">
                <AdSlot slotId="user-gallery-ad" showAds={!!user?.showAds} />
             </div>
           ) : (
             <PromptGroupCard
-              key={item.promptId}
-              group={item}
-              onView={() => handleSelectGroup(item)}
-              onDelete={() => confirmDeleteGroup(item)}
-              onUpgrade={item.type === 'image' ? () => handleUpgradeImage(item.coverImage) : undefined}
+              key={(item as PromptGroup).promptId}
+              group={item as PromptGroup}
+              onView={() => handleSelectGroup(item as PromptGroup)}
+              onDelete={() => confirmDeleteGroup(item as PromptGroup)}
+              onUpgrade={(item as PromptGroup).type === 'image' ? () => handleUpgradeImage((item as PromptGroup).coverImage) : undefined}
             />
           )
         )}
@@ -469,7 +470,7 @@ export function GalleryClient() {
                             <Download className="mr-2 h-4 w-4" /> Download
                         </Button>
                         {selectedMedia.type === 'image' && (
-                            selectedMedia.isShared ? (
+                            (selectedMedia as MediaItem).isShared ? (
                                 <Button variant="outline" size="sm" disabled>
                                     <CheckCircle className="mr-2 h-4 w-4 text-green-500" />
                                     Shared
